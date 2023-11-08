@@ -1,0 +1,107 @@
+/* CSS Variables */
+:root {
+    --primary: #ddd;
+    --dark: #333;
+    --light: #fff;
+    --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
+    --lightGray: rgba(241, 241, 241, 0.8);
+}
+
+
+html {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--dark);
+}
+
+body {
+    background-image: url('/images/ColorWall-x85vgl.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 4rem);
+}
+
+.wrapper {
+    display: grid;
+    grid-gap: 20px;
+}
+
+.custom {
+    background-color: #198754;
+    color: white;
+}
+
+.custom-secondary:hover {
+    background-color: #198754;
+    color: white;
+}
+
+.header-title {
+    color: #75b798;
+}
+.header-description {
+    color: #75b798;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    bottom: 10px;
+    right: 17px;
+    pointer-events: none;
+}
+
+
+
+.form-control.rounded {
+    border-radius: 5px;
+}
+
+.btn-primary.rounded-pill {
+    border-radius: 50px;
+}
+
+.password-container {
+    position: relative;
+    display: inline-block;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 5px;
+    top: 70%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.validation-error {
+    color: red;
+    font-size: 15px;
+}
+.error-email-username {
+    color: red;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+
+
+
+footer {
+    margin-top: auto;
+    background: var(--dark);
+    color: var(--light);
+    text-align: center;
+    padding: 1rem;
+}

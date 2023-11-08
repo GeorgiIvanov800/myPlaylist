@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head}">
+</head>
+
+<body>
+<div class="wrapper">
+    <nav th:replace="~{fragments/nav-bar}"></nav>
+
+    <div class="container mt-5">
+        <!-- Personalized Welcome Message -->
+        <h2>Hello, !</h2>
+        <th:block sec:authorize="isAuthenticated()">
+            <th:block th:text="${#authentication.principal.displayUsername}"></th:block>
+        </th:block>
+
+        <!-- User Profile Overview & Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle" />
+                <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlistsCount}">10</span></p>
+                <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
+                <button class="btn btn-primary mt-3">Create a New Playlist</button>
+            </div>
+            <div class="col-md-9">
+                <!-- Recently Played or Favorites -->
+                <h4>Your Recent Tracks</h4>
+                <ul>
+                    <!-- Sample songs. This can be looped with Thymeleaf -->
+                    <li>Song 1 by Artist A</li>
+                    <li>Song 2 by Artist B</li>
+                    <li>Song 3 by Artist C</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Music Recommendations -->
+        <div class="mt-5">
+            <h4>You might like...</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">
+                        <div class="card-body">
+                            <h5 class="card-title">Album Title</h5>
+                            <p class="card-text">Artist Name</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more album cards similar to the above card for other recommendations -->
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="mt-5">
+            <h4>Activity Feed</h4>
+            <!-- Sample activities. This can be looped with Thymeleaf -->
+            <p><strong>Friend A</strong> created a new playlist.</p>
+            <p><strong>Friend B</strong> liked a song by Artist Z.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
+
+    </footer>
+</div>
+</body>
+</html>
