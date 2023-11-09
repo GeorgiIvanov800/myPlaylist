@@ -21,6 +21,8 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+myPlaylist:
+  remember.me.key: ${REMEMBER_ME_KEY:topsecret}
 logging:
   level:
     org.hibernate.SQL: DEBUG

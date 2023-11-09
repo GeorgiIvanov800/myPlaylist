@@ -2,6 +2,7 @@ package org.myplaylist.myplaylist.config;
 
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.impl.MyPlaylistUserDetailService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfiguration {
+
+    private final String rememberMeKey;
+
+    public SecurityConfiguration(@Value("${myPlaylist.remember.me.key}")
+                                 String rememberMeKey) {
+        this.rememberMeKey = rememberMeKey;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -49,7 +57,14 @@ public class SecurityConfiguration {
                      .invalidateHttpSession(true);
                 }
 
-        ).build();
+        ).rememberMe(
+                rememberMe -> {
+                    rememberMe
+                            .key(rememberMeKey)
+                            .rememberMeParameter("rememberme")
+                            .rememberMeCookieName("rememberme");
+                }
+       ).build();
 
     }
 
