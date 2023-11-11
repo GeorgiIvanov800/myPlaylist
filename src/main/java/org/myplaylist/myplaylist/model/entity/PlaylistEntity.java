@@ -12,11 +12,13 @@ public class PlaylistEntity extends BaseEntity {
     private String name;
     @Column(nullable = false, columnDefinition = "TEXT")
     @Enumerated(EnumType.STRING)
-    private List<PlaylistEnums> categories;
+    private PlaylistEnums category;
 
     @Column(nullable = false)
     private String description;
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
+    inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<SongEntity> songs;
 
     public PlaylistEntity() {
@@ -30,12 +32,12 @@ public class PlaylistEntity extends BaseEntity {
         this.name = name;
     }
 
-    public List<PlaylistEnums> getCategories() {
-        return categories;
+    public PlaylistEnums getCategory() {
+        return category;
     }
 
-    public void setCategories(List<PlaylistEnums> categories) {
-        this.categories = categories;
+    public void setCategory(PlaylistEnums category) {
+        this.category = category;
     }
 
     public String getDescription() {

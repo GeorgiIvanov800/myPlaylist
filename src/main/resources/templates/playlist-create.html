@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/head}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>MyPlaylist</title>
+    <link rel="stylesheet" th:href="@{/css/reset-css.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://kit.fontawesome.com/08b39fed13.js" crossorigin="anonymous"></script>
+    <script th:src="@{/js/main.js}"></script>
 </head>
 
 <body>
@@ -9,43 +20,69 @@
     <nav th:replace="~{fragments/nav-bar}"></nav>
 
     <div class="container mt-5">
-        <!-- Page Title -->
         <h2>Create Your Playlist</h2>
 
-        <!-- Playlist Creation Form -->
-        <form th:action="@{/createPlaylist}"  method="post" class="mt-4">
-            <div class="form-group">
-                <label for="playlistName">Playlist Name:</label>
-                <input type="text" id="playlistName"  class="form-control" placeholder="Enter Playlist Name" required>
+        <!-- Row for two columns: Playlist Details and Song Search -->
+        <div class="row">
+            <!-- Playlist Details Box -->
+            <div class="col-md-6">
+                <div class="playlist-details-box">
+                    <form id="playlistForm" th:action="@{/playlist/create}" method="post">
+                        <div class="form-group">
+                            <label for="playlistName">Playlist Name:</label>
+                            <input type="text" id="playlistName" name="name" class="form-control"
+                                   placeholder="Enter Playlist Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="playlistDescription">Description:</label>
+                            <textarea id="playlistDescription" name="description" class="form-control" rows="3"
+                                      placeholder="Enter a description"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="playlistGenre">Genre:</label>
+                            <select id="playlistGenre" name="genre" class="form-control">
+                                <!-- Populate with genres -->
+                                <option value="Rock">Rock</option>
+                                <option value="Pop">Pop</option>
+                                <option value="Jazz">Jazz</option>
+                                <!-- Additional genres -->
+                            </select>
+                        </div>
+
+                        <!-- Hidden input for storing added song IDs -->
+                        <input type="hidden" id="songIds" name="songIds"/>
+
+                        <button type="submit" class="btn btn-primary">Create Playlist</button>
+                    </form>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="playlistDescription">Description (Optional):</label>
-                <textarea id="playlistDescription" class="form-control" rows="3" placeholder="Enter a description"></textarea>
+            <!-- Song Search and Display Box -->
+            <div class="col-md-6">
+                <div class="song-search-box">
+                    <label for="songSearch"></label>
+                    <input type="text" id="songSearch" class="form-control" placeholder="Search for songs">
+                    <div id="searchResults" class="mt-2">
+                        <!-- Initial list of songs or empty state -->
+                        <div th:each="song : ${songs}" class="song-item">
+                            <span th:text="${song.title} + ' - ' + song.artist">Song Title - Artist</span>
+                            <button type="button" class="add-song" th:attr="data-song-id=${song.id}"
+                                    onclick="addSong(this)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label>Add Songs:</label>
-                <input type="text" id="songSearch" class="form-control" placeholder="Search for songs to add">
-                <!-- Implement song search functionality -->
-            </div>
-
-            <div id="addedSongsList" class="mt-3">
-                <!-- List of added songs will be displayed here -->
-            </div>
-
-            <button type="submit" class="btn btn-primary">Create Playlist</button>
-            <a href="/" class="btn btn-secondary">Cancel</a>
-        </form>
+        <!-- Footer -->
+        <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5"></footer>
     </div>
-
-    <!-- Footer -->
-    <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
-    </footer>
 </div>
 
-<script>
-    // JavaScript for song search and add functionality
-</script>
+<script th:src="@{/js/createPlaylist.js}"></script>
 </body>
 </html>

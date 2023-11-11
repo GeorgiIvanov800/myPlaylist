@@ -25,7 +25,7 @@ public class PlaylistServiceImpl {
         PlaylistEntity playlist = new PlaylistEntity();
         playlist.setName(playlistBindingModel.getName());
         playlist.setDescription(playlistBindingModel.getDescription());
-        playlist.setCategories(playlistBindingModel.getCategories());
+
 
 
         List<SongEntity> songs = songRepository.findAllById(playlistBindingModel.getSongIds());

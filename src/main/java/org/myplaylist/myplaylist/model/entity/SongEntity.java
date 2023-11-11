@@ -1,26 +1,20 @@
 package org.myplaylist.myplaylist.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.myplaylist.myplaylist.utils.DurationConverter;
 
 import java.time.Duration;
+import java.util.List;
 
 @Entity
 @Table(name = "songs")
 public class SongEntity extends BaseEntity {
     @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
     private String artist;
-
     private String album;
-
+    @Column(columnDefinition = "TEXT")
     private String comment;
-
     private String genre;
 
     private Integer year;
@@ -28,8 +22,10 @@ public class SongEntity extends BaseEntity {
     private Duration duration;
 
     private String type;
-
+    @Column(columnDefinition = "TEXT")
     private String filePath; //store the location of the song file
+    @ManyToMany(mappedBy = "songs")
+    private List<PlaylistEntity> playlists;
 
     public SongEntity() {
     }
@@ -47,7 +43,7 @@ public class SongEntity extends BaseEntity {
     }
 
     public void setArtist(String artist) {
-        artist = artist;
+        this.artist = artist;
     }
 
     public String getAlbum() {
@@ -104,5 +100,13 @@ public class SongEntity extends BaseEntity {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public List<PlaylistEntity> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(List<PlaylistEntity> playlists) {
+        this.playlists = playlists;
     }
 }
