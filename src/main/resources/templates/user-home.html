@@ -21,7 +21,7 @@
                 <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle" />
                 <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlistsCount}">10</span></p>
                 <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
-                <button class="btn btn-primary mt-3">Create a New Playlist</button>
+                <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
             </div>
             <div class="col-md-9">
                 <!-- Recently Played or Favorites -->
