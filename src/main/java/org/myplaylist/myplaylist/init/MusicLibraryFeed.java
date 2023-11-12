@@ -119,7 +119,7 @@ public class MusicLibraryFeed implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Hi");
+//        feedDatabase();
     }
 }
 

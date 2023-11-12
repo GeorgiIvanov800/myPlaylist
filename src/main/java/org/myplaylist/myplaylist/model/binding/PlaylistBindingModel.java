@@ -1,18 +1,27 @@
 package org.myplaylist.myplaylist.model.binding;
 
-import org.myplaylist.myplaylist.model.enums.PlaylistEnums;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
 import java.util.List;
 
 public class PlaylistBindingModel {
-
+    @NotEmpty(message = "You should give your playlist a name")
+    @Size(min = 3, max = 20 ,message = "Name must be between 3 and 20 characters")
     private String name;
-
+    @NotEmpty(message = "You should give your playlist a simple description")
+    @Size(min = 3, max = 20 ,message = "Description name must be between 3 and 20 characters")
     private String description;
-
+    @NotNull(message = "Please choose a genre for your playlist if you are not sure what the genre is just use Manjda")
+    private PlaylistGenreEnums genre;
+    @NotNull(message = "Playlist without songs is it really a playlist?!")
+    @NotEmpty(message = "Playlist without songs is it really a playlist?!")
     private List<Long> songIds;
 
-    private List<PlaylistEnums> categories;
+    public PlaylistBindingModel() {
+    }
 
     public String getName() {
         return name;
@@ -38,11 +47,11 @@ public class PlaylistBindingModel {
         this.songIds = songIds;
     }
 
-    public List<PlaylistEnums> getCategories() {
-        return categories;
+    public PlaylistGenreEnums getGenre() {
+        return genre;
     }
 
-    public void setCategories(List<PlaylistEnums> categories) {
-        this.categories = categories;
+    public void setGenre(PlaylistGenreEnums genre) {
+        this.genre = genre;
     }
 }

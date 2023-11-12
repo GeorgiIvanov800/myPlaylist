@@ -1,21 +1,20 @@
-console.log("Hello from My Playlist")
+//Event Listener on the Playlist Form
 document.addEventListener('DOMContentLoaded', function () {
     let form = document.getElementById('playlistForm');
-    console.log("Forn element: ", form);
-
+    console.log("Form element: ", form);
+    //Submit button
     form.addEventListener('submit', function(e) {
-        console.log("Submit button clicked.");
+        // console.log("Submit button clicked.");
         e.preventDefault();
 
         let name = document.getElementById('playlistName').value;
         let description = document.getElementById('playlistDescription').value;
-        let songIds = []; // This should be populated with actual song IDs
+        let songIds = [];
+        let genre = document.getElementById('playlistGenre').value;
 
-        // Example of how you might populate songIds with selected songs
-        // This is just a placeholder and will depend on your actual implementation
-        // document.querySelectorAll('.selected-song').forEach(function(song) {
-        //     songIds.push(song.dataset.songId);
-        // });
+        songIds = Array.from(document.querySelectorAll('#playlistSongs li'))
+            .map(li => li.dataset.songId);
+
 
         let csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
         let csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
@@ -35,24 +34,111 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Accept': 'application/json',
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({ name, description, songIds })
+            body: JSON.stringify({ name, description, songIds, genre })
         })
-            .then(function(response) {
+            .then(response => {
                 if (!response.ok) {
-                    throw new Error('Server responded with status ' + response.status);
+                    // If the response is not OK, parse the response as JSON and then handle the error
+                    return response.json().then(err => {
+                        const errorMessages = Object.entries(err).map(([field, message]) => `${field}: ${message}`).join("; ");
+                        throw new Error(errorMessages);
+                    });
                 }
+                // If the response is OK, parse it as JSON
                 return response.json();
             })
-            .then(function(data) {
+            .then(data => {
                 // Handle successful playlist creation
                 console.log('Success:', data);
-                // Redirect to the playlist page or display a success message
-                // window.location.href = '/path-to-playlist/' + data.id;
+                alert("Playlist created successfully!"); // Simple alert for success
             })
-            .catch(function(error) {
+            .catch(error => {
                 // Handle errors
                 console.error('Error:', error);
-                // Display error message to the user
+                alert("Failed to create playlist: " + error.message); // Error notification with detailed messages
             });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('searchResults').addEventListener('click', function(event) {
+        let target = event.target;
+        let addButton = target.classList.contains('add-song') ? target : target.closest('.add-song');
+
+        if (addButton) {
+            const songItem = addButton.closest('div[data-song-id]');
+
+            if (songItem) {
+                console.log('Song Title Element:', songItem.querySelector('.song-title')); // Check if the element is found
+
+                const songId = songItem.getAttribute('data-song-id');
+                const songTitleElement = songItem.querySelector('.song-title');
+                const songArtistElement = songItem.querySelector('.song-artist');
+
+                if (!songTitleElement || !songArtistElement) {
+                    console.error('Song title or artist elements not found');
+                    return;
+                }
+
+                const songTitle = songTitleElement.textContent;
+                const songArtist = songArtistElement.textContent;
+
+                addSongToPlaylist(songId, songTitle, songArtist);
+                updateSongIdsInput(songId);
+
+            } else {
+                console.error('Could not find the song item element');
+            }
+        }
+    });
+});
+
+function addSongToPlaylist(songId, songTitle, songArtist) {
+    const playlistSongs = document.getElementById('playlistSongs');
+
+    // Create the list item for the song
+    const songElement = document.createElement('li');
+    songElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+    songElement.setAttribute('data-song-id', songId);
+
+    // Create a span for the song text
+    const songText = document.createElement('span');
+    songText.textContent = `${songTitle} - ${songArtist}`;
+    songElement.appendChild(songText);
+
+    // Create the remove button
+    const removeButton = document.createElement('button');
+    removeButton.setAttribute('type', 'button');
+    removeButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'remove-song');
+    removeButton.innerHTML = '<i class="fas fa-minus" aria-hidden="true"></i>';
+    removeButton.onclick = function() {
+        removeSongFromPlaylist(songId, songElement);
+    };
+    songElement.appendChild(removeButton);
+
+    // Append the new song element to the playlist
+    playlistSongs.appendChild(songElement);
+}
+
+function removeSongFromPlaylist(songId, songElement) {
+    // Remove the song element from the playlist
+    songElement.remove();
+
+    // Update the hidden input to remove the song ID
+    const songIdsInput = document.getElementById('songIds');
+    let songIds = songIdsInput.value.split(',');
+    songIds = songIds.filter(id => id !== songId);
+    songIdsInput.value = songIds.join(',');
+}
+
+
+function updateSongIdsInput(songId) {
+    const songIdsInput = document.getElementById('songIds');
+    let songIds = songIdsInput.value ? songIdsInput.value.split(',') : [];
+    if (!songIds.includes(songId)) {
+        songIds.push(songId);
+        songIdsInput.value = songIds.join(',');
+    }
+    console.log(songIds)
+}
+

@@ -1,6 +1,6 @@
 package org.myplaylist.myplaylist.model.enums;
 
-public enum PlaylistEnums {
+public enum PlaylistGenreEnums {
     Blues,
     Classical,
     Country,
@@ -24,5 +24,6 @@ public enum PlaylistEnums {
     Trance,
     Trap,
     World,
-    Soup
+    Soup,
+    Manjda
 }

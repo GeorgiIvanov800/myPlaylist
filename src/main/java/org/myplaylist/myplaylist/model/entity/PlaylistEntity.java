@@ -1,7 +1,7 @@
 package org.myplaylist.myplaylist.model.entity;
 
 import jakarta.persistence.*;
-import org.myplaylist.myplaylist.model.enums.PlaylistEnums;
+import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ public class PlaylistEntity extends BaseEntity {
     private String name;
     @Column(nullable = false, columnDefinition = "TEXT")
     @Enumerated(EnumType.STRING)
-    private PlaylistEnums category;
+    private PlaylistGenreEnums genre;
 
     @Column(nullable = false)
     private String description;
     @ManyToMany
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
-    inverseJoinColumns = @JoinColumn(name = "song_id"))
+            inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<SongEntity> songs;
 
     public PlaylistEntity() {
@@ -32,12 +32,12 @@ public class PlaylistEntity extends BaseEntity {
         this.name = name;
     }
 
-    public PlaylistEnums getCategory() {
-        return category;
+    public PlaylistGenreEnums getGenre() {
+        return genre;
     }
 
-    public void setCategory(PlaylistEnums category) {
-        this.category = category;
+    public void setGenre(PlaylistGenreEnums genre) {
+        this.genre = genre;
     }
 
     public String getDescription() {
