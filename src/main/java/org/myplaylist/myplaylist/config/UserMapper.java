@@ -8,6 +8,7 @@ import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
+import org.myplaylist.myplaylist.model.view.UserViewModel;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -19,4 +20,6 @@ public interface UserMapper {
     SongViewModel songEntityToViewModel(SongEntity song);
 
     PlaylistViewModel playlistEntityToViewModel(PlaylistEntity playlist);
+
+    UserViewModel userEntityToViewModel(UserEntity user);
 }

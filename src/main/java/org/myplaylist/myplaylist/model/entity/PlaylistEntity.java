@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
 import java.util.List;
+import java.util.Optional;
 
 @Table(name = "playlists")
 @Entity
@@ -22,6 +23,9 @@ public class PlaylistEntity extends BaseEntity {
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<SongEntity> songs;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     public PlaylistEntity() {
     }
@@ -61,8 +65,15 @@ public class PlaylistEntity extends BaseEntity {
     public String getPictureURL() {
         return pictureURL;
     }
-
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }
