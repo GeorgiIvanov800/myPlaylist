@@ -38,24 +38,32 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    // If the response is not OK, parse the response as JSON and then handle the error
                     return response.json().then(err => {
-                        const errorMessages = Object.entries(err).map(([field, message]) => `${field}: ${message}`).join("; ");
-                        throw new Error(errorMessages);
+                        // Clear any previous error messages
+                        document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+                        // Display new error messages next to the respective fields
+                        Object.entries(err).forEach(([field, message]) => {
+                            const errorElement = document.getElementById(field + 'Error');
+                            if (errorElement) {
+                                errorElement.textContent = message;
+                            }
+                            console.log(err);
+                        });
+
+                        throw new Error("Validation errors occurred");
                     });
                 }
-                // If the response is OK, parse it as JSON
                 return response.json();
             })
             .then(data => {
-                // Handle successful playlist creation
-                console.log('Success:', data);
+                // Handle success
                 alert("Playlist created successfully!"); // Simple alert for success
+                window.location.href = "/users/home";
             })
             .catch(error => {
-                // Handle errors
                 console.error('Error:', error);
-                alert("Failed to create playlist: " + error.message); // Error notification with detailed messages
+                // Handle other types of errors (network issues, etc.)
             });
     });
 });

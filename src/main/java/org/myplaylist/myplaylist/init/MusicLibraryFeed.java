@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 @Component
 public class MusicLibraryFeed implements CommandLineRunner {
     private final SongRepository songRepository;
-    private static final String path = "/mnt/938cfd0c-3042-4e00-a6f3-eaa7cbc2a4ad/Music";
+    private static final String path = "/mnt/938cfd0c-3042-4e00-a6f3-eaa7cbc2a4ad/MusicDB";
 
     private final int BATCH_SIZE = 100;
 

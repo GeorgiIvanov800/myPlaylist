@@ -14,6 +14,8 @@ public class PlaylistEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PlaylistGenreEnums genre;
 
+    private String pictureURL;
+
     @Column(nullable = false)
     private String description;
     @ManyToMany
@@ -54,5 +56,13 @@ public class PlaylistEntity extends BaseEntity {
 
     public void setSongs(List<SongEntity> songs) {
         this.songs = songs;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 }

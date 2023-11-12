@@ -33,7 +33,7 @@ public class RestPlaylistController {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.groupingBy(FieldError::getField,
-                            Collectors.mapping(FieldError::getDefaultMessage, Collectors.joining("; "))));
+                            Collectors.mapping(FieldError::getDefaultMessage, Collectors.joining(", "))));
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
