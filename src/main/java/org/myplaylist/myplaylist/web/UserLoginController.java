@@ -34,6 +34,7 @@ public class UserLoginController {
     public String onFailure(
             @ModelAttribute("email") String email,
             Model model) {
+        //TODO: make it with redirect attributes
 
         model.addAttribute("email", email);
         model.addAttribute("bad_credentials", "true");

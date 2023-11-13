@@ -24,7 +24,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        //config
+        //Config
         //Define which urls are visible by which users
        return httpSecurity.authorizeHttpRequests(
                 authorizeRequests -> authorizeRequests
@@ -32,8 +32,10 @@ public class SecurityConfiguration {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         //allow anyone to see the home page, the registration page and the login form
                         .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
+                        .requestMatchers("/error").permitAll()
                         //all other requests are authenticated
                         .anyRequest().authenticated()
+               //TODO add a page which will be only accessible by admins or moderators
         ).formLogin(
                 formLogin -> {
                     formLogin
@@ -58,7 +60,7 @@ public class SecurityConfiguration {
                 }
 
         ).rememberMe(
-                rememberMe -> {
+                rememberMe -> { // remember me cookie
                     rememberMe
                             .key(rememberMeKey)
                             .rememberMeParameter("rememberme")
