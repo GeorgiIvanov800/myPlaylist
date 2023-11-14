@@ -16,7 +16,6 @@ public class SongEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String comment;
     private String genre;
-
     private Integer year;
     @Convert(converter = DurationConverter.class)
     private Duration duration;

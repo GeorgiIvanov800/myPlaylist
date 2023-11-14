@@ -14,9 +14,9 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/users/home")
+    @GetMapping("/users/dashboard")
     public String home(Model model) {
-        return "user-home";
+        return "user-dashboard";
     }
 
 

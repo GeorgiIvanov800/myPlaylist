@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Handle success
                 alert("Playlist created successfully!"); // Simple alert for success
-                window.location.href = "/users/home";
+                window.location.href = "/users/dashboard";
             })
             .catch(error => {
                 console.error('Error:', error);

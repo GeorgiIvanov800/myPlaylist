@@ -63,8 +63,8 @@ public class MusicLibraryFeed implements CommandLineRunner {
         }
     }
 
-    @Transactional
-    private void saveAndClearBatch(List<SongEntity> songsBatch) {
+
+    public void saveAndClearBatch(List<SongEntity> songsBatch) {
         songRepository.saveAll(songsBatch);
         songsBatch.clear(); // Clear the batch list to free memory
     }
@@ -75,13 +75,28 @@ public class MusicLibraryFeed implements CommandLineRunner {
 
                 AudioFile audioFile = AudioFileIO.read(file);
                 Tag tag = audioFile.getTag();
-
+                Integer year = null;
+                int defaultYear = 0;
                 SongEntity song = new SongEntity();
+                String artist = tag.getFirst(FieldKey.ARTIST);
+
+                if (artist == null || artist.trim().isEmpty()) {
+                    artist = "Unknown Artist";
+                }
+                song.setArtist(artist);
+
+                if (tag.getFirst(FieldKey.YEAR) != null) {
+                    try {
+                        year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
+                    } catch (NumberFormatException e) {
+                        // Handle the case where the year is not a valid integer
+                        year = defaultYear; // replace defaultYear with your default value
+                    }
+                }
 
                 song.setTitle(tag.getFirst(FieldKey.TITLE));
-                song.setArtist(tag.getFirst(FieldKey.ARTIST));
                 song.setAlbum(tag.getFirst(FieldKey.ALBUM));
-                song.setYear(tag.getFirst(FieldKey.YEAR) != null ? Integer.parseInt(tag.getFirst(FieldKey.YEAR)) : null);
+                song.setYear(year);
                 song.setGenre(tag.getFirst(FieldKey.GENRE));
                 song.setDuration(Duration.ofSeconds(audioFile.getAudioHeader().getTrackLength()));
                 song.setType(file.getPath());

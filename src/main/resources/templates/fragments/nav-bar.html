@@ -9,7 +9,12 @@
 <body>
 <nav th:fragment="navbar"
         class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/"> <i class="fa-solid fa-compact-disc fa-spin"></i> MyPlaylist</a>
+    <th:block sec:authorize="isAuthenticated()">
+        <a class="navbar-brand" th:href="@{/users/dashboard}"> <i class="fa-solid fa-compact-disc fa-spin"></i> MyPlaylist</a>
+    </th:block>
+    <th:block sec:authorize="!isAuthenticated()">
+        <a class="navbar-brand" href="/"> <i class="fa-solid fa-compact-disc fa-spin"></i> MyPlaylist</a>
+    </th:block>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                             //the names of the input fields (user-register)
                             .usernameParameter("email")
                             .passwordParameter("password")
-                            .defaultSuccessUrl("/users/home")
+                            .defaultSuccessUrl("/users/dashboard")
                             .failureForwardUrl("/users/login-error");
                 }
         ).logout(
