@@ -22,6 +22,8 @@ public class UserEntity extends BaseEntity {
     private String lastName;
     @Column(nullable = false, unique = true)
     private String username;
+    @OneToMany(mappedBy = "user")
+    private List<PlaylistEntity> playlists = new ArrayList<>();
     private boolean active;
 
     public UserEntity() {

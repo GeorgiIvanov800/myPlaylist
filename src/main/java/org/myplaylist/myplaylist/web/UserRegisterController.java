@@ -14,8 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping("/users")
+
 @Controller
+@RequestMapping("/users")
 public class UserRegisterController {
 
     private final UserService userService;

@@ -1,6 +1,6 @@
 package org.myplaylist.myplaylist.web;
 
-import org.myplaylist.myplaylist.model.binding.UserLoginBindingModel;
+import org.myplaylist.myplaylist.init.MusicLibraryFeed;
 import org.myplaylist.myplaylist.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +16,11 @@ public class UserLoginController {
 
     private final UserService userService;
 
-    public UserLoginController(UserService userService) {
+    private final MusicLibraryFeed musicLibraryFeed;
+
+    public UserLoginController(UserService userService, MusicLibraryFeed musicLibraryFeed) {
         this.userService = userService;
+        this.musicLibraryFeed = musicLibraryFeed;
     }
 
 
@@ -27,10 +30,11 @@ public class UserLoginController {
         return "user-login";
     }
 
-    @PostMapping("/users/login-error")
+    @PostMapping("/login-error")
     public String onFailure(
             @ModelAttribute("email") String email,
             Model model) {
+        //TODO: make it with redirect attributes
 
         model.addAttribute("email", email);
         model.addAttribute("bad_credentials", "true");

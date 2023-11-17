@@ -95,8 +95,15 @@ body {
     font-weight: bold;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
 
-
+.song-search-box {
+    margin-left: 30px;
+}
 
 footer {
     margin-top: auto;

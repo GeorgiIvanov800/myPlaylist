@@ -3,7 +3,8 @@ spring:
     driverClassName: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/my_playlist?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
-    password: 9212058445
+    password: ${MARIADBPASSWORD}
+
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
@@ -21,8 +22,15 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+
+myPlaylist:
+  remember.me.key: ${REMEMBER_ME_KEY:topsecret}
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.springframework.security: TRACE
+#   org.springframework.security: TRACE
+

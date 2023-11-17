@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head}">
+</head>
+
+<body>
+<div class="wrapper">
+    <nav th:replace="~{fragments/nav-bar}"></nav>
+
+    <div class="container mt-5">
+        <!-- Personalized Welcome Message -->
+        <h2 th:text="'Hello, ' + ${#authentication.principal.displayUsername} + '!'">Hello, User!</h2>
+
+
+        <!-- User Profile Overview & Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle" />
+                <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlistsCount}">10</span></p>
+                <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
+                <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
+            </div>
+            <div class="col-md-9">
+                <!-- User's Playlists -->
+                <h4>Your Playlists</h4>
+                <div class="row">
+                    <th:block th:each="playlist : ${playlist}">
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="path_to_playlist_cover.png" class="card-img-top" alt="Playlist Cover">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
+                                    <p th:text="${playlist.description}">Playlist Description</p>
+                                    <div>
+                                        <h6>Songs in this playlist:</h6>
+                                        <ul class="list-unstyled">
+                                            <!-- 'stat' is a status variable containing count don't display all the songs just 5  -->
+                                            <li th:each="song, stat : ${playlist.songs}"
+                                                th:if="${stat.count <= 5}" class="mb-2">
+                                                <!-- Song title and artist -->
+                                                <span th:text="${song.title + ' by ' + song.artist}" class="song-details">Song Title by Artist</span>
+
+                                                <!-- Separator line -->
+                                                <hr th:if="${stat.count < 5 && stat.count < playlist.songs.size()}">
+                                        </ul>
+                                        <span th:if="${playlist.songs.size() > 5}">... and more</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+        </div>
+
+        <!-- Music Recommendations -->
+        <div class="mt-5">
+            <h4>You might like...</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">
+                        <div class="card-body">
+                            <h5 class="card-title">Album Title</h5>
+                            <p class="card-text">Artist Name</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more album cards similar to the above card for other recommendations -->
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="mt-5">
+            <h4>Activity Feed</h4>
+            <!-- Sample activities. This can be looped with Thymeleaf -->
+            <p><strong>Friend A</strong> created a new playlist.</p>
+            <p><strong>Friend B</strong> liked a song by Artist Z.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
+
+    </footer>
+</div>
+</body>
+</html>
