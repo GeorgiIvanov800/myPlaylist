@@ -88,18 +88,26 @@
                             <div class="card songs-card mt-3">
                                 <!-- Available songs list -->
                                 <div class="card-header">Available Songs</div>
+                                <!--TODO: FIX THIS STYLE PUT IN A CSS NOT IN THE TAG-->
                                 <div class="card-body song-list" style="max-height: 500px; overflow-y: auto;">
                                     <!-- List of songs populated from the database -->
                                     <div th:each="song : ${songsPage.content}"
-                                         th:attr="data-song-id=${song}"
+                                         th:attr="data-song-id=${song.id}"
                                          class="d-flex justify-content-between align-items-center mb-2">
                                         <span class="song-title" th:text="${song.artist}">Song Artist</span>
                                         <span class="song-artist" th:text="${song.title}">Song Title</span>
                                         <button type="button" class="btn btn-outline-primary btn-sm add-song"
-                                                th:attr="data-song-id=${song}">
+                                                th:attr="data-song-id=${song.id}">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
+                                    <nav>
+                                        <ul class="pagination">
+                                            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, songsPage.totalPages - 1)}">
+                                                <a class="page-link" th:href="@{/playlist/create(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>

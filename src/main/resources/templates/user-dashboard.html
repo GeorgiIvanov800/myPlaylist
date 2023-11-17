@@ -31,7 +31,21 @@
                                 <img src="path_to_playlist_cover.png" class="card-img-top" alt="Playlist Cover">
                                 <div class="card-body">
                                     <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
-                                    <!-- Additional playlist details here -->
+                                    <p th:text="${playlist.description}">Playlist Description</p>
+                                    <div>
+                                        <h6>Songs in this playlist:</h6>
+                                        <ul class="list-unstyled">
+                                            <!-- 'stat' is a status variable containing count don't display all the songs just 5  -->
+                                            <li th:each="song, stat : ${playlist.songs}"
+                                                th:if="${stat.count <= 5}" class="mb-2">
+                                                <!-- Song title and artist -->
+                                                <span th:text="${song.title + ' by ' + song.artist}" class="song-details">Song Title by Artist</span>
+
+                                                <!-- Separator line -->
+                                                <hr th:if="${stat.count < 5 && stat.count < playlist.songs.size()}">
+                                        </ul>
+                                        <span th:if="${playlist.songs.size() > 5}">... and more</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
