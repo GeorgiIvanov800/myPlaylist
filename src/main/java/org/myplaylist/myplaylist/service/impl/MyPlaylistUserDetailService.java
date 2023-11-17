@@ -39,7 +39,8 @@ public class MyPlaylistUserDetailService implements UserDetailsService {
                 userEntity.getEmail(), // Login via email
                 userEntity.getPassword(),
                 authorities,
-                userEntity.getUsername()
+                userEntity.getUsername(),
+                userEntity.getId()
         );
 
     }

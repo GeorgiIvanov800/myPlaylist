@@ -1,10 +1,8 @@
 package org.myplaylist.myplaylist.model.view;
 
-public class UserViewModel {
+public record UserViewModel (
 
-    private String username;
+     String username,
+     String pictureURL
 
-    private String pictureURL;
-
-
-}
+) {}

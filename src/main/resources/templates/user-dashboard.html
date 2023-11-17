@@ -10,10 +10,8 @@
 
     <div class="container mt-5">
         <!-- Personalized Welcome Message -->
-        <h2>Hello, !</h2>
-        <th:block sec:authorize="isAuthenticated()">
-            <th:block th:text="${#authentication.principal.displayUsername}"></th:block>
-        </th:block>
+        <h2 th:text="'Hello, ' + ${#authentication.principal.displayUsername} + '!'">Hello, User!</h2>
+
 
         <!-- User Profile Overview & Quick Actions -->
         <div class="row mt-4">
@@ -24,15 +22,21 @@
                 <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
             </div>
             <div class="col-md-9">
-                <!-- Recently Played or Favorites -->
-                <h4>Your Recent Tracks</h4>
-                <ul>
-                    <!-- Sample songs. This can be looped with Thymeleaf -->
-                    <li>Song 1 by Artist A</li>
-                    <li>Song 2 by Artist B</li>
-                    <li>Song 3 by Artist C</li>
-                </ul>
-            </div>
+                <!-- User's Playlists -->
+                <h4>Your Playlists</h4>
+                <div class="row">
+                    <th:block th:each="playlist : ${playlist}">
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="path_to_playlist_cover.png" class="card-img-top" alt="Playlist Cover">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
+                                    <!-- Additional playlist details here -->
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
         </div>
 
         <!-- Music Recommendations -->

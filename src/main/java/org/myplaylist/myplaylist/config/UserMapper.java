@@ -19,7 +19,7 @@ public interface UserMapper {
 
     SongViewModel songEntityToViewModel(SongEntity song);
 
-    PlaylistViewModel playlistEntityToViewModel(PlaylistEntity playlist);
+    PlaylistViewModel playlistEntityToViewModel(PlaylistEntity playlistEntity);
 
     UserViewModel userEntityToViewModel(UserEntity user);
 }
