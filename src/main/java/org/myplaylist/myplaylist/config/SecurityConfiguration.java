@@ -60,11 +60,12 @@ public class SecurityConfiguration {
                 }
 
         ).rememberMe(
-                rememberMe -> { // remember me cookie
+                rememberMe -> { // Remember me cookie
                     rememberMe
                             .key(rememberMeKey)
                             .rememberMeParameter("rememberme")
-                            .rememberMeCookieName("rememberme");
+                            .rememberMeCookieName("rememberme")
+                            .tokenValiditySeconds(7 * 24 * 60 * 60); //Cookie will live only 1 week
                 }
        ).build();
 
