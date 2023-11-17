@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 MyPlaylist
 Overview
 
