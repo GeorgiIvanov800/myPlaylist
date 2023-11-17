@@ -41,12 +41,11 @@
                         <div id="descriptionError" class="error-message"></div>
                     </div>
 
-                    <!-- Songs in Playlist Box -->
+                    <!-- Songs in Playlist -->
                     <div class="card playlist-songs-card mb-3">
                         <div class="card-header">Songs in Playlist</div>
-                        <ul id="playlistSongs" class="list-group list-group-flush"
-                            style="max-height: 300px; overflow-y: auto;">
-                            <!-- Dynamically added songs will go here -->
+                        <ul id="playlistSongs" class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+
                         </ul>
                         <div id="songIdsError" class="error-message"></div>
                     </div>
@@ -91,24 +90,29 @@
                                 <!--TODO: FIX THIS STYLE PUT IN A CSS NOT IN THE TAG-->
                                 <div class="card-body song-list" style="max-height: 500px; overflow-y: auto;">
                                     <!-- List of songs populated from the database -->
-                                    <div th:each="song : ${songsPage.content}"
-                                         th:attr="data-song-id=${song.id}"
-                                         class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="song-title" th:text="${song.artist}">Song Artist</span>
-                                        <span class="song-artist" th:text="${song.title}">Song Title</span>
-                                        <button type="button" class="btn btn-outline-primary btn-sm add-song"
-                                                th:attr="data-song-id=${song.id}">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                    <nav>
-                                        <ul class="pagination">
+                                    <ul class="list-group">
+                                        <li th:each="song : ${songsPage.content}"
+                                            th:attr="data-song-id=${song.id}"
+                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="song-title mb-1" th:text="${song.title}">Song Title</h6>
+                                                <small class="text-muted song-artist" th:text="${song.artist}">Song Artist</small>
+                                            </div>
+                                            <button type="button" class="btn btn-outline-primary btn-sm add-song">
+                                                <i class="fas fa-plus"></i> Add
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <!-- Pagination -->
+                                    <nav aria-label="Song Pagination">
+                                        <ul class="pagination justify-content-center mt-3">
                                             <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, songsPage.totalPages - 1)}">
                                                 <a class="page-link" th:href="@{/playlist/create(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
                                             </li>
                                         </ul>
                                     </nav>
                                 </div>
+
                             </div>
                         </div>
                     </div>

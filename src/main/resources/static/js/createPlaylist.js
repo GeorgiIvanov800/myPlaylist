@@ -69,84 +69,74 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('searchResults').addEventListener('click', function(event) {
-        let target = event.target;
-        let addButton = target.classList.contains('add-song') ? target : target.closest('.add-song');
+    const searchResults = document.getElementById('searchResults');
 
-        if (addButton) {
-            const songItem = addButton.closest('div[data-song-id]');
+    if (searchResults) {
+        searchResults.addEventListener('click', function(event) {
+            let target = event.target;
+            let addButton = target.classList.contains('add-song') ? target : target.closest('.add-song');
 
-            if (songItem) {
-                console.log('Song Title Element:', songItem.querySelector('.song-title')); // Check if the element is found
+            if (addButton) {
+                const songItem = addButton.closest('li[data-song-id]');
 
-                const songId = songItem.getAttribute('data-song-id');
-                const songTitleElement = songItem.querySelector('.song-title');
-                const songArtistElement = songItem.querySelector('.song-artist');
+                if (songItem) {
+                    const songId = songItem.getAttribute('data-song-id');
+                    const songTitleElement = songItem.querySelector('.song-title');
+                    const songArtistElement = songItem.querySelector('.song-artist');
 
-                if (!songTitleElement || !songArtistElement) {
-                    console.error('Song title or artist elements not found');
-                    return;
+                    if (!songTitleElement || !songArtistElement) {
+                        console.error('Song title or artist elements not found');
+                        return;
+                    }
+
+                    const songTitle = songTitleElement.textContent;
+                    const songArtist = songArtistElement.textContent;
+
+                    addSongToPlaylist(songId, songTitle, songArtist);
+                    updateSongIdsInput(songId);
+
+                } else {
+                    console.error('Could not find the song item element');
                 }
-
-                const songTitle = songTitleElement.textContent;
-                const songArtist = songArtistElement.textContent;
-
-                addSongToPlaylist(songId, songTitle, songArtist);
-                updateSongIdsInput(songId);
-
-            } else {
-                console.error('Could not find the song item element');
             }
-        }
-    });
+        });
+    } else {
+        console.error('searchResults element not found');
+    }
 });
 
+//Adding songs into the playlist
 function addSongToPlaylist(songId, songTitle, songArtist) {
     const playlistSongs = document.getElementById('playlistSongs');
-
-    // Create the list item for the song
-    const songElement = document.createElement('li');
-    songElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-    songElement.setAttribute('data-song-id', songId);
-
-    // Create a span for the song text
-    const songText = document.createElement('span');
-    songText.textContent = `${songTitle} - ${songArtist}`;
-    songElement.appendChild(songText);
-
-    // Create the remove button
-    const removeButton = document.createElement('button');
-    removeButton.setAttribute('type', 'button');
-    removeButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'remove-song');
-    removeButton.innerHTML = '<i class="fas fa-minus" aria-hidden="true"></i>';
-    removeButton.onclick = function() {
-        removeSongFromPlaylist(songId, songElement);
-    };
-    songElement.appendChild(removeButton);
-
-    // Append the new song element to the playlist
-    playlistSongs.appendChild(songElement);
+    const li = document.createElement('li');
+    li.setAttribute('data-song-id', songId);
+    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+    li.innerHTML = `
+        <div>
+            <h6 class="song-title mb-1">${songTitle}</h6>
+            <small class="text-muted song-artist">${songArtist}</small>
+        </div>
+        <button type="button" class="btn btn-outline-danger btn-sm remove-song">
+            <i class="fas fa-minus"></i> Remove
+        </button>
+    `;
+    playlistSongs.appendChild(li);
 }
 
-function removeSongFromPlaylist(songId, songElement) {
-    // Remove the song element from the playlist
-    songElement.remove();
-
-    // Update the hidden input to remove the song ID
-    const songIdsInput = document.getElementById('songIds');
-    let songIds = songIdsInput.value.split(',');
-    songIds = songIds.filter(id => id !== songId);
-    songIdsInput.value = songIds.join(',');
-}
-
-
-function updateSongIdsInput(songId) {
-    const songIdsInput = document.getElementById('songIds');
-    let songIds = songIdsInput.value ? songIdsInput.value.split(',') : [];
-    if (!songIds.includes(songId)) {
-        songIds.push(songId);
-        songIdsInput.value = songIds.join(',');
+document.getElementById('playlistSongs').addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-song') || event.target.closest('.remove-song')) {
+        const songItem = event.target.closest('li[data-song-id]');
+        if (songItem) {
+            removeSongFromPlaylist(songItem);
+        }
     }
-    console.log(songIds)
+});
+
+function removeSongFromPlaylist(songItem) {
+    // Assuming songItem is the li element
+    if (songItem) {
+        songItem.remove(); // Removes the song item from the list
+        // Any additional logic needed after removing a song
+    }
 }
 
