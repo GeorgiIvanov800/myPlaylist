@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let form = document.getElementById('playlistForm');
     console.log("Form element: ", form);
     //Submit button
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
 
         e.preventDefault();
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!csrfTokenMeta || !csrfHeaderMeta) {
             console.error('CSRF token or header not found in the HTML meta tags');
-            return; // Exit the function if the meta tags are not found
+            return; // Exit the function if the meta-tags are not found
         }
 
         let csrfToken = csrfTokenMeta.getAttribute('content');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Accept': 'application/json',
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({ name, description, songIds, genre })
+            body: JSON.stringify({name, description, songIds, genre})
         })
             .then(response => {
                 if (!response.ok) {
@@ -67,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchResults = document.getElementById('searchResults');
 
     if (searchResults) {
-        searchResults.addEventListener('click', function(event) {
+        searchResults.addEventListener('click', function (event) {
             let target = event.target;
             let addButton = target.classList.contains('add-song') ? target : target.closest('.add-song');
 
@@ -92,8 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const songArtist = songArtistElement.textContent;
 
                     addSongToPlaylist(songId, songTitle, songArtist);
-                    updateSongIdsInput(songId);
-
 
                 } else {
                     console.error('Could not find the song item element');
@@ -107,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //Adding songs into the playlist
 const addedSongIds = new Set();
+
 function addSongToPlaylist(songId, songTitle, songArtist) {
     const playlistSongs = document.getElementById('playlistSongs');
     const li = document.createElement('li');
@@ -122,7 +121,7 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
         </button>
     `;
     playlistSongs.appendChild(li);
-    //Disable the add button when songs is added to the playlist
+    //Disable the added button when songs are added to the playlist
     const addButton = document.querySelector(`li[data-song-id="${songId}"] .add-song`);
     //Add song id to the set to keep track which songs are added
     addedSongIds.add(songId);
@@ -131,7 +130,7 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
     }
 }
 
-document.getElementById('playlistSongs').addEventListener('click', function(event) {
+document.getElementById('playlistSongs').addEventListener('click', function (event) {
     if (event.target.classList.contains('remove-song') || event.target.closest('.remove-song')) {
         const songItem = event.target.closest('li[data-song-id]');
         if (songItem) {
@@ -179,8 +178,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Select all song items by their class
         let songItems = document.querySelectorAll('.song-item');
 
-        console.log('Number of song items found:', songItems.length); // For debugging
-
         if (!songItems.length) {
             console.error('No song items found');
         }
@@ -193,10 +190,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Check if the title or artist includes the search query
             if (title.includes(searchQuery) || artist.includes(searchQuery)) {
                 // If the item matches the query, display it
-                item.style.display = '';
+                item.classList.remove('hidden-item'); // Show the item
             } else {
                 // If the item does not match the query, hide it
-                item.style.display = 'none';
+                item.classList.add('hidden-item'); // Hide the item
             }
         });
     });
