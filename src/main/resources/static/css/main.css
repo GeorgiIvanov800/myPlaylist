@@ -104,6 +104,9 @@ body {
 .song-search-box {
     margin-left: 30px;
 }
+body {
+    color: #3dd5f3;
+}
 
 footer {
     margin-top: auto;

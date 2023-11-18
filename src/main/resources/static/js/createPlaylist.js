@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("Form element: ", form);
     //Submit button
     form.addEventListener('submit', function(e) {
-        // console.log("Submit button clicked.");
+
         e.preventDefault();
 
         let name = document.getElementById('playlistName').value;
@@ -57,13 +57,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                // Handle success
-                alert("Playlist created successfully!"); // Simple alert for success
+                // Simple alert for success
+                alert("Playlist created successfully!");
                 window.location.href = "/users/dashboard";
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Handle other types of errors (network issues, etc.)
             });
     });
 });
@@ -95,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     addSongToPlaylist(songId, songTitle, songArtist);
                     updateSongIdsInput(songId);
 
+
                 } else {
                     console.error('Could not find the song item element');
                 }
@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //Adding songs into the playlist
+const addedSongIds = new Set();
 function addSongToPlaylist(songId, songTitle, songArtist) {
     const playlistSongs = document.getElementById('playlistSongs');
     const li = document.createElement('li');
@@ -121,6 +122,13 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
         </button>
     `;
     playlistSongs.appendChild(li);
+    //Disable the add button when songs is added to the playlist
+    const addButton = document.querySelector(`li[data-song-id="${songId}"] .add-song`);
+    //Add song id to the set to keep track which songs are added
+    addedSongIds.add(songId);
+    if (addButton) {
+        addButton.disabled = true;
+    }
 }
 
 document.getElementById('playlistSongs').addEventListener('click', function(event) {
@@ -133,10 +141,64 @@ document.getElementById('playlistSongs').addEventListener('click', function(even
 });
 
 function removeSongFromPlaylist(songItem) {
-    // Assuming songItem is the li element
+    //Get the song ID
+    const songId = songItem.getAttribute('data-song-id');
+
+    // Removes the song item from the list
     if (songItem) {
-        songItem.remove(); // Removes the song item from the list
-        // Any additional logic needed after removing a song
+        songItem.remove();
+    }
+    // Remove the song ID from the Set
+    addedSongIds.delete(songId);
+
+    // Find the Add button for this song and re-enable it
+    const addButton = document.querySelector(`li[data-song-id="${songId}"] .add-song`);
+    if (addButton) {
+        addButton.disabled = false;
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Get the search input box by its ID
+    let searchInput = document.getElementById('songSearch');
+    console.log("Hello form Search")
+    if (!searchInput) {
+        console.error('Search input not found');
+        return;
+    }
+
+    //event listener to trigger when the user types in the search box
+    searchInput.addEventListener('keyup', function () {
+
+        // Get the current value of the input box, convert it to lowercase for case-insensitive search
+        console.log('Key up event triggered'); // For debugging
+
+        let searchQuery = searchInput.value.toLowerCase();
+        console.log('Search Query:', searchQuery); // For debugging
+
+        // Select all song items by their class
+        let songItems = document.querySelectorAll('.song-item');
+
+        console.log('Number of song items found:', songItems.length); // For debugging
+
+        if (!songItems.length) {
+            console.error('No song items found');
+        }
+        // Iterate over each song item
+        songItems.forEach(function (item) {
+            // Get the text content of the song title and artist, convert to lowercase
+            let title = item.querySelector('.song-title').textContent.toLowerCase();
+            let artist = item.querySelector('.song-artist').textContent.toLowerCase();
+
+            // Check if the title or artist includes the search query
+            if (title.includes(searchQuery) || artist.includes(searchQuery)) {
+                // If the item matches the query, display it
+                item.style.display = '';
+            } else {
+                // If the item does not match the query, hide it
+                item.style.display = 'none';
+            }
+        });
+    });
+});
 

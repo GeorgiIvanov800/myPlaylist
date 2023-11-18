@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +24,13 @@ public class SongServiceImpl {
         this.songMapper = songMapper;
     }
 
-    public Page<SongViewModel> getAllSongs(Pageable pageable) {
-        Page<SongEntity> songEntities = songRepository.findAll(pageable);
+    public List<SongViewModel> getAllSongs() {
+        List<SongEntity> songEntities = songRepository.findAll();
+        List<SongViewModel> songs = new ArrayList<>();
 
-        return songEntities.map(songMapper::songEntityToViewModel);
+        return songEntities.stream()
+                .map(songMapper::songEntityToViewModel)
+                .collect(Collectors.toList());
     }
 
 

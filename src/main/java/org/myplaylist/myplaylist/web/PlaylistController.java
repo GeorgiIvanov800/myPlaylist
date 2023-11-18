@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/playlist")
@@ -22,11 +24,9 @@ public class PlaylistController {
     }
 
     @GetMapping("/create")
-    public String create(Model model,
-                         @PageableDefault(size = 20)
-                         Pageable pageable) {
-        Page<SongViewModel> songs = songService.getAllSongs(pageable);
-        model.addAttribute("songsPage", songs);
+    public String create(Model model) {
+        List<SongViewModel> songs = songService.getAllSongs();
+        model.addAttribute("songs", songs);
         return "playlist-create";
     }
 }
