@@ -1,11 +1,10 @@
 package org.myplaylist.myplaylist.service.impl;
 
+import org.myplaylist.myplaylist.config.PlaylistMapper;
 import org.myplaylist.myplaylist.config.UserMapper;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.repository.SongRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,11 +16,11 @@ public class SongServiceImpl {
 
     private final SongRepository songRepository;
 
-    private final UserMapper songMapper;
+    private final PlaylistMapper playlistMapper;
 
-    public SongServiceImpl(SongRepository songRepository, UserMapper songMapper) {
+    public SongServiceImpl(SongRepository songRepository, PlaylistMapper playlistMapper) {
         this.songRepository = songRepository;
-        this.songMapper = songMapper;
+        this.playlistMapper = playlistMapper;
     }
 
     public List<SongViewModel> getAllSongs() {
@@ -29,8 +28,10 @@ public class SongServiceImpl {
         List<SongViewModel> songs = new ArrayList<>();
 
         return songEntities.stream()
-                .map(songMapper::songEntityToViewModel)
+                .map(playlistMapper::songEntityToViewModel)
                 .collect(Collectors.toList());
+
+//        return null;
     }
 
 

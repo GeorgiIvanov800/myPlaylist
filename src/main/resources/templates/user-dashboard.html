@@ -28,10 +28,25 @@
                     <th:block th:each="playlist : ${playlist}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
-                                <img src="path_to_playlist_cover.png" class="card-img-top" alt="Playlist Cover">
+                                <img th:src="${playlist.pictureUrl() != null and !playlist.pictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}" class="img-fluid" alt="Playlist Cover">
+                                <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
                                 <div class="card-body">
-                                    <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
+                                    <!-- Display playlist picture or default picture -->
                                     <p th:text="${playlist.description}">Playlist Description</p>
+                                    <!-- Image Upload Form for each Playlist -->
+                                    <div class="image-upload-form">
+                                        <p class="upload-instructions">Customize your playlist with an image:</p>
+                                        <form th:action="@{/playlist/{id}/upload-image(id=${playlist.id})}" method="post" enctype="multipart/form-data" class="imageUploadForm">
+                                            <div class="input-group mb-3">
+                                                <input type="file" name="picture" accept="image/png, image/jpeg" class="form-control file-input" id="inputGroupFile01">
+                                                <button type="submit" class="btn btn-outline-secondary upload-button" id="theUploadButton" disabled>Upload</button>
+                                            </div>
+                                            <p>Maximum file size: 1MB</p>
+                                            <div class="spinner" style="display: none;">
+                                                <div class="loader"></div>
+                                            </div>
+                                        </form>
+                                    </div>
                                     <div>
                                         <h6>Songs in this playlist:</h6>
                                         <ul class="list-unstyled">
@@ -81,8 +96,9 @@
 
     <!-- Footer -->
     <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
-
     </footer>
 </div>
+</div>
+<script th:src="@{/js/playlistDashboard.js}"></script>
 </body>
 </html>

@@ -38,7 +38,7 @@ public class DashboardController {
         Long id = user.getUserId();
 
         Page<PlaylistViewModel> userPlaylist = playlistService.getUserPlaylist(pageable, id);
-
+        System.out.println();
         model.addAttribute("playlist", userPlaylist);
 
         return "user-dashboard";

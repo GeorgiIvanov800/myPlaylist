@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check if the title or artist includes the search query
             if (title.includes(searchQuery) || artist.includes(searchQuery)) {
-                // If the item matches the query, display it
+                // If the item matches the query, display it, Used custom CSS with .d-flex from bootstrap was not working
                 item.classList.remove('hidden-item'); // Show the item
             } else {
                 // If the item does not match the query, hide it

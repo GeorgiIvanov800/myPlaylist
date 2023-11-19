@@ -19,8 +19,7 @@ public class PlaylistBindingModel {
     @NotNull(message = "Playlist without songs is it really a playlist?!")
     @NotEmpty(message = "Playlist without songs is it really a playlist?!")
     private List<Long> songIds;
-
-    private String pictureURL;
+    private String pictureUrl;
 
     public PlaylistBindingModel() {
     }
@@ -55,5 +54,13 @@ public class PlaylistBindingModel {
 
     public void setGenre(PlaylistGenreEnums genre) {
         this.genre = genre;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

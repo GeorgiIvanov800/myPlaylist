@@ -16,13 +16,6 @@ import org.myplaylist.myplaylist.model.view.UserViewModel;
 public interface UserMapper {
     UserRegistrationBindingModel userEntityToUserDTO(UserEntity user);
     UserEntity userDTOtoUserEntity(UserRegistrationBindingModel dto);
-
     UserLoginBindingModel userEntitytToUserLoginBindingModel(UserEntity user);
-
-    SongViewModel songEntityToViewModel(SongEntity song);
-
-    PlaylistViewModel playlistEntityToViewModel(PlaylistEntity playlistEntity);
-
     UserViewModel userEntityToViewModel(UserEntity user);
-
 }

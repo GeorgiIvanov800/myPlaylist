@@ -73,7 +73,7 @@ public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        // This service translates  the myPlaylist users and roles
+        // This service translates the myPlaylist users and roles
         //to representation which spring security understands
         return new MyPlaylistUserDetailService(userRepository);
     }

@@ -1,6 +1,6 @@
 package org.myplaylist.myplaylist.model.view;
 
-import java.util.List;
+import java.util.Set;
 
 public record PlaylistViewModel(
         Long id,
@@ -8,6 +8,6 @@ public record PlaylistViewModel(
         String genre,
         String pictureUrl,
         String description,
-        List<SongViewModel> songs,
+        Set<SongViewModel> songs,
         UserViewModel user
 ) {}

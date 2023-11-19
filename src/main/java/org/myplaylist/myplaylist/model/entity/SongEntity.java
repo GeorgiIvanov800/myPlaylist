@@ -5,12 +5,14 @@ import org.myplaylist.myplaylist.utils.DurationConverter;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "songs")
 public class SongEntity extends BaseEntity {
     @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String artist;
     private String album;
     @Column(columnDefinition = "TEXT")
@@ -24,7 +26,7 @@ public class SongEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String filePath; //store the location of the song file
     @ManyToMany(mappedBy = "songs")
-    private List<PlaylistEntity> playlists;
+    private Set<PlaylistEntity> playlists;
 
     public SongEntity() {
     }
@@ -101,11 +103,10 @@ public class SongEntity extends BaseEntity {
         this.filePath = filePath;
     }
 
-    public List<PlaylistEntity> getPlaylists() {
+    public Set<PlaylistEntity> getPlaylists() {
         return playlists;
     }
-
-    public void setPlaylists(List<PlaylistEntity> playlists) {
+    public void setPlaylists(Set<PlaylistEntity> playlists) {
         this.playlists = playlists;
     }
 }

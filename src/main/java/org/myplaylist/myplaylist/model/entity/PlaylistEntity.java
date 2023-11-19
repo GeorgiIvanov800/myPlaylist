@@ -5,6 +5,7 @@ import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Table(name = "playlists")
 @Entity
@@ -14,15 +15,13 @@ public class PlaylistEntity extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     @Enumerated(EnumType.STRING)
     private PlaylistGenreEnums genre;
-
-    private String pictureURL;
-
+    private String pictureUrl;
     @Column(nullable = false)
     private String description;
     @ManyToMany
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
-    private List<SongEntity> songs;
+    private Set<SongEntity> songs;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -54,19 +53,20 @@ public class PlaylistEntity extends BaseEntity {
         this.description = description;
     }
 
-    public List<SongEntity> getSongs() {
+    public Set<SongEntity> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<SongEntity> songs) {
+    public void setSongs(Set<SongEntity> songs) {
         this.songs = songs;
     }
 
-    public String getPictureURL() {
-        return pictureURL;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
-    public void setPictureURL(String pictureURL) {
-        this.pictureURL = pictureURL;
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public UserEntity getUser() {

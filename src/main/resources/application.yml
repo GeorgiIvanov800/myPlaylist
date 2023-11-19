@@ -22,6 +22,18 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  web:
+    resources:
+      chain:
+        cache: false
+      static-locations: file:src/main/resources/static/
+      cache:
+        period: 0
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    prefix: file:src/main/resources/templates/
 
 
 myPlaylist:
@@ -29,7 +41,7 @@ myPlaylist:
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
+#    org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
 #    org.springframework.security: TRACE
 

@@ -1,5 +1,7 @@
 package org.myplaylist.myplaylist.service.impl;
 
+import org.apache.tomcat.util.http.fileupload.FileUpload;
+import org.myplaylist.myplaylist.config.PlaylistMapper;
 import org.myplaylist.myplaylist.config.UserMapper;
 import org.myplaylist.myplaylist.exception.LoginCredentialsException;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
@@ -16,9 +18,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 @Service
 public class PlaylistServiceImpl {
@@ -26,14 +34,15 @@ public class PlaylistServiceImpl {
     private final PlaylistRepository playlistRepository;
     private final SongRepository songRepository;
     private final UserRepository userRepository;
-    private final UserMapper mapper;
+    private final PlaylistMapper playlistMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaylistServiceImpl.class);
+    private static final String UPLOAD_DIR = "/home/givanov/IdeaProjects/myplaylist/src/main/resources/static/playlist-images/";
 
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, SongRepository songRepository, UserRepository userRepository, UserMapper mapper) {
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, SongRepository songRepository, UserRepository userRepository, PlaylistMapper playlistMapper) {
         this.playlistRepository = playlistRepository;
         this.songRepository = songRepository;
         this.userRepository = userRepository;
-        this.mapper = mapper;
+        this.playlistMapper = playlistMapper;
     }
 
     public void createPlaylist(PlaylistBindingModel playlistBindingModel, String username) {
@@ -47,25 +56,52 @@ public class PlaylistServiceImpl {
         if (userOptional.isEmpty()) {
             throw new LoginCredentialsException("User not found: " + username);
         }
-        UserEntity user = userOptional.get();
-        playlist.setUser(user);
 
+        playlist.setUser(userOptional.get());
 
+        //get the songs by id
+        List<SongEntity> songList = songRepository.findAllById(playlistBindingModel.getSongIds());
 
-        List<SongEntity> songs = songRepository.findAllById(playlistBindingModel.getSongIds());
-
+        //convert to Set to be sure in the uniqueness of the songs
+        Set<SongEntity> songs = new HashSet<>(songList);
         playlist.setSongs(songs);
 
         LOGGER.info("Saving playlist {}", playlist.getName());
         playlistRepository.save(playlist);
-
     }
 
     public Page<PlaylistViewModel> getUserPlaylist(Pageable pageable, Long userId) {
 
         Page<PlaylistEntity> byUser = playlistRepository.findByUserId(userId, pageable);
+        System.out.println();
+        return byUser.map(playlistMapper::playlistEntityToViewModel);
+    }
 
-        return byUser.map(mapper::playlistEntityToViewModel);
+    public void updatePlaylistImage(Long playlistId, String pictureUrl, MultipartFile pictureFile, String filename) throws IOException {
+
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        try (InputStream inputStream = pictureFile.getInputStream()) {
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            // Log error and/or rethrow as custom exception
+            throw new IllegalArgumentException("Error saving file: " + filename, e);
+        }
+
+
+        PlaylistEntity playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
+        playlist.setPictureUrl(pictureUrl);
+        playlistRepository.save(playlist);
+        System.out.println("-----------");
+        System.out.println(playlist.getPictureUrl());
+        System.out.println("-----------");
 
     }
+
 }
