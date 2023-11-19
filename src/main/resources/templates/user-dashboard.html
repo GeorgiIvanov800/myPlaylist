@@ -54,11 +54,17 @@
                                         <ul class="list-unstyled song-list" th:if="${playlist.songs.size() > 0}">
                                             <!-- Initially display only the first 3 songs -->
                                             <li th:each="song, stat : ${playlist.songs}" th:if="${stat.count <= 3}" class="mb-2 song-item">
-                                                <span th:text="${song.title + ' by ' + song.artist}">Song Title by Artist</span>
+                                                <span th:text="${song.title}">Song Title</span>
+                                                <span class="highlight">by</span>
+                                                <span th:text="${song.artist}">Artist Name</span>
+                                                <hr class="song-separator">
                                             </li>
                                             <!-- Hidden additional songs -->
                                             <li th:each="song, stat : ${playlist.songs}" th:if="${stat.count > 3}" class="mb-2 song-item hidden">
-                                                <span th:text="${song.title + ' by ' + song.artist}">Song Title by Artist</span>
+                                                <span th:text="${song.title}">Song Title</span>
+                                                <span class="highlight">by</span>
+                                                <span th:text="${song.artist}">Artist Name</span>
+                                                <hr class="song-separator">
                                             </li>
                                         </ul>
                                         <!-- Show More link -->

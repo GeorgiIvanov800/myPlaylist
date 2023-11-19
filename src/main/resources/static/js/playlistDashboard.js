@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded and parsed");
     const uploadForms = document.querySelectorAll('.imageUploadForm');
 
-    console.log("Form: ", uploadForms);
-
     uploadForms.forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -71,10 +69,33 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function(event) {
             event.preventDefault();
             let songList = this.previousElementSibling;
-            songList.querySelectorAll('.hidden').forEach(function(item) {
+
+            // Remove hidden class to reveal songs
+            let hiddenItems = songList.querySelectorAll('.hidden');
+            hiddenItems.forEach(function(item) {
                 item.classList.remove('hidden');
             });
-            this.style.display = 'none'; // Hide the "Show More" link
+
+            // Hide the "Show More" link
+            this.style.display = 'none';
+
+            // all separators are visible
+            let separators = songList.querySelectorAll('.song-separator');
+            separators.forEach(separator => separator.style.display = 'block');
+
+            // Then hide the last one
+            if (separators.length) {
+                separators[separators.length - 1].style.display = 'none';
+            }
         });
     });
+
+    //Hide the last visible separator
+    document.querySelectorAll('.song-list').forEach(function(songList) {
+        let separators = songList.querySelectorAll('.song-separator');
+        if (separators.length) {
+            separators[separators.length - 1].style.display = 'none';
+        }
+    });
 });
+

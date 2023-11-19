@@ -17,3 +17,8 @@
 .hidden {
     display: none;
 }
+
+.highlight {
+    color: red; /* Replace with your desired color */
+}
+

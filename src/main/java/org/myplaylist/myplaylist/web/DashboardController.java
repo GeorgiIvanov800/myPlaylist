@@ -33,7 +33,7 @@ public class DashboardController {
             (@AuthenticationPrincipal CustomUserDetails user,
              Model model,
              @PageableDefault(
-                     size = 3,
+                     size = 6,
                      sort = "id"
              ) Pageable pageable) {
         Long id = user.getUserId();
