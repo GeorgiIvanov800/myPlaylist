@@ -65,3 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.show-more').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            let songList = this.previousElementSibling;
+            songList.querySelectorAll('.hidden').forEach(function(item) {
+                item.classList.remove('hidden');
+            });
+            this.style.display = 'none'; // Hide the "Show More" link
+        });
+    });
+});

@@ -1,5 +1,6 @@
 package org.myplaylist.myplaylist.web;
 
+import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.service.impl.CustomUserDetails;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
@@ -38,8 +39,9 @@ public class DashboardController {
         Long id = user.getUserId();
 
         Page<PlaylistViewModel> userPlaylist = playlistService.getUserPlaylist(pageable, id);
-        System.out.println();
+        Long songsCount = playlistService.getTotalSongCountForUser(id);
         model.addAttribute("playlist", userPlaylist);
+        model.addAttribute("songsCount", songsCount);
 
         return "user-dashboard";
     }

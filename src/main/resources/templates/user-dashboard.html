@@ -17,7 +17,7 @@
         <div class="row mt-4">
             <div class="col-md-3">
                 <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle" />
-                <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlistsCount}">10</span></p>
+                <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlist.totalElements}">0</span></p>
                 <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
                 <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
             </div>
@@ -28,7 +28,9 @@
                     <th:block th:each="playlist : ${playlist}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
+                                <div class="image-wrapper">
                                 <img th:src="${playlist.pictureUrl() != null and !playlist.pictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}" class="img-fluid" alt="Playlist Cover">
+                                </div>
                                 <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
                                 <div class="card-body">
                                     <!-- Display playlist picture or default picture -->
@@ -49,17 +51,18 @@
                                     </div>
                                     <div>
                                         <h6>Songs in this playlist:</h6>
-                                        <ul class="list-unstyled">
-                                            <!-- 'stat' is a status variable containing count don't display all the songs just 5  -->
-                                            <li th:each="song, stat : ${playlist.songs}"
-                                                th:if="${stat.count <= 5}" class="mb-2">
-                                                <!-- Song title and artist -->
-                                                <span th:text="${song.title + ' by ' + song.artist}" class="song-details">Song Title by Artist</span>
-
-                                                <!-- Separator line -->
-                                                <hr th:if="${stat.count < 5 && stat.count < playlist.songs.size()}">
+                                        <ul class="list-unstyled song-list" th:if="${playlist.songs.size() > 0}">
+                                            <!-- Initially display only the first 3 songs -->
+                                            <li th:each="song, stat : ${playlist.songs}" th:if="${stat.count <= 3}" class="mb-2 song-item">
+                                                <span th:text="${song.title + ' by ' + song.artist}">Song Title by Artist</span>
+                                            </li>
+                                            <!-- Hidden additional songs -->
+                                            <li th:each="song, stat : ${playlist.songs}" th:if="${stat.count > 3}" class="mb-2 song-item hidden">
+                                                <span th:text="${song.title + ' by ' + song.artist}">Song Title by Artist</span>
+                                            </li>
                                         </ul>
-                                        <span th:if="${playlist.songs.size() > 5}">... and more</span>
+                                        <!-- Show More link -->
+                                        <a href="#" th:if="${playlist.songs.size() > 3}" class="show-more">... and more</a>
                                     </div>
                                 </div>
                             </div>

@@ -77,6 +77,10 @@ public class PlaylistServiceImpl {
         return byUser.map(playlistMapper::playlistEntityToViewModel);
     }
 
+    public Long getTotalSongCountForUser(Long userId) {
+        return playlistRepository.countTotalSongsByUserId(userId);
+    }
+
     public void updatePlaylistImage(Long playlistId, String pictureUrl, MultipartFile pictureFile, String filename) throws IOException {
 
         Path uploadPath = Paths.get(UPLOAD_DIR);
