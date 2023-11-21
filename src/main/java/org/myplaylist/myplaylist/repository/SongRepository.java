@@ -9,4 +9,5 @@ public interface SongRepository extends JpaRepository<SongEntity, Long> {
 
     List<SongEntity> findAll();
 
+    List<SongEntity> findAllByUser_Email(String email);
 }

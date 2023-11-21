@@ -1,7 +1,6 @@
 package org.myplaylist.myplaylist.service.impl;
 
 import org.myplaylist.myplaylist.config.PlaylistMapper;
-import org.myplaylist.myplaylist.config.UserMapper;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.repository.SongRepository;
@@ -15,7 +14,6 @@ import java.util.stream.Collectors;
 public class SongServiceImpl {
 
     private final SongRepository songRepository;
-
     private final PlaylistMapper playlistMapper;
 
     public SongServiceImpl(SongRepository songRepository, PlaylistMapper playlistMapper) {
@@ -30,9 +28,14 @@ public class SongServiceImpl {
         return songEntities.stream()
                 .map(playlistMapper::songEntityToViewModel)
                 .collect(Collectors.toList());
-
-//        return null;
     }
 
 
+    public List<SongViewModel> getUserSongs(String email) {
+        List<SongEntity> userSongs = songRepository.findAllByUser_Email(email);
+
+        return userSongs.stream()
+                .map(playlistMapper::songEntityToViewModel)
+                .collect(Collectors.toList());
+    }
 }

@@ -34,9 +34,15 @@ public class PlaylistController {
     }
 
     @GetMapping("/create")
-    public String create(Model model) {
+    public String create(Model model, Principal principal) {
+        String email = principal.getName();
+
         List<SongViewModel> songs = songService.getAllSongs();
+
+        List<SongViewModel> userSongs = songService.getUserSongs(email);
+
         model.addAttribute("songs", songs);
+        model.addAttribute("userSongs", userSongs);
         return "playlist-create";
     }
 
