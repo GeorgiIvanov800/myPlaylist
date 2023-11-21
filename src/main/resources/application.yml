@@ -6,8 +6,8 @@ spring:
     password: ${MARIADBPASSWORD}
   servlet:
     multipart:
-      max-file-size: 15MB
-      max-request-size: 15MB
+      max-file-size: 200MB
+      max-request-size: 200MB
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
@@ -46,6 +46,6 @@ logging:
   level:
 #    org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.security: TRACE
+#    org.springframework.security: TRACE
 
 
