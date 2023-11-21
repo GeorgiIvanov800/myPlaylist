@@ -22,7 +22,7 @@ public class SongServiceImpl {
     }
 
     public List<SongViewModel> getAllSongs() {
-        List<SongEntity> songEntities = songRepository.findAll();
+        List<SongEntity> songEntities = songRepository.findAllByUserIsNull();
         List<SongViewModel> songs = new ArrayList<>();
 
         return songEntities.stream()

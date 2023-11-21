@@ -80,7 +80,7 @@
                     </li>
                 </ul>
                 <!-- Tab Content -->
-                <div class="tab-content">
+                <div class="tab-content" id="addSongs">
                     <!-- Available Songs -->
                     <div class="tab-pane fade show active" id="availableSongs">
                         <div id="searchResults" class="mt-2">
@@ -106,11 +106,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- My Songs -->
+                    <!-- User Songs -->
                     <div class="tab-pane fade" id="mySongs" role="tabpanel">
                         <div class="card songs-card mt-3">
                             <div class="card-body song-list">
-                                <!-- List of songs populated from the database -->
+                                <!-- List of User songs  -->
                                 <ul class="list-group">
                                     <li th:each="song : ${userSongs}"
                                         th:attr="data-song-id=*{song.id()}"

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SongRepository extends JpaRepository<SongEntity, Long> {
 
-    List<SongEntity> findAll();
+    List<SongEntity> findAllByUserIsNull();
 
     List<SongEntity> findAllByUser_Email(String email);
 }

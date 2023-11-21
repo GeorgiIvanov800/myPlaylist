@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 //Add Button
 document.addEventListener('DOMContentLoaded', function () {
-    const searchResults = document.getElementById('searchResults');
+    const searchResults = document.getElementById('addSongs');
 
     if (searchResults) {
         searchResults.addEventListener('click', function (event) {
@@ -109,6 +109,8 @@ const addedSongIds = new Set();
 function addSongToPlaylist(songId, songTitle, songArtist) {
     const playlistSongs = document.getElementById('playlistSongs');
     const li = document.createElement('li');
+    console.log(`Adding song with ID: ${songId}`);
+
     li.setAttribute('data-song-id', songId);
     li.className = 'list-group-item d-flex justify-content-between align-items-center';
     li.innerHTML = `
@@ -123,6 +125,7 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
     playlistSongs.appendChild(li);
     //Disable the added button when songs are added to the playlist
     const addButton = document.querySelector(`li[data-song-id="${songId}"] .add-song`);
+    console.log("Targeted add button:", addButton);
     //Add song id to the set to keep track which songs are added
     addedSongIds.add(songId);
     if (addButton) {
@@ -152,6 +155,7 @@ function removeSongFromPlaylist(songItem) {
 
     // Find the Add button for this song and re-enable it
     const addButton = document.querySelector(`li[data-song-id="${songId}"] .add-song`);
+
     if (addButton) {
         addButton.disabled = false;
     }
@@ -160,13 +164,12 @@ function removeSongFromPlaylist(songItem) {
 document.addEventListener('DOMContentLoaded', function () {
     // Get the search input box by its ID
     let searchInput = document.getElementById('songSearch');
-    console.log("Hello form Search")
     if (!searchInput) {
         console.error('Search input not found');
         return;
     }
 
-    //event listener to trigger when the user types in the search box
+    //Event listener to trigger when the user types in the search box
     searchInput.addEventListener('keyup', function () {
 
         // Get the current value of the input box, convert it to lowercase for case-insensitive search
