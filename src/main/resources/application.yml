@@ -4,7 +4,10 @@ spring:
     url: jdbc:mariadb://localhost:3306/my_playlist?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: ${MARIADBPASSWORD}
-
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
@@ -43,6 +46,6 @@ logging:
   level:
 #    org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
-#    org.springframework.security: TRACE
+    org.springframework.security: TRACE
 
 

@@ -87,8 +87,7 @@
                             <div class="card songs-card mt-3">
                                 <!-- Available songs list -->
                                 <div class="card-header">Available Songs</div>
-                                <!--TODO: FIX THIS STYLE PUT IN A CSS NOT IN THE TAG-->
-                                <div class="card-body song-list" style="max-height: 500px; overflow-y: auto;">
+                                <div class="card-body song-list">
                                     <!-- List of songs populated from the database -->
                                     <ul class="list-group">
                                         <li th:each="song : ${songs}"
@@ -104,7 +103,6 @@
                                         </li>
                                     </ul>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -117,7 +115,11 @@
                             </div>
                         </div>
                         <!-- Add Song Button -->
-                        <button type="button" class="btn btn-primary mt-3" id="addSongButton">Add Song</button>
+                        <form id="uploadForm" th:method="POST" th:action="@{/playlist/upload}" enctype="multipart/form-data">
+                            <input type="file" name="files" id="fileInput" multiple="true" accept=".mp3" />
+                            <span id="fileError" style="color: red;"></span>
+                            <button type="submit" class="btn btn-primary mt-3">Upload songs</button>
+                        </form>
                     </div>
                 </div>
             </div>

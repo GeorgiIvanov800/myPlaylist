@@ -24,6 +24,8 @@ public class UserEntity extends BaseEntity {
     private String username;
     @OneToMany(mappedBy = "user")
     private List<PlaylistEntity> playlists = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SongEntity> songs = new ArrayList<>();
     private boolean active;
 
     public UserEntity() {
@@ -75,6 +77,22 @@ public class UserEntity extends BaseEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public List<PlaylistEntity> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(List<PlaylistEntity> playlists) {
+        this.playlists = playlists;
+    }
+
+    public List<SongEntity> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(List<SongEntity> songs) {
+        this.songs = songs;
     }
 
     public boolean isActive() {

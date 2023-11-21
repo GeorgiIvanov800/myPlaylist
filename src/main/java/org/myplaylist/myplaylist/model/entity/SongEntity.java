@@ -21,12 +21,14 @@ public class SongEntity extends BaseEntity {
     private Integer year;
     @Convert(converter = DurationConverter.class)
     private Duration duration;
-
     private String type;
     @Column(columnDefinition = "TEXT")
     private String filePath; //store the location of the song file
     @ManyToMany(mappedBy = "songs")
     private Set<PlaylistEntity> playlists;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     public SongEntity() {
     }
@@ -101,6 +103,14 @@ public class SongEntity extends BaseEntity {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public Set<PlaylistEntity> getPlaylists() {

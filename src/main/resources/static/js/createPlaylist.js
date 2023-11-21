@@ -198,4 +198,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+//Check how many files the user want to upload and that they are all in mp3 format
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    let files = document.getElementById('fileInput').files;
+    let errorMessage = '';
+
+    if (files.length > 20) {
+        errorMessage = 'You can only upload up to 20 songs.';
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].type !== 'audio/mpeg') {
+            errorMessage = 'All files must be in MP3 format.';
+            break;
+        }
+    }
+
+    if (errorMessage) {
+        document.getElementById('fileError').innerText = errorMessage;
+        event.preventDefault();
+    }
+});
 
