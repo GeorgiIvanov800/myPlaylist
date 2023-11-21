@@ -103,11 +103,19 @@
         </div>
     </div>
 
+        <div id="player">
+            <button id="playBtn">Play</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="nextBtn">Next</button>
+            <button id="prevBtn">Previous</button>
+            <div>Now playing: <span id="nowPlaying">None</span></div>
+        </div>
     <!-- Footer -->
     <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
     </footer>
 </div>
 </div>
 <script th:src="@{/js/playlistDashboard.js}"></script>
+<script th:src="@{/js/lib/howler.core.min.js}"></script>
 </body>
 </html>

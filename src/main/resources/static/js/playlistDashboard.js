@@ -26,9 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-//Add a spiner when the User creates the playlist and to be sure that the image is indeed saved in the resources
+//Add a spinner when the User creates the playlist and to be sure that the image is indeed saved in the resources
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM fully loaded and parsed");
     const uploadForms = document.querySelectorAll('.imageUploadForm');
 
     uploadForms.forEach(form => {
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             spinner.style.display = 'none'; // Hide spinner
                             // Reloads the page or navigates to the dashboard
                             window.location.href = '/users/dashboard';
-                        }, 2000); // Adjust the delay as needed
+                        }, 1000); // Spinner time
                     } else {
                         alert('File upload failed.');
                         spinner.style.display = 'none'; // Hide spinner
