@@ -98,3 +98,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function toggleHiddenSongs() {
+    document.querySelectorAll('.song-item.hidden').forEach(el => {
+        el.classList.toggle('hidden');
+    });
+}

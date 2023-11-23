@@ -23,9 +23,7 @@ import java.util.stream.Stream;
 @Component
 public class MusicLibraryFeed implements CommandLineRunner {
     private final SongRepository songRepository;
-    private static final String path = System.getenv("PATH");
-
-    private final int BATCH_SIZE = 100;
+    private static final String path = "/home/givanov/IdeaProjects/myplaylist/src/main/resources/static/songs";
 
     public MusicLibraryFeed(SongRepository songRepository) {
         this.songRepository = songRepository;
@@ -45,6 +43,7 @@ public class MusicLibraryFeed implements CommandLineRunner {
                 SongEntity song = processAudioFiles(file);
                 if (song != null) {
                     songsBatch.add(song);
+                    int BATCH_SIZE = 100;
                     if (songsBatch.size() == BATCH_SIZE) {
                         saveAndClearBatch(songsBatch);
                     }
@@ -77,7 +76,6 @@ public class MusicLibraryFeed implements CommandLineRunner {
                 Integer year = null;
                 int defaultYear = 0;
                 SongEntity song = new SongEntity();
-                song.setFilePath(file.getPath());
                 String artist = tag.getFirst(FieldKey.ARTIST);
 
                 if (artist == null || artist.trim().isEmpty()) {
@@ -89,7 +87,6 @@ public class MusicLibraryFeed implements CommandLineRunner {
                     try {
                         year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
                     } catch (NumberFormatException e) {
-                        // Handle the case where the year is not a valid integer
                         year = defaultYear; // replace defaultYear with your default value
                     }
                 }
@@ -99,8 +96,9 @@ public class MusicLibraryFeed implements CommandLineRunner {
                 song.setYear(year);
                 song.setGenre(tag.getFirst(FieldKey.GENRE));
                 song.setDuration(Duration.ofSeconds(audioFile.getAudioHeader().getTrackLength()));
-                song.setType(file.getPath());
+                String relativePath = "songs/" + file.getName();
 
+                song.setFilePath(relativePath);
                 String fileType = getFileExtension(file);
                 song.setType(fileType);
 
@@ -134,7 +132,7 @@ public class MusicLibraryFeed implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        feedDatabase();
+        feedDatabase();
     }
 }
 

@@ -16,7 +16,7 @@
         <!-- User Profile Overview & Quick Actions -->
         <div class="row mt-4">
             <div class="col-md-3">
-                <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle" />
+                <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle"/>
                 <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlist.totalElements}">0</span></p>
                 <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
                 <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
@@ -29,7 +29,8 @@
                         <div class="col-md-4 mb-4">
                             <div class="card">
                                 <div class="image-wrapper">
-                                <img th:src="${playlist.pictureUrl() != null and !playlist.pictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}" class="img-fluid" alt="Playlist Cover">
+                                    <img th:src="${playlist.pictureUrl() != null and !playlist.pictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}"
+                                         class="img-fluid" alt="Playlist Cover">
                                 </div>
                                 <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
                                 <div class="card-body">
@@ -38,10 +39,14 @@
                                     <!-- Image Upload Form for each Playlist -->
                                     <div class="image-upload-form">
                                         <p class="upload-instructions">Customize your playlist with an image:</p>
-                                        <form th:action="@{/playlist/{id}/upload-image(id=${playlist.id})}" method="post" enctype="multipart/form-data" class="imageUploadForm">
+                                        <form th:action="@{/playlist/{id}/upload-image(id=${playlist.id})}"
+                                              method="post" enctype="multipart/form-data" class="imageUploadForm">
                                             <div class="input-group mb-3">
-                                                <input type="file" name="picture" accept="image/png, image/jpeg" class="form-control file-input" id="inputGroupFile01">
-                                                <button type="submit" class="btn btn-outline-secondary upload-button" id="theUploadButton" disabled>Upload</button>
+                                                <input type="file" name="picture" accept="image/png, image/jpeg"
+                                                       class="form-control file-input" id="inputGroupFile01">
+                                                <button type="submit" class="btn btn-outline-secondary upload-button"
+                                                        id="theUploadButton" disabled>Upload
+                                                </button>
                                             </div>
                                             <p>Maximum file size: 1MB</p>
                                             <div class="spinner" style="display: none;">
@@ -52,15 +57,12 @@
                                     <div>
                                         <h6>Songs in this playlist:</h6>
                                         <ul class="list-unstyled song-list" th:if="${playlist.songs.size() > 0}">
-                                            <!-- Initially display only the first 3 songs -->
-                                            <li th:each="song, stat : ${playlist.songs}" th:if="${stat.count <= 3}" class="mb-2 song-item">
-                                                <span th:text="${song.title}">Song Title</span>
-                                                <span class="highlight">by</span>
-                                                <span th:text="${song.artist}">Artist Name</span>
-                                                <hr class="song-separator">
-                                            </li>
-                                            <!-- Hidden additional songs -->
-                                            <li th:each="song, stat : ${playlist.songs}" th:if="${stat.count > 3}" class="mb-2 song-item hidden">
+                                            <!-- Display songs with conditional visibility for those beyond the first three -->
+                                            <li th:each="song, stat : ${playlist.songs}"
+                                                th:classappend="${stat.count > 3} ? 'hidden' : ''"
+                                                class="mb-2 song-item"
+                                                th:data-file-path="${song.filePath}">
+
                                                 <span th:text="${song.title}">Song Title</span>
                                                 <span class="highlight">by</span>
                                                 <span th:text="${song.artist}">Artist Name</span>
@@ -68,41 +70,42 @@
                                             </li>
                                         </ul>
                                         <!-- Show More link -->
-                                        <a href="#" th:if="${playlist.songs.size() > 3}" class="show-more">... and more</a>
+                                        <a href="#" th:if="${playlist.songs.size() > 3}" class="show-more" onclick="toggleHiddenSongs()">... and more</a>
+
                                     </div>
                                 </div>
                             </div>
+                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'">Load Playlist</button>
                         </div>
                     </th:block>
                 </div>
-        </div>
+            </div>
 
-        <!-- Music Recommendations -->
-        <div class="mt-5">
-            <h4>You might like...</h4>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">
-                        <div class="card-body">
-                            <h5 class="card-title">Album Title</h5>
-                            <p class="card-text">Artist Name</p>
+            <!-- Music Recommendations -->
+            <div class="mt-5">
+                <h4>You might like...</h4>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">
+                            <div class="card-body">
+                                <h5 class="card-title">Album Title</h5>
+                                <p class="card-text">Artist Name</p>
+                            </div>
                         </div>
                     </div>
+                    <!-- Add more album cards similar to the above card for other recommendations -->
                 </div>
-                <!-- Add more album cards similar to the above card for other recommendations -->
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="mt-5">
+                <h4>Activity Feed</h4>
+                <!-- Sample activities. This can be looped with Thymeleaf -->
+                <p><strong>Friend A</strong> created a new playlist.</p>
+                <p><strong>Friend B</strong> liked a song by Artist Z.</p>
             </div>
         </div>
-
-        <!-- Activity Feed -->
-        <div class="mt-5">
-            <h4>Activity Feed</h4>
-            <!-- Sample activities. This can be looped with Thymeleaf -->
-            <p><strong>Friend A</strong> created a new playlist.</p>
-            <p><strong>Friend B</strong> liked a song by Artist Z.</p>
-        </div>
-    </div>
-
         <div id="player">
             <button id="playBtn">Play</button>
             <button id="pauseBtn">Pause</button>
@@ -110,12 +113,13 @@
             <button id="prevBtn">Previous</button>
             <div>Now playing: <span id="nowPlaying">None</span></div>
         </div>
-    <!-- Footer -->
-    <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
-    </footer>
-</div>
+        <!-- Footer -->
+        <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
+        </footer>
+    </div>
 </div>
 <script th:src="@{/js/playlistDashboard.js}"></script>
 <script th:src="@{/js/lib/howler.core.min.js}"></script>
+<script th:src="@{/js/player.js}"></script>
 </body>
 </html>
