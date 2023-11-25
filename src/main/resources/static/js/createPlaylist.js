@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
 
         if (!csrfTokenMeta || !csrfHeaderMeta) {
-            console.error('CSRF token or header not found in the HTML meta tags');
+            // console.error('CSRF token or header not found in the HTML meta tags');
             return; // Exit the function if the meta-tags are not found
         }
 
