@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/head}">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPlaylist</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/reset-css.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/user-dashboard.css}">
+    <script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://kit.fontawesome.com/08b39fed13.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -81,30 +92,22 @@
                 </div>
             </div>
 
-            <!-- Music Recommendations -->
-            <div class="mt-5">
-                <h4>You might like...</h4>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">
-                            <div class="card-body">
-                                <h5 class="card-title">Album Title</h5>
-                                <p class="card-text">Artist Name</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Add more album cards similar to the above card for other recommendations -->
-                </div>
-            </div>
-
-            <!-- Activity Feed -->
-            <div class="mt-5">
-                <h4>Activity Feed</h4>
-                <!-- Sample activities. This can be looped with Thymeleaf -->
-                <p><strong>Friend A</strong> created a new playlist.</p>
-                <p><strong>Friend B</strong> liked a song by Artist Z.</p>
-            </div>
+<!--            &lt;!&ndash; Music Recommendations &ndash;&gt;-->
+<!--            <div class="mt-5">-->
+<!--                <h4>You might like...</h4>-->
+<!--                <div class="row">-->
+<!--                    <div class="col-md-3">-->
+<!--                        <div class="card">-->
+<!--                            <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">-->
+<!--                            <div class="card-body">-->
+<!--                                <h5 class="card-title">Album Title</h5>-->
+<!--                                <p class="card-text">Artist Name</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; Add more album cards similar to the above card for other recommendations &ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div id="player">
             <button id="playBtn">Play</button>
@@ -112,6 +115,13 @@
             <button id="nextBtn">Next</button>
             <button id="prevBtn">Previous</button>
             <div>Now playing: <span id="nowPlaying">None</span></div>
+            <!-- Playlist Display -->
+            <div id="playlistDisplay">
+                <h4>Playlist</h4>
+                <ul id="playlistSongs">
+                    <!-- Songs will be dynamically added here -->
+                </ul>
+            </div>
         </div>
         <!-- Footer -->
         <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">

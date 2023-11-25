@@ -15,6 +15,7 @@ import java.util.Set;
 public interface PlaylistRepository extends JpaRepository<PlaylistEntity, Long> {
 
     Page<PlaylistEntity> findByUserId(Long userId, Pageable pageable);
-    @Query("SELECT COUNT(s) FROM PlaylistEntity p JOIN p.songs s WHERE p.user.id = :userId")
+    @Query("SELECT COUNT(songs) FROM PlaylistEntity playlist JOIN playlist.songs songs WHERE playlist.user.id = :userId")
     Long countTotalSongsByUserId(Long userId);
+    Optional<PlaylistEntity> findById(Long id);
 }

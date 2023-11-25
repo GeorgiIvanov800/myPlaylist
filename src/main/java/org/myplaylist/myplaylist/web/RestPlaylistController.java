@@ -2,6 +2,7 @@ package org.myplaylist.myplaylist.web;
 
 import jakarta.validation.Valid;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
+import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
 import org.myplaylist.myplaylist.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,7 +32,7 @@ public class RestPlaylistController {
                                             BindingResult bindingResult, Principal principal) {
         String username = principal.getName();
 
-
+        //TODO: Set Limit of 100 songs in a playlist
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.groupingBy(FieldError::getField,
@@ -44,5 +46,11 @@ public class RestPlaylistController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+    //Fetch songs for specific playlist
+    @GetMapping("/{playlistId}/songs")
+    public ResponseEntity<List<SongViewModel>> getPlaylistSongs(@PathVariable Long playlistId) {
+        List<SongViewModel> songs = playlistService.getSongsForPlaylist(playlistId);
+        return ResponseEntity.ok(songs);
     }
 }

@@ -82,4 +82,5 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     }
+
 }

@@ -22,3 +22,26 @@
     color: red; /* Replace with your desired color */
 }
 
+#playlistDisplay {
+    margin-top: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+#playlistSongs li {
+    cursor: pointer;
+    padding: 5px;
+    list-style-type: none;
+}
+
+#playlistSongs li:hover {
+    background-color: #f0f0f0;
+}
+
+.current-song {
+    font-weight: bold;
+    color: #007bff;
+}
+

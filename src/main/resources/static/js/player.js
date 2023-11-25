@@ -23,7 +23,13 @@ function updateNowPlaying(title, artist) {
 
 // Control Buttons event listeners
 document.getElementById("playBtn").addEventListener("click", function() {
-    sound.play();
+    if (sound) {
+        if (sound.playing()) {
+            sound.pause();
+        } else {
+            sound.play();
+        }
+    }
 });
 
 document.getElementById("pauseBtn").addEventListener("click", function() {
@@ -65,5 +71,62 @@ function populatePlaylistFromDOM() {
     }
 }
 
-// Call this function on page load or when the playlist is rendered
+// Call this function on a page load or when the playlist is rendered
 populatePlaylistFromDOM();
+
+function loadPlaylist(playlistId) {
+
+    fetch('/api/playlist/' + playlistId + '/songs', {
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(songs => {
+            playlist = songs.map(song => {
+                return {
+                    title: song.title,
+                    artist: song.artist,
+                    url: '/' + song.filePath // Construct the song URL
+                };
+            });
+
+            if (playlist.length > 0) {
+                loadSong(0); // Load the first song from the new playlist
+                updatePlaylistDisplay(songs); // Update the playlist display
+            }
+        })
+        .catch(error => {
+            console.error('Error loading playlist:', error);
+            // Handle errors (like showing an alert or a message to the user)
+        });
+}
+
+function updatePlaylistDisplay(songs) {
+    const playlistElement = document.getElementById('playlistSongs');
+    playlistElement.innerHTML = ''; // Clear the existing list
+
+    songs.forEach((song, index) => {
+        const songItem = document.createElement('li');
+        songItem.textContent = `${song.title} by ${song.artist}`;
+        songItem.onclick = () => {
+            loadSong(index); // Load and play the song when clicked
+            highlightCurrentSong(index); // Optional, to highlight the playing song
+        };
+        playlistElement.appendChild(songItem);
+    });
+}
+
+function highlightCurrentSong(index) {
+    const songs = document.querySelectorAll('#playlistSongs li');
+    songs.forEach((li, liIndex) => {
+        if (index === liIndex) {
+            li.classList.add('current-song');
+        } else {
+            li.classList.remove('current-song');
+        }
+    });
+}
+

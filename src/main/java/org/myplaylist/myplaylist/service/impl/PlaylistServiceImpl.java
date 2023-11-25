@@ -10,6 +10,7 @@ import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
+import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.repository.PlaylistRepository;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
@@ -27,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistServiceImpl {
@@ -108,4 +110,12 @@ public class PlaylistServiceImpl {
 
     }
 
+    public List<SongViewModel> getSongsForPlaylist(Long playlistId) {
+        return playlistRepository.findById(playlistId)
+                .map(playlist -> playlist.getSongs().stream()
+                        .limit(100)
+                        .map(playlistMapper::songEntityToViewModel)
+                        .collect(Collectors.toList()))
+                .orElseThrow( () -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
+    }
 }
