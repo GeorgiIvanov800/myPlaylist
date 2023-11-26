@@ -25,7 +25,7 @@
         <!-- User Profile Overview & Quick Actions -->
         <div class="row mt-4">
             <div class="col-md-3">
-                <img src="path_to_default_avatar.png" alt="User Profile Picture" class="img-fluid rounded-circle"/>
+                <img th:src="@{/images/avatar-default-icon.png}" alt="User Profile Picture" class="img-fluid rounded-circle" style="width: 50%;"/>
                 <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlist.totalElements}">0</span></p>
                 <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
                 <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
@@ -83,20 +83,20 @@
                                         <!-- Show More link -->
                                         <a href="#" th:if="${playlist.songs.size() > 3}" class="show-more"
                                            onclick="toggleHiddenSongs()">... and more</a>
-
                                     </div>
                                 </div>
                             </div>
                             <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'">Load Playlist</button>
                         </div>
+                        <div class="d-flex justify-content-center mt-4">
+                            <button id="togglePlayerBtn" class="btn btn-toggle">Toggle Player</button>
+                        </div>
                     </th:block>
                 </div>
             </div>
             <!--   Music Player      -->
-            <button id="togglePlayerBtn" class="btn btn-primary">Toggle Player</button>
             <div class="music-player" id="musicPlayer">
-                <img src="https://images.unsplash.com/photo-1503248947681-3198a7abfcc9?ixlib=rb-0.3.5&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=9dea5064c1d0b9f8969216204ba66c73"
-                     class="album"/>
+                <img th:src="@{/images/ne22wl.png}" class="img-fluid" alt="PlayerPicture">
                 <div class="dash">
                     <a href="#mute" class="fa fa-volume-up"></a>
                     <span class="volume-level">
@@ -107,7 +107,6 @@
                             <div class="progress"></div>
                         </div>
                     </div>
-                    <a href="#seek"></a>
                     <div class="controls">
                         <a href="#back" class="fa fa-fast-backward"></a>
                         <a href="#play" class="fa fa-pause"></a>

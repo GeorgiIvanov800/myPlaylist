@@ -22,26 +22,26 @@
     color: red; /* Replace with your desired color */
 }
 
-/*#playlistDisplay {*/
-/*    margin-top: 15px;*/
-/*    max-height: 200px;*/
-/*    overflow-y: auto;*/
-/*    border-top: 1px solid #ccc;*/
-/*    padding-top: 10px;*/
-/*}*/
+.btn-toggle {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
 
-/*#playlistSongs li {*/
-/*    cursor: pointer;*/
-/*    padding: 5px;*/
-/*    list-style-type: none;*/
-/*}*/
+.btn-toggle:hover, .btn-toggle:focus {
+    background-color: #0056b3; /* Darker shade for hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-/*#playlistSongs li:hover {*/
-/*    background-color: #f0f0f0;*/
-/*}*/
+/* Optional: Fix the button at the bottom of the viewport */
+/* .btn-toggle {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+} */
 
-/*.current-song {*/
-/*    font-weight: bold;*/
-/*    color: #007bff;*/
-/*}*/
 

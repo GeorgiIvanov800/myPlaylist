@@ -6,7 +6,6 @@ let playlist = []; // Initialize playlist at the top
 // Function to load and play a song
 function loadSong(index) {
     let song = playlist[index];
-    console.log('Loading song:', song);
     if (sound) {
         sound.unload();
     }
@@ -23,7 +22,6 @@ function loadSong(index) {
 
 // Function to update the Now Playing Display
 function updateNowPlaying(title, artist, formattedDuration) {
-    console.log('Now playing:', { title, artist, formattedDuration });
     document.querySelector('.music-player .info label').textContent = title;
     document.querySelector('.music-player .info small').textContent = artist;
     document.querySelector('.music-player .info span[name="duration"]').textContent = formattedDuration;
@@ -37,7 +35,7 @@ function updateProgress() {
         let duration = sound.duration();
         let progress = currentTime / duration;
         let angle = progress * 360;
-
+        console.log('Progress angle:', angle, 'Current Time:', currentTime, 'Total Duration:', duration);
         // Update the rotation of the progress element
         document.querySelector('.music-player .seeker .wheel .progress').style.transform = 'rotate(' + angle + 'deg)';
 
@@ -152,7 +150,6 @@ function loadPlaylist(playlistId) {
             return response.json();
         })
         .then(songs => {
-            console.log('Fetched songs:', songs);
             playlist = songs.map(song => {
                 return {
                     title: song.title,
@@ -183,8 +180,6 @@ function populatePlaylistFromDOM() {
         const formattedDuration = el.getAttribute('data-formatted-duration');
         let url = el.getAttribute('data-file-path');
 
-        console.log('Mapped song:', { title, artist, url, formattedDuration }); // Log each mapped song
-
         url = "/" + url;
         return { title, artist, url, formattedDuration };
     });
@@ -212,5 +207,5 @@ populatePlaylistFromDOM();
 
 document.getElementById('togglePlayerBtn').addEventListener('click', function() {
     let musicPlayer = document.getElementById('musicPlayer');
-    musicPlayer.classList.toggle('show-player');
+    musicPlayer.classList.toggle('slide-in');
 });
