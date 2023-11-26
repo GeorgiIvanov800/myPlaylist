@@ -9,5 +9,6 @@ public record SongViewModel(
      String album,
      String genre,
      String filePath,
-     Duration duration
+     Duration duration,
+     String formattedDuration
 ) {}

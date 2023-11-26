@@ -1,8 +1,6 @@
 package org.myplaylist.myplaylist.service.impl;
 
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.myplaylist.myplaylist.config.PlaylistMapper;
-import org.myplaylist.myplaylist.config.UserMapper;
 import org.myplaylist.myplaylist.exception.LoginCredentialsException;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -27,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,11 +60,17 @@ public class PlaylistServiceImpl {
         playlist.setUser(userOptional.get());
 
         //get the songs by id
-        List<SongEntity> songList = songRepository.findAllById(playlistBindingModel.getSongIds());
+//        List<SongEntity> songList = songRepository.findAllById(playlistBindingModel.getSongIds());
 
-        //convert to Set to be sure in the uniqueness of the songs
-        Set<SongEntity> songs = new HashSet<>(songList);
-        playlist.setSongs(songs);
+        List<SongEntity> songList = new ArrayList<>();
+        for (Long songId : playlistBindingModel.getSongIds()) {
+            songRepository.findById(songId).ifPresent(song -> {
+                if (!songList.contains(song)) {
+                    songList.add(song);
+                }
+            });
+        }
+        playlist.setSongs(songList);
 
         LOGGER.info("Saving playlist {}", playlist.getName());
         playlistRepository.save(playlist);
@@ -104,10 +108,8 @@ public class PlaylistServiceImpl {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
         playlist.setPictureUrl(pictureUrl);
         playlistRepository.save(playlist);
-        System.out.println("-----------");
-        System.out.println(playlist.getPictureUrl());
-        System.out.println("-----------");
 
+        System.out.println(playlist.getPictureUrl());
     }
 
     public List<SongViewModel> getSongsForPlaylist(Long playlistId) {

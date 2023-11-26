@@ -6,6 +6,7 @@ let playlist = []; // Initialize playlist at the top
 // Function to load and play a song
 function loadSong(index) {
     let song = playlist[index];
+    console.log('Loading song:', song);
     if (sound) {
         sound.unload();
     }
@@ -16,26 +17,41 @@ function loadSong(index) {
             updateProgress(); // Start updating the progress when the song plays
         }
     });
-    updateNowPlaying(song.title, song.artist);
+    updateNowPlaying(song.title, song.artist, song.formattedDuration);
     sound.play();
 }
 
 // Function to update the Now Playing Display
-function updateNowPlaying(title, artist) {
+function updateNowPlaying(title, artist, formattedDuration) {
+    console.log('Now playing:', { title, artist, formattedDuration });
     document.querySelector('.music-player .info label').textContent = title;
     document.querySelector('.music-player .info small').textContent = artist;
+    document.querySelector('.music-player .info span[name="duration"]').textContent = formattedDuration;
 }
 
 
 // Update the progress of the song
 function updateProgress() {
     if (sound.playing()) {
-        let progress = (sound.seek() || 0) / sound.duration();
+        let currentTime = sound.seek() || 0;
+        let duration = sound.duration();
+        let progress = currentTime / duration;
         let angle = progress * 360;
+
+        // Update the rotation of the progress element
         document.querySelector('.music-player .seeker .wheel .progress').style.transform = 'rotate(' + angle + 'deg)';
-        // This is where you would also update the current time text
+
+        // Update the current time display
+        document.querySelector('.music-player .info span[name="current"]').textContent = formatTime(currentTime);
+
         requestAnimationFrame(updateProgress); // Continue updating the progress
     }
+}
+
+function formatTime(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
+    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 }
 
 // Play/Pause Toggle
@@ -136,11 +152,13 @@ function loadPlaylist(playlistId) {
             return response.json();
         })
         .then(songs => {
+            console.log('Fetched songs:', songs);
             playlist = songs.map(song => {
                 return {
                     title: song.title,
                     artist: song.artist,
-                    url: '/' + song.filePath // Construct the song URL
+                    url: '/' + song.filePath,// Construct the song URL,
+                    formattedDuration: song.formattedDuration
                 };
             });
 
@@ -158,24 +176,18 @@ function loadPlaylist(playlistId) {
 // Populate playlist display (unchanged)
 function populatePlaylistFromDOM() {
     const songElements = document.querySelectorAll('.song-list .song-item');
-    console.log("Found song elements:", songElements.length);
 
     playlist = Array.from(songElements).map(el => {
         const title = el.querySelector('span:first-of-type').textContent;
         const artist = el.querySelector('span:nth-of-type(3)').textContent;
+        const formattedDuration = el.getAttribute('data-formatted-duration');
         let url = el.getAttribute('data-file-path');
 
-        console.log("Song data:", { title, artist, url });
-        url = "/" + url;
-        return { title, artist, url };
-    });
+        console.log('Mapped song:', { title, artist, url, formattedDuration }); // Log each mapped song
 
-    if (playlist.length > 0) {
-        console.log("Playlist populated:", playlist);
-        loadSong(0); // Load the first song after populating the playlist
-    } else {
-        console.log("No songs found in the playlist.");
-    }
+        url = "/" + url;
+        return { title, artist, url, formattedDuration };
+    });
 }
 
 populatePlaylistFromDOM();
@@ -190,7 +202,6 @@ function updatePlaylistDisplay(songs) {
         songItem.textContent = `${song.title} by ${song.artist}`;
         songItem.onclick = () => {
             loadSong(index); // Load and play the song when clicked
-            highlightCurrentSong(index); // Optional, to highlight the playing song
         };
         playlistElement.appendChild(songItem);
     });
@@ -198,3 +209,8 @@ function updatePlaylistDisplay(songs) {
 
 // Call this function on a page load or when the playlist is rendered
 populatePlaylistFromDOM();
+
+document.getElementById('togglePlayerBtn').addEventListener('click', function() {
+    let musicPlayer = document.getElementById('musicPlayer');
+    musicPlayer.classList.toggle('show-player');
+});

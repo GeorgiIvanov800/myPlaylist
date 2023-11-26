@@ -19,12 +19,9 @@
 <body>
 <div class="wrapper">
     <nav th:replace="~{fragments/nav-bar}"></nav>
-
     <div class="container mt-5">
         <!-- Personalized Welcome Message -->
         <h2 th:text="'Hello, ' + ${#authentication.principal.displayUsername} + '!'">Hello, User!</h2>
-
-
         <!-- User Profile Overview & Quick Actions -->
         <div class="row mt-4">
             <div class="col-md-3">
@@ -73,11 +70,13 @@
                                             <li th:each="song, stat : ${playlist.songs}"
                                                 th:classappend="${stat.count > 3} ? 'hidden' : ''"
                                                 class="mb-2 song-item"
-                                                th:data-file-path="${song.filePath}">
+                                                th:data-file-path="${song.filePath}"
+                                                th:data-formatted-duration="${song.formattedDuration()}">
 
                                                 <span th:text="${song.title}">Song Title</span>
                                                 <span class="highlight">by</span>
                                                 <span th:text="${song.artist}">Artist Name</span>
+                                                <span th:text="${song.formattedDuration()}">Time</span>
                                                 <hr class="song-separator">
                                             </li>
                                         </ul>
@@ -93,87 +92,41 @@
                     </th:block>
                 </div>
             </div>
-
-            <!--            &lt;!&ndash; Music Recommendations &ndash;&gt;-->
-            <!--            <div class="mt-5">-->
-            <!--                <h4>You might like...</h4>-->
-            <!--                <div class="row">-->
-            <!--                    <div class="col-md-3">-->
-            <!--                        <div class="card">-->
-            <!--                            <img src="path_to_album_cover.png" class="card-img-top" alt="Recommended Album">-->
-            <!--                            <div class="card-body">-->
-            <!--                                <h5 class="card-title">Album Title</h5>-->
-            <!--                                <p class="card-text">Artist Name</p>-->
-            <!--                            </div>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                    &lt;!&ndash; Add more album cards similar to the above card for other recommendations &ndash;&gt;-->
-            <!--                </div>-->
-            <!--            </div>-->
-        </div>
-<!--        <div class="container mt-4">-->
-<!--            <div class="row">-->
-<!--                <div class="col">-->
-<!--                    <div id="player" class="text-center">-->
-<!--                        <button id="playBtn" class="btn btn-success mx-1">Play</button>-->
-<!--                        <i class="fas fa-play"></i>-->
-<!--                        <button id="pauseBtn" class="btn btn-warning mx-1">Pause</button>-->
-<!--                        <button id="nextBtn" class="btn btn-primary mx-1">Next</button>-->
-<!--                        <button id="prevBtn" class="btn btn-secondary mx-1">Previous</button>-->
-<!--                        <div class="mt-3">Now playing: <span id="nowPlaying">None</span></div>-->
-<!--                        <div id="playlistDisplay" class="card mt-3">-->
-<!--                            <div class="card-header">-->
-<!--                                <h4>Playlist</h4>-->
-<!--                            </div>-->
-<!--                            <ul id="playlistSongs" class="list-group list-group-flush">-->
-<!--                                &lt;!&ndash; Songs will be dynamically added here &ndash;&gt;-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-
-<!--  Test Music Player      -->
-        <div class="music-player">
-            <img src="https://images.unsplash.com/photo-1503248947681-3198a7abfcc9?ixlib=rb-0.3.5&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=9dea5064c1d0b9f8969216204ba66c73" class="album" />
-            <div class="dash">
-                <a href="#mute" class="fa fa-volume-up"></a>
-                <span class="volume-level">
+            <!--   Music Player      -->
+            <button id="togglePlayerBtn" class="btn btn-primary">Toggle Player</button>
+            <div class="music-player" id="musicPlayer">
+                <img src="https://images.unsplash.com/photo-1503248947681-3198a7abfcc9?ixlib=rb-0.3.5&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=9dea5064c1d0b9f8969216204ba66c73"
+                     class="album"/>
+                <div class="dash">
+                    <a href="#mute" class="fa fa-volume-up"></a>
+                    <span class="volume-level">
 			<em style="width: 75%"></em>
 		</span>
-                <div class="seeker">
-                    <div class="wheel">
-                        <div class="progress"></div>
+                    <div class="seeker">
+                        <div class="wheel">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                    <a href="#seek"></a>
+                    <div class="controls">
+                        <a href="#back" class="fa fa-fast-backward"></a>
+                        <a href="#play" class="fa fa-pause"></a>
+                        <a href="#forward" class="fa fa-fast-forward"></a>
+                    </div>
+                    <div class="info">
+                        <i><span name="current">0:00</span> / <span name="duration">0:00</span></i>
+                        <label></label>
+                        <small></small>
                     </div>
                 </div>
-                <a href="#seek"></a>
-                <div class="controls">
-                    <a href="#back" class="fa fa-fast-backward"></a>
-                    <a href="#play" class="fa fa-pause"></a>
-                    <a href="#forward" class="fa fa-fast-forward"></a>
-                </div>
-                <div class="info">
-                    <i><span name="current">0:00</span> / <span name="duration">0:00</span></i>
-                    <label>Marteria - OMG</label>
-                    <small>Zum Glück in die Zukunft II</small>
-                </div>
             </div>
+            <!-- Footer -->
+            <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5"></footer>
         </div>
-
-
-
-
-
-        <!-- Footer -->
-        <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5">
-        </footer>
     </div>
 </div>
 <script th:src="@{/js/playlistDashboard.js}"></script>
 <script th:src="@{/js/lib/howler.core.min.js}"></script>
-<!--<script th:src="@{/js/player.js}"></script>-->
 <script th:src="@{/js/newPlayer.js}"></script>
 </body>
 </html>

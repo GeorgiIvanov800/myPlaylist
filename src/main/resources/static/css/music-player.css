@@ -1,8 +1,14 @@
 .music-player {
     position: absolute !important;
-    top: 50%;
-    left: 50%;
-    margin: -207px 0 0 -207px;
+    top: auto; /* Use 'auto' instead of '80%' for bottom slide-in */
+    left: 12%;
+    margin: 0; /* Updated margin */
+    bottom: -415px; /* Height of the player - adjust if different */
+    transition: left 0.5s ease-in-out; /* Smooth transition for bottom property */
+}
+
+.show-player {
+    left: 0; /* Adjust if you want some margin from the bottom */
 }
 
 .music-player {

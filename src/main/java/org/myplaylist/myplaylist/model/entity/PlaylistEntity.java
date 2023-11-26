@@ -21,7 +21,7 @@ public class PlaylistEntity extends BaseEntity {
     @ManyToMany
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
-    private Set<SongEntity> songs;
+    private List<SongEntity> songs;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -53,14 +53,13 @@ public class PlaylistEntity extends BaseEntity {
         this.description = description;
     }
 
-    public Set<SongEntity> getSongs() {
+    public List<SongEntity> getSongs() {
         return songs;
     }
 
-    public void setSongs(Set<SongEntity> songs) {
+    public void setSongs(List<SongEntity> songs) {
         this.songs = songs;
     }
-
     public String getPictureUrl() {
         return pictureUrl;
     }
