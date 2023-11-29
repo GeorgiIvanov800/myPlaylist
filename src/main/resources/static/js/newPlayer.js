@@ -37,24 +37,26 @@ function updateNowPlaying(title, artist, formattedDuration) {
     document.querySelector('.music-player .info span[name="duration"]').textContent = formattedDuration;
 }
 
-
 // Update the progress of the song
 function updateProgress() {
     if (sound.playing()) {
         let currentTime = sound.seek() || 0;
         let duration = sound.duration();
         let progress = currentTime / duration;
-        let angle = progress * 360;
-        console.log('Progress angle:', angle, 'Current Time:', currentTime, 'Total Duration:', duration);
-        // Update the rotation of the progress element
-        document.querySelector('.music-player .seeker .wheel .progress').style.transform = 'rotate(' + angle + 'deg)';
 
         // Update the current time display
         document.querySelector('.music-player .info span[name="current"]').textContent = formatTime(currentTime);
 
-        requestAnimationFrame(updateProgress); // Continue updating the progress
+        requestAnimationFrame(updateProgress);
     }
 }
+
+
+
+
+
+
+
 
 function formatTime(seconds) {
     let minutes = Math.floor(seconds / 60);
@@ -215,42 +217,3 @@ function updatePlaylistDisplay(songs) {
 
 // Call this function on a page load or when the playlist is rendered
 populatePlaylistFromDOM();
-
-const progressDot = document.getElementById('progressDot');
-
-progressDot.addEventListener('mousedown', function(e) {
-    isDraggingProgressDot = true;
-    updateProgressOnDrag(e);
-});
-
-document.addEventListener('mousemove', function(e) {
-    if (isDraggingProgressDot) {
-        updateProgressOnDrag(e);
-    }
-});
-
-document.addEventListener('mouseup', function() {
-    isDraggingProgressDot = false;
-});
-
-function updateProgressOnDrag(e) {
-    const seekerBounds = document.querySelector('.music-player .seeker .wheel').getBoundingClientRect();
-    const seekerWidth = seekerBounds.width;
-    const clickX = e.clientX - seekerBounds.left;
-    const newProgress = Math.max(0, Math.min(clickX / seekerWidth, 1));
-
-    // Update the song position
-    if (sound) {
-        const newTime = newProgress * sound.duration();
-        sound.seek(newTime);
-    }
-
-    // Update the progress bar and dot position
-    updateProgressBar(newProgress);
-}
-
-function updateProgressBar(progress) {
-    const angle = progress * 360;
-    document.querySelector('.music-player .seeker .wheel .progress').style.transform = 'rotate(' + angle + 'deg)';
-    progressDot.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'deg)';
-}
