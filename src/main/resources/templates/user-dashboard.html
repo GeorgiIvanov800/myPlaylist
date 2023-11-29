@@ -25,7 +25,8 @@
         <!-- User Profile Overview & Quick Actions -->
         <div class="row mt-4">
             <div class="col-md-3">
-                <img th:src="@{/images/avatar-default-icon.png}" alt="User Profile Picture" class="img-fluid rounded-circle" style="width: 50%;"/>
+                <img th:src="@{/images/avatar-default-icon.png}" alt="User Profile Picture"
+                     class="img-fluid rounded-circle" style="width: 50%;"/>
                 <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlist.totalElements}">0</span></p>
                 <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
                 <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
@@ -86,25 +87,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'">Load Playlist</button>
-                        </div>
-                        <div class="d-flex justify-content-center mt-4">
-                            <button id="togglePlayerBtn" class="btn btn-toggle">Toggle Player</button>
+                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'">Play Playlist</button>
                         </div>
                     </th:block>
                 </div>
             </div>
             <!--   Music Player      -->
-            <div class="music-player" id="musicPlayer">
+            <div class="music-player mb-5" id="musicPlayer">
                 <img th:src="@{/images/ne22wl.png}" class="img-fluid" alt="PlayerPicture">
                 <div class="dash">
                     <a href="#mute" class="fa fa-volume-up"></a>
                     <span class="volume-level">
-			<em style="width: 75%"></em>
-		</span>
+			        <em style="width: 75%"></em></span>
                     <div class="seeker">
                         <div class="wheel">
                             <div class="progress"></div>
+                            <!-- Draggable Dot -->
+                            <div id="progressDot" class="progress-dot"></div>
                         </div>
                     </div>
                     <div class="controls">
@@ -119,11 +118,11 @@
                     </div>
                 </div>
             </div>
-            <!-- Footer -->
-            <footer th:replace="~{fragments/footer}" class="footer bg-blur mt-5"></footer>
         </div>
     </div>
 </div>
+<!-- Footer -->
+<footer th:replace="~{fragments/footer}"></footer>
 <script th:src="@{/js/playlistDashboard.js}"></script>
 <script th:src="@{/js/lib/howler.core.min.js}"></script>
 <script th:src="@{/js/newPlayer.js}"></script>

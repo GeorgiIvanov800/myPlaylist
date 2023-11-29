@@ -2,6 +2,8 @@
 let sound = null;
 let currentSongIndex = 0;
 let playlist = []; // Initialize playlist at the top
+let isDraggingProgressDot = false;
+
 
 // Function to load and play a song
 function loadSong(index) {
@@ -14,10 +16,18 @@ function loadSong(index) {
         html5: true,
         onplay: function() {
             updateProgress(); // Start updating the progress when the song plays
+        },
+        onend: function() {
+            playNextSong();
         }
     });
     updateNowPlaying(song.title, song.artist, song.formattedDuration);
     sound.play();
+}
+
+function playNextSong() {
+    currentSongIndex = (currentSongIndex + 1) % playlist.length;
+    loadSong(currentSongIndex);
 }
 
 // Function to update the Now Playing Display
@@ -158,6 +168,7 @@ function loadPlaylist(playlistId) {
                     formattedDuration: song.formattedDuration
                 };
             });
+            document.getElementById('musicPlayer').classList.add('visible');
 
             if (playlist.length > 0) {
                 loadSong(0); // Load the first song from the new playlist
@@ -205,7 +216,41 @@ function updatePlaylistDisplay(songs) {
 // Call this function on a page load or when the playlist is rendered
 populatePlaylistFromDOM();
 
-document.getElementById('togglePlayerBtn').addEventListener('click', function() {
-    let musicPlayer = document.getElementById('musicPlayer');
-    musicPlayer.classList.toggle('slide-in');
+const progressDot = document.getElementById('progressDot');
+
+progressDot.addEventListener('mousedown', function(e) {
+    isDraggingProgressDot = true;
+    updateProgressOnDrag(e);
 });
+
+document.addEventListener('mousemove', function(e) {
+    if (isDraggingProgressDot) {
+        updateProgressOnDrag(e);
+    }
+});
+
+document.addEventListener('mouseup', function() {
+    isDraggingProgressDot = false;
+});
+
+function updateProgressOnDrag(e) {
+    const seekerBounds = document.querySelector('.music-player .seeker .wheel').getBoundingClientRect();
+    const seekerWidth = seekerBounds.width;
+    const clickX = e.clientX - seekerBounds.left;
+    const newProgress = Math.max(0, Math.min(clickX / seekerWidth, 1));
+
+    // Update the song position
+    if (sound) {
+        const newTime = newProgress * sound.duration();
+        sound.seek(newTime);
+    }
+
+    // Update the progress bar and dot position
+    updateProgressBar(newProgress);
+}
+
+function updateProgressBar(progress) {
+    const angle = progress * 360;
+    document.querySelector('.music-player .seeker .wheel .progress').style.transform = 'rotate(' + angle + 'deg)';
+    progressDot.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'deg)';
+}
