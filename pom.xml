@@ -86,6 +86,12 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.16.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.lookfirst/sardine -->
+        <dependency>
+            <groupId>com.github.lookfirst</groupId>
+            <artifactId>sardine</artifactId>
+            <version>5.12</version>
+        </dependency>
 
 
 

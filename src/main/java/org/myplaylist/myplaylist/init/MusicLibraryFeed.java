@@ -6,6 +6,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.repository.SongRepository;
+import org.myplaylist.myplaylist.utils.NextCloudWebDavClient;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -23,17 +24,20 @@ import java.util.stream.Stream;
 @Component
 public class MusicLibraryFeed implements CommandLineRunner {
     private final SongRepository songRepository;
-    private static final String path = "/home/givanov/IdeaProjects/myplaylist/src/main/resources/static/songs";
+    private static final String localPath = "/home/givanov/Music/AvailableSongs";
 
-    public MusicLibraryFeed(SongRepository songRepository) {
+    private final NextCloudWebDavClient nextCloudWebDavClient;
+
+    public MusicLibraryFeed(SongRepository songRepository, NextCloudWebDavClient nextCloudWebDavClient) {
         this.songRepository = songRepository;
+        this.nextCloudWebDavClient = nextCloudWebDavClient;
     }
 
     public void feedDatabase() {
 
         List<SongEntity> songsBatch = new ArrayList<>();
 
-        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+        try (Stream<Path> paths = Files.walk(Paths.get(localPath))) {
             List<File> files = paths.filter(Files::isRegularFile)
                     .filter(this::isSupportedAudioFile)
                     .map(Path::toFile)
@@ -96,9 +100,11 @@ public class MusicLibraryFeed implements CommandLineRunner {
                 song.setYear(year);
                 song.setGenre(tag.getFirst(FieldKey.GENRE));
                 song.setDuration(Duration.ofSeconds(audioFile.getAudioHeader().getTrackLength()));
-                String relativePath = "songs/" + file.getName();
+                String localFilePath = file.getAbsolutePath();
 
-                song.setFilePath(relativePath);
+                String nextcloudFilePath = convertLocalPathToNextcloudPath(localFilePath);
+                String nextCloudUrl = nextCloudWebDavClient.createShareLink(nextcloudFilePath);
+                song.setFilePath(nextCloudUrl);
                 String fileType = getFileExtension(file);
                 song.setType(fileType);
 
@@ -130,9 +136,33 @@ public class MusicLibraryFeed implements CommandLineRunner {
         }
     }
 
+    private String convertLocalPathToNextcloudPath(String localFilePath) {
+        String localBaseDirectory = localPath; // Your local base directory
+        String nextcloudBaseDirectory = "AvailableSongs"; // The corresponding directory in Nextcloud
+
+        // Ensure that the local file path starts with the local base directory
+        if (!localFilePath.startsWith(localBaseDirectory)) {
+            throw new IllegalArgumentException("File path does not start with the base local directory.");
+        }
+
+        // Remove the local base directory part
+        String relativePath = localFilePath.substring(localBaseDirectory.length());
+
+        // Construct the Nextcloud path
+        return nextcloudBaseDirectory + relativePath;
+    }
+
+    public String generateNextcloudUrl(String localFilePath) {
+        String nextcloudBasePath = "http://192.168.0.204/remote.php/dav/files/admin/";
+        String relativePathInNextcloud = convertLocalPathToNextcloudPath(localFilePath);
+        return nextcloudBasePath + relativePathInNextcloud;
+    }
+
+
     @Override
     public void run(String... args) throws Exception {
-//        feedDatabase();
+        feedDatabase();
+//        nextCloudWebDavClient.generateURL("AvailableSongs/");
     }
 }
 

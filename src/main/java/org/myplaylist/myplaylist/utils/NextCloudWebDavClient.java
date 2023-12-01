@@ -1,6 +1,9 @@
 package org.myplaylist.myplaylist.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
+import com.github.sardine.SardineFactory;
 import jakarta.xml.bind.JAXBException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -76,7 +79,7 @@ public class NextCloudWebDavClient {
         }
     }
 
-    private String createShareLink(String remotePath) throws Exception {
+    public String createShareLink(String remotePath) throws Exception {
         HttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost("http://192.168.0.204/ocs/v1.php/apps/files_sharing/api/v1/shares");
 
@@ -119,5 +122,28 @@ public class NextCloudWebDavClient {
         return directDownload;
     }
 
+    public List<String> generateURL(String directoryPath) {
+
+        Sardine sardine = SardineFactory.begin(USERNAME_NEXTCLOUD, PASSWORD);
+        List<String> fileUrls = new ArrayList<>();
+        String webDavUrl = "http://192.168.0.204/remote.php/dav/files/" + USERNAME_NEXTCLOUD + "/";
+
+        String fullUrl = webDavUrl + directoryPath;
+        try {
+            List<DavResource> resources = sardine.list(webDavUrl + directoryPath);
+            for (DavResource res : resources) {
+                if (!res.isDirectory()) { // Filter out directories
+                    // Construct the URL for each file
+                    String fileUrl = webDavUrl + directoryPath + res.getName();
+                    fileUrls.add(fileUrl);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+
+        return fileUrls;
+    }
 
 }
