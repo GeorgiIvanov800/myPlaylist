@@ -1,3 +1,5 @@
+server:
+  address: 0.0.0.0
 spring:
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
