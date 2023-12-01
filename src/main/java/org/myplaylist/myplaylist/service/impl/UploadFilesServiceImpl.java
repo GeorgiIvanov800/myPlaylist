@@ -9,6 +9,7 @@ import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.UploadFilesService;
+import org.myplaylist.myplaylist.utils.NextCloudWebDavClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,16 +27,15 @@ import java.util.Objects;
 
 @Service
 public class UploadFilesServiceImpl implements UploadFilesService {
-
     private final SongRepository songRepository;
-
     private final UserRepository userRepository;
+    private final NextCloudWebDavClient nextCloudWebDavClient;
 
-    private static final String UPLOAD_DIR = "/home/givanov/IdeaProjects/myplaylist/src/main/resources/static/uploads/";
 
-    public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository) {
+    public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
+        this.nextCloudWebDavClient = nextCloudWebDavClient;
     }
 
 
@@ -48,24 +48,21 @@ public class UploadFilesServiceImpl implements UploadFilesService {
                 .orElseThrow(() -> new IllegalArgumentException(email + " not found"));
 
         try {
-            Path uploadDirectory = Paths.get(UPLOAD_DIR + email);
-
-            if (!Files.exists(uploadDirectory)) {
-                Files.createDirectories(uploadDirectory);
-            }
 
             for (MultipartFile file : files) {
-                System.out.println();
                 if (Objects.equals(file.getContentType(), "audio/mpeg")
                         && !file.isEmpty()
-                        && file.getSize() <= 10 * 1024 * 1024) { // 10mb limit my hardware is poor
+                        && file.getSize() <= 30 * 1024 * 1024) { // 30mb limit my hardware is poor
+
                     String fileName = file.getOriginalFilename();
                     assert fileName != null;
-                    Path filePath = uploadDirectory.resolve(fileName);
-                    Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                    File convertedFile = convertMultipartFileToFile(file, fileName); // Convert to File
+                    String remotePath = "Songs/" + fileName; // Define the path on Nextcloud
+                    nextCloudWebDavClient.uploadFile(convertedFile, remotePath); // Upload to Nextcloud
+
                     SongEntity song = processAudioFiles(file, user); // save the meta-info in the DB
                     assert song != null;
-                    song.setFilePath(String.valueOf(filePath));
+                    song.setFilePath(remotePath);
                     songs.add(song);
                 }
                 songRepository.saveAll(songs);
@@ -77,20 +74,9 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         return true;
     }
 
-
-    private String getFileExtension(File file) {
-        String name = file.getName();
-        int lastIndexOfDot = name.lastIndexOf('.');
-        if (lastIndexOfDot > 0) {
-            return name.substring(lastIndexOfDot + 1).toLowerCase();
-        } else {
-            return ""; // No extension found
-        }
-    }
-
     private SongEntity processAudioFiles(MultipartFile multiPartFile, UserEntity user) {
 
-        File file = null;
+        File file;
         String originalFileName = multiPartFile.getOriginalFilename();
         String extension = originalFileName != null ? originalFileName.substring(originalFileName.lastIndexOf('.')) : "";
 

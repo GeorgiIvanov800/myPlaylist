@@ -87,7 +87,7 @@ public class MusicLibraryFeed implements CommandLineRunner {
                     try {
                         year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
                     } catch (NumberFormatException e) {
-                        year = defaultYear; // replace defaultYear with your default value
+                        year = defaultYear; // replace defaultYear with default value
                     }
                 }
 

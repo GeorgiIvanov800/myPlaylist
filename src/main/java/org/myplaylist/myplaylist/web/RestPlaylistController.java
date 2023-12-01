@@ -4,9 +4,6 @@ import jakarta.validation.Valid;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
-import org.myplaylist.myplaylist.service.impl.UserServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -22,8 +19,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/playlist")
 public class RestPlaylistController {
     private final PlaylistServiceImpl playlistService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestPlaylistController.class);
-    public RestPlaylistController(PlaylistServiceImpl playlistService, UserServiceImpl userService) {
+
+    public RestPlaylistController(PlaylistServiceImpl playlistService) {
         this.playlistService = playlistService;
     }
 

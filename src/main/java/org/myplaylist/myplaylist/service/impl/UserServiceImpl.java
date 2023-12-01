@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserRegistrationBindingModel userRegistrationBindingModel) {
+
         //Check if the user is already registered
         if (userRepository.findByEmail(userRegistrationBindingModel.getEmail()).isPresent()) {
             throw new CustomValidationException("Email already in use: " + userRegistrationBindingModel.getEmail(), "email");
