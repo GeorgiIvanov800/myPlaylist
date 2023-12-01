@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,28 +48,27 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException(email + " not found"));
 
+        List<List<MultipartFile>> fileBatches = createFileBatches(Arrays.asList(files), 5); // Batch size set to 5
+
         try {
+            for (List<MultipartFile> batch : fileBatches) {
+                for (MultipartFile file : batch) {
+                    if (isFileValid(file)) {
+                        String fileName = file.getOriginalFilename();
+                        File convertedFile = convertMultipartFileToFile(file, fileName);
+                        String remotePath = "Songs/" + fileName;
 
-            for (MultipartFile file : files) {
-                if (Objects.equals(file.getContentType(), "audio/mpeg")
-                        && !file.isEmpty()
-                        && file.getSize() <= 30 * 1024 * 1024) { // 30mb limit my hardware is poor
+                        String path = nextCloudWebDavClient.uploadFile(convertedFile, remotePath);
 
-                    String fileName = file.getOriginalFilename();
-                    assert fileName != null;
-                    File convertedFile = convertMultipartFileToFile(file, fileName); // Convert to File
-                    String remotePath = "Songs/" + fileName; // Define the path on Nextcloud
-                    nextCloudWebDavClient.uploadFile(convertedFile, remotePath); // Upload to Nextcloud
-
-                    SongEntity song = processAudioFiles(file, user); // save the meta-info in the DB
-                    assert song != null;
-                    song.setFilePath(remotePath);
-                    songs.add(song);
+                        SongEntity song = processAudioFiles(file, user);
+                        song.setFilePath(path);
+                        songs.add(song);
+                    }
                 }
                 songRepository.saveAll(songs);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -131,5 +131,20 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         }
 
         return tempFile;
+    }
+
+    private boolean isFileValid(MultipartFile file) {
+        return Objects.equals(file.getContentType(), "audio/mpeg")
+                && !file.isEmpty()
+                && file.getSize() <= 30 * 1024 * 1024; // 30MB limit
+    }
+
+    private List<List<MultipartFile>> createFileBatches(List<MultipartFile> files, int batchSize) {
+        List<List<MultipartFile>> batches = new ArrayList<>();
+        for (int start = 0; start < files.size(); start += batchSize) {
+            int end = Math.min(start + batchSize, files.size());
+            batches.add(new ArrayList<>(files.subList(start, end)));
+        }
+        return batches;
     }
 }

@@ -8,6 +8,7 @@ let isDraggingProgressDot = false;
 // Function to load and play a song
 function loadSong(index) {
     let song = playlist[index];
+    console.log('Loading song:', song);
     if (sound) {
         sound.unload();
     }
@@ -15,6 +16,7 @@ function loadSong(index) {
         src: [song.url],
         html5: true,
         onplay: function() {
+            console.log('Song playing:', song.title);
             updateProgress(); // Start updating the progress when the song plays
         },
         onend: function() {
@@ -22,6 +24,7 @@ function loadSong(index) {
         }
     });
     updateNowPlaying(song.title, song.artist, song.formattedDuration);
+    console.log('Playing song:', song.title, 'from URL:', song.url);
     sound.play();
 }
 
@@ -50,13 +53,6 @@ function updateProgress() {
         requestAnimationFrame(updateProgress);
     }
 }
-
-
-
-
-
-
-
 
 function formatTime(seconds) {
     let minutes = Math.floor(seconds / 60);
@@ -156,17 +152,19 @@ function loadPlaylist(playlistId) {
     fetch('/api/playlist/' + playlistId + '/songs', {
     })
         .then(response => {
+            console.log('Fetch response:', response);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(songs => {
+            console.log('Songs received:', songs);
             playlist = songs.map(song => {
                 return {
                     title: song.title,
                     artist: song.artist,
-                    url: '/' + song.filePath,// Construct the song URL,
+                    url: song.filePath,// Construct the song URL,
                     formattedDuration: song.formattedDuration
                 };
             });
@@ -202,7 +200,9 @@ populatePlaylistFromDOM();
 
 // Update playlist display as before (unchanged)
 function updatePlaylistDisplay(songs) {
+    console.log('Updating playlist display', songs);
     const playlistElement = document.getElementById('playlistSongs');
+    console.log('Playlist element:', playlistElement);
     playlistElement.innerHTML = ''; // Clear the existing list
 
     songs.forEach((song, index) => {
