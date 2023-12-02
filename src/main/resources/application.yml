@@ -21,7 +21,7 @@ spring:
       ddl-auto: update
   sql:
     init:
-      mode: always
+      mode: never
 
   mvc:
     hiddenmethod:
@@ -44,10 +44,15 @@ spring:
 myPlaylist:
   remember.me.key: ${REMEMBER_ME_KEY:topsecret}
 
+nextcloud:
+  webdav-url: ${NEXTCLOUD_WEBDAV_URL}
+  username: ${USERNAME_NEXTCLOUD}
+  password: ${NEXT_CLOUD_PASSWORD}
+  share-link: ${NEXT_CLOUD_SHARE_LINK}
+
 logging:
   level:
 #    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.security: TRACE
-
-
+#    org.hibernate.orm.jdbc.bind: TRACE
+#    org.springframework.security: TRACE
+     org.apache.logging.log4j: TRACE

@@ -1,6 +1,5 @@
 package org.myplaylist.myplaylist.web;
 
-import org.myplaylist.myplaylist.init.MusicLibraryFeed;
 import org.myplaylist.myplaylist.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +15,8 @@ public class UserLoginController {
 
     private final UserService userService;
 
-    private final MusicLibraryFeed musicLibraryFeed;
-
-    public UserLoginController(UserService userService, MusicLibraryFeed musicLibraryFeed) {
+    public UserLoginController(UserService userService) {
         this.userService = userService;
-        this.musicLibraryFeed = musicLibraryFeed;
     }
 
 

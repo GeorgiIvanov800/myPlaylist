@@ -9,7 +9,7 @@ import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.UploadFilesService;
-import org.myplaylist.myplaylist.utils.NextCloudWebDavClient;
+import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

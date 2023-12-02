@@ -1,9 +1,5 @@
-package org.myplaylist.myplaylist.utils;
+package org.myplaylist.myplaylist.utils.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sardine.DavResource;
-import com.github.sardine.Sardine;
-import com.github.sardine.SardineFactory;
 import jakarta.xml.bind.JAXBException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -17,12 +13,13 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.myplaylist.myplaylist.config.NextCloudProperties;
 import org.myplaylist.myplaylist.model.dto.Ocs;
+import org.myplaylist.myplaylist.utils.XmlParser;
 import org.springframework.stereotype.Component;
 
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -31,36 +28,30 @@ import java.util.List;
 
 @Component
 public class NextCloudWebDavClient {
-
-    private static final String NEXTCLOUD_WEBDAV_URL = System.getenv("NEXTCLOUD_WEBDAV_URL");
-    private static final String USERNAME_NEXTCLOUD = System.getenv("USERNAME_NEXTCLOUD");
-    private static final String PASSWORD = System.getenv("NEXT_CLOUD_PASSWORD");
-    private final ObjectMapper objectMapper;
+    private final NextCloudProperties nextCloudProperties;
     private final XmlParser xmlParser;
 
-    public NextCloudWebDavClient(ObjectMapper objectMapper, XmlParser xmlParser) {
-        this.objectMapper = objectMapper;
+    public NextCloudWebDavClient(NextCloudProperties nextCloudProperties, XmlParser xmlParser) {
+        this.nextCloudProperties = nextCloudProperties;
         this.xmlParser = xmlParser;
     }
 
-
     public String uploadFile(File file, String remotePath) throws Exception {
 
-        String shareLink = "";
         // Split the remotePath to get the directory and the filename separately
         int lastSlashIndex = remotePath.lastIndexOf('/');
         String directoryPath = remotePath.substring(0, lastSlashIndex + 1);
         String fileName = remotePath.substring(lastSlashIndex + 1);
 
         // URL-encode only the fileName part
-        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString()).replace("+", "%20");
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
 
 
         HttpClient client = HttpClients.createDefault();
-        HttpPut put = new HttpPut(NEXTCLOUD_WEBDAV_URL + directoryPath + encodedFileName);
+        HttpPut put = new HttpPut(nextCloudProperties.getWebdavUrl() + directoryPath + encodedFileName);
 
         // Basic authentication
-        String auth = USERNAME_NEXTCLOUD + ":" + PASSWORD;
+        String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
         String authHeader = "Basic " + new String(encodedAuth);
         put.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
@@ -79,12 +70,12 @@ public class NextCloudWebDavClient {
         }
     }
 
-    public String createShareLink(String remotePath) throws Exception {
+    private String createShareLink(String remotePath) throws Exception {
         HttpClient client = HttpClients.createDefault();
-        HttpPost post = new HttpPost("http://192.168.0.204/ocs/v1.php/apps/files_sharing/api/v1/shares");
+        HttpPost post = new HttpPost(nextCloudProperties.getShareLink());
 
         // Basic authentication
-        String auth = USERNAME_NEXTCLOUD + ":" + PASSWORD;
+        String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
         String authHeader = "Basic " + new String(encodedAuth);
         post.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
@@ -93,7 +84,7 @@ public class NextCloudWebDavClient {
         // Set up the request body for creating a share
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("path", remotePath));
-        params.add(new BasicNameValuePair("shareType", "3")); // 3 for public link
+        params.add(new BasicNameValuePair("shareType", "3")); // 3 for a public link
         params.add(new BasicNameValuePair("permissions", "1")); // 1 for read-only
         post.setEntity(new UrlEncodedFormEntity(params));
 
@@ -117,33 +108,7 @@ public class NextCloudWebDavClient {
         Ocs ocs = xmlParser.from(responseXml, Ocs.class);
 
         String baseUrl = ocs.getData().getUrl();
-        String directDownload = baseUrl + "/download";
 
-        return directDownload;
+        return baseUrl + "/download";
     }
-
-    public List<String> generateURL(String directoryPath) {
-
-        Sardine sardine = SardineFactory.begin(USERNAME_NEXTCLOUD, PASSWORD);
-        List<String> fileUrls = new ArrayList<>();
-        String webDavUrl = "http://192.168.0.204/remote.php/dav/files/" + USERNAME_NEXTCLOUD + "/";
-
-        String fullUrl = webDavUrl + directoryPath;
-        try {
-            List<DavResource> resources = sardine.list(webDavUrl + directoryPath);
-            for (DavResource res : resources) {
-                if (!res.isDirectory()) { // Filter out directories
-                    // Construct the URL for each file
-                    String fileUrl = webDavUrl + directoryPath + res.getName();
-                    fileUrls.add(fileUrl);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Handle exceptions appropriately
-        }
-
-        return fileUrls;
-    }
-
 }

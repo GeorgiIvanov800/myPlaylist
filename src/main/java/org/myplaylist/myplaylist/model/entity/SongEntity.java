@@ -1,10 +1,9 @@
 package org.myplaylist.myplaylist.model.entity;
 
 import jakarta.persistence.*;
-import org.myplaylist.myplaylist.utils.DurationConverter;
+import org.myplaylist.myplaylist.utils.impl.DurationConverter;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.Set;
 
 @Entity

@@ -1,4 +1,4 @@
-package org.myplaylist.myplaylist.utils;
+package org.myplaylist.myplaylist.utils.impl;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
