@@ -4,6 +4,9 @@ import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.UploadFilesService;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
 import org.myplaylist.myplaylist.service.impl.SongServiceImpl;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -81,6 +84,16 @@ public class PlaylistController {
         }
 
         return "redirect:/playlist/create";
+    }
+    @PreAuthorize("@songServiceImpl.isOwner(#id, #principal.username)")
+    @DeleteMapping("delete/{songId}")
+    public String delete(@PathVariable("songId") Long id,
+                         @AuthenticationPrincipal UserDetails principal) throws Exception {
+        System.out.println();
+        songService.deleteSong(id);
+
+        return "redirect:/playlist/create";
+
     }
 }
 

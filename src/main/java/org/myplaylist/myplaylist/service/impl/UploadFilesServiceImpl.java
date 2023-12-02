@@ -43,6 +43,7 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         List<SongEntity> songs = new ArrayList<>();
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException(email + " not found"));
+        String formattedEmail = email.replace("@", "_at_").replace(".", "_dot_");
 
         List<List<MultipartFile>> fileBatches = createFileBatches(Arrays.asList(files), 5); // Batch size set to 5
 
@@ -54,7 +55,7 @@ public class UploadFilesServiceImpl implements UploadFilesService {
                         File convertedFile = convertMultipartFileToFile(file, fileName);
                         String remotePath = "Songs/" + fileName;
 
-                        String path = nextCloudWebDavClient.uploadFile(convertedFile, remotePath);
+                        String path = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
 
                         SongEntity song = processAudioFiles(file, user);
                         song.setFilePath(path);

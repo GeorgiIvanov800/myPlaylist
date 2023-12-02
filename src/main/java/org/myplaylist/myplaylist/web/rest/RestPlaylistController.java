@@ -1,4 +1,4 @@
-package org.myplaylist.myplaylist.web;
+package org.myplaylist.myplaylist.web.rest;
 
 import jakarta.validation.Valid;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;

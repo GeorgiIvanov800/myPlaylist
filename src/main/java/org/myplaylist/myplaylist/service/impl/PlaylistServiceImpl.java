@@ -116,7 +116,7 @@ public class PlaylistServiceImpl {
         return playlistRepository.findById(playlistId)
                 .map(playlist -> playlist.getSongs().stream()
                         .limit(100)
-                        .map(playlistMapper::songEntityToViewModel)
+                        .map(playlistMapper::songEntityToViewModelWithoutOwner)
                         .collect(Collectors.toList()))
                 .orElseThrow( () -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
     }

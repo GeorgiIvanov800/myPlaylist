@@ -10,5 +10,6 @@ public record SongViewModel(
      String genre,
      String filePath,
      Duration duration,
-     String formattedDuration
+     String formattedDuration,
+     boolean userIsOwner
 ) {}
