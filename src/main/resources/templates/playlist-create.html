@@ -119,9 +119,18 @@
                                             <h6 class="song-title mb-1" th:text="${song.title}">Song Title</h6>
                                             <small class="text-muted song-artist" th:text="${song.artist}">Song Artist</small>
                                         </div>
-                                        <button type="button" class="btn btn-outline-primary btn-sm add-song">
-                                            <i class="fas fa-plus"></i> Add
+                                        <div class="d-flex align-items-center">
+                                        <button type="button" class="btn btn-outline-primary btn-sm add-song me-1">
+                                            <i class="fas fa-plus"></i>
                                         </button>
+                                        <form th:method="delete"
+                                              th:action="@{/playlist/delete/{songId}(songId=${song.id})}">
+                                            <input type="hidden" name="_method" value="delete" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
