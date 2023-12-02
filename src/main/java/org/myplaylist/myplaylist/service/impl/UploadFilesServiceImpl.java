@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,14 +53,15 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             for (List<MultipartFile> batch : fileBatches) {
                 for (MultipartFile file : batch) {
                     if (isFileValid(file)) {
-                        String fileName = file.getOriginalFilename();
-                        File convertedFile = convertMultipartFileToFile(file, fileName);
-                        String remotePath = "Songs/" + fileName;
+                        String originalFileName = file.getOriginalFilename();
+                        File convertedFile = convertMultipartFileToFile(file, originalFileName);
+                        String remotePath = "Songs/" + originalFileName;
 
-                        String path = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
+                        List<String> pathAndShareLink = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
 
-                        SongEntity song = processAudioFiles(file, user);
-                        song.setFilePath(path);
+                        SongEntity song = processAudioFiles(file, user, originalFileName);
+                        song.setFilePath(pathAndShareLink.get(0));
+                        song.setNextCloudPath(pathAndShareLink.get(1));
                         songs.add(song);
                     }
                 }
@@ -71,11 +74,10 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         return true;
     }
 
-    private SongEntity processAudioFiles(MultipartFile multiPartFile, UserEntity user) {
+    private SongEntity processAudioFiles(MultipartFile multiPartFile, UserEntity user, String filename) {
 
         File file;
-        String originalFileName = multiPartFile.getOriginalFilename();
-        String extension = originalFileName != null ? originalFileName.substring(originalFileName.lastIndexOf('.')) : "";
+        String extension = filename != null ? filename.substring(filename.lastIndexOf('.')) : "";
 
         try {
             file = convertMultipartFileToFile(multiPartFile, extension);
@@ -83,15 +85,9 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             Tag tag = audioFile.getTag();
             Integer year = null;
             int defaultYear = 0;
-            String title = tag.getFirst(FieldKey.TITLE);
 
             SongEntity song = new SongEntity();
-            String artist = tag.getFirst(FieldKey.ARTIST);
-
-            if (artist.trim().isEmpty() && title.trim().isEmpty()) {
-                artist = originalFileName;
-            }
-            song.setArtist(artist);
+            song.setArtist(filename);
 
             if (tag.getFirst(FieldKey.YEAR) != null) {
                 try {
@@ -102,7 +98,6 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             }
             song.setAlbum(tag.getFirst(FieldKey.ALBUM));
             song.setYear(year);
-            song.setTitle(tag.getFirst(FieldKey.TITLE));
             song.setGenre(tag.getFirst(FieldKey.GENRE));
             song.setDuration(Duration.ofSeconds(audioFile.getAudioHeader().getTrackLength()));
             song.setUser(user);

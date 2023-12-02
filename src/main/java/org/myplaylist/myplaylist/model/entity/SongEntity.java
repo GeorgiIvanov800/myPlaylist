@@ -9,7 +9,6 @@ import java.util.Set;
 @Entity
 @Table(name = "songs")
 public class SongEntity extends BaseEntity {
-    @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private String artist;
@@ -24,7 +23,7 @@ public class SongEntity extends BaseEntity {
     private String nextCloudPath;
     @Column(columnDefinition = "TEXT")
     private String filePath; //store the location of the song file
-    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "songs")
     private Set<PlaylistEntity> playlists;
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -41,10 +41,10 @@ public class NextCloudWebDavClient {
         this.xmlParser = xmlParser;
     }
 
-    public String uploadFile(File file, String remotePath, String email) throws Exception {
+    public List<String> uploadFile(File file, String remotePath, String email) throws Exception {
+        List<String> pathAndShareLink = new ArrayList<>();
         // Split the remotePath to get the directory and the filename separately
         int lastSlashIndex = remotePath.lastIndexOf('/');
-        String directoryPath = remotePath.substring(0, lastSlashIndex + 1);
         String fileName = remotePath.substring(lastSlashIndex + 1);
 
         String userDirectoryPath = "/Songs/" + URLEncoder.encode(email, StandardCharsets.UTF_8).replace("+", "%20") + "/";
@@ -77,29 +77,18 @@ public class NextCloudWebDavClient {
 
         if (statusCode == 201) {
             String shareLink = createShareLink(filePath);
-            return shareLink;
+            pathAndShareLink.add(shareLink);
+            pathAndShareLink.add(fullPath); //todo see this
+            return pathAndShareLink;
         } else {
             throw new RuntimeException("Failed to upload file. HTTP error code: " + statusCode);
         }
     }
 
-    public void deleteFile(String remotePath) throws Exception {
-
-        String webdavUrl = nextCloudProperties.getWebdavUrl() + "/remote.php/dav/files/" + nextCloudProperties.getUsername() + "/" + remotePath;
-
-        // URL-encode the path (excluding domain and protocol)
-        URI uri = new URI(
-                new URL(webdavUrl).getProtocol(),
-                null,
-                new URL(webdavUrl).getHost(),
-                new URL(webdavUrl).getPort(),
-                new URL(webdavUrl).getPath(),
-                null,
-                null
-        );
+    public void deleteFile(String filePath) throws Exception {
 
         HttpClient client = HttpClients.createDefault();
-        HttpDelete delete = new HttpDelete(uri);
+        HttpDelete delete = new HttpDelete(filePath);
 
         // Basic authentication
         String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
@@ -161,7 +150,6 @@ public class NextCloudWebDavClient {
     public void createSubfolderIfNotExists( String directoryPath) throws IOException {
         Sardine sardine = SardineFactory.begin(nextCloudProperties.getUsername(), nextCloudProperties.getPassword());
         String fullUrl = nextCloudProperties.getWebdavUrl() + directoryPath;
-//        String fullUrl = "http://192.168.0.204/remote.php/dav/files/admin" + directoryPath;
 
         if (!doesFolderExist(sardine, fullUrl)) {
             sardine.createDirectory(nextCloudProperties.getWebdavUrl() + directoryPath);

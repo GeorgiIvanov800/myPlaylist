@@ -2,11 +2,13 @@ package org.myplaylist.myplaylist.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.myplaylist.myplaylist.config.PlaylistMapper;
+import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
+import org.myplaylist.myplaylist.repository.PlaylistRepository;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,12 +25,14 @@ public class SongServiceImpl {
     private final SongRepository songRepository;
     private final PlaylistMapper playlistMapper;
     private final UserRepository userRepository;
+    private final PlaylistRepository playlistRepository;
     private final NextCloudWebDavClient nextCloudWebDavClient;
 
-    public SongServiceImpl(SongRepository songRepository, PlaylistMapper playlistMapper, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient) {
+    public SongServiceImpl(SongRepository songRepository, PlaylistMapper playlistMapper, UserRepository userRepository, PlaylistRepository playlistRepository, NextCloudWebDavClient nextCloudWebDavClient) {
         this.songRepository = songRepository;
         this.playlistMapper = playlistMapper;
         this.userRepository = userRepository;
+        this.playlistRepository = playlistRepository;
         this.nextCloudWebDavClient = nextCloudWebDavClient;
     }
 
@@ -54,8 +57,13 @@ public class SongServiceImpl {
 
     @Transactional
     public void deleteSong(Long songId) throws Exception {
-        Optional<SongEntity> songToDelete = songRepository.findById(songId);
-        nextCloudWebDavClient.deleteFile(songToDelete.get().getFilePath());
+        SongEntity songToDelete = songRepository.findById(songId)
+                .orElseThrow( () -> new IllegalArgumentException("Cant find song with id" + songId));
+        for (PlaylistEntity playlist: songToDelete.getPlaylists()) {
+            playlist.getSongs().remove(songToDelete);
+            playlistRepository.save(playlist);
+        }
+        nextCloudWebDavClient.deleteFile(songToDelete.getNextCloudPath());
         songRepository.deleteById(songId);
     }
 
