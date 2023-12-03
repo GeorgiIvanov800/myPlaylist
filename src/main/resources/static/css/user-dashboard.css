@@ -20,23 +20,22 @@
 
 .card-title {
     display: inline-block;
-    margin-right: 10px; /* Adjust as needed */
-    margin-bottom: 10px; /* Space below the title */
-    font-size: 18px; /* Adjust as needed */
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
 .card-body p {
-    margin-bottom: 10px; /* Space below the description */
-    /* If you want to truncate the description initially */
+    margin-bottom: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Number of lines you want to show initially */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 
 .card-body {
-    margin-top: 10px; /* Space above the card body */
+    margin-top: 10px;
 }
 
 .dropdown {
@@ -49,7 +48,7 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-    font-size: 20px; /* Adjust size as needed */
+    font-size: 20px;
 }
 
 .dropdown-content {
@@ -61,7 +60,7 @@
     z-index: 1;
 }
 
-.dropdown-content a {
+.dropdown-content a, .dropdown-content form {
     color: black;
     padding: 8px 12px;
     text-decoration: none;
@@ -69,14 +68,26 @@
     font-size: 14px;
 }
 
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
+.dropdown-content a:hover, .dropdown-content form:hover {
+    background-color: darkgray;
 }
-
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
 
+.delete-form button.link-style-button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+}
 
 

@@ -99,7 +99,7 @@ public class PlaylistController {
     }
     @PreAuthorize("@songServiceImpl.isOwner(#id, #principal.username)")
     @DeleteMapping("delete/{songId}")
-    public String delete(@PathVariable("songId") Long id,
+    public String deleteSong(@PathVariable("songId") Long id,
                          @AuthenticationPrincipal UserDetails principal) throws Exception {
 
         songService.deleteSong(id);

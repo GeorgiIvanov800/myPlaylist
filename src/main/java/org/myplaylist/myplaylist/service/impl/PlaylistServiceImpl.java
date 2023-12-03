@@ -1,5 +1,6 @@
 package org.myplaylist.myplaylist.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.myplaylist.myplaylist.config.PlaylistMapper;
 import org.myplaylist.myplaylist.exception.LoginCredentialsException;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
@@ -145,6 +146,10 @@ public class PlaylistServiceImpl {
        return playlistRepository.findById(id)
                 .map(playlistMapper::playlistEntityToViewModel)
                 .orElseThrow(() -> new IllegalArgumentException("Playlist not found: " + id)); // TODO make a custom exception Resource not found
+    }
+    @Transactional
+    public void deletePlaylist(Long id) {
+        playlistRepository.deleteById(id);
     }
 }
 

@@ -50,7 +50,10 @@
                                     <div class="dropdown-content">
                                         <a th:href="@{/playlist/create/{id}(id=${playlist.id})}">Edit</a>
                                         <a href="#" onclick="uploadImage(${playlist.id})">Upload Image</a>
-                                        <a href="#" onclick="deletePlaylist(${playlist.id})">Delete</a>
+                                        <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}" method="post" class="delete-form">
+                                            <input type="hidden" name="_method" value="delete"/>
+                                            <button type="submit" class="link-style-button">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="card-body">
