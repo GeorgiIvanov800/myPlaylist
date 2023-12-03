@@ -205,32 +205,39 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById('uploadForm').addEventListener('submit', function (event) {
     let files = document.getElementById('fileInput').files;
     let errorElement = document.getElementById('fileError');
+    let isValid = true;
     errorElement.textContent = '';
 
     // Check the number of files
     if (files.length > 5) {
         errorElement.textContent = 'You can only upload up to 5 songs.';
-        event.preventDefault(); // Prevent submission
+        isValid = false
     } else if (files.length === 0) {
         errorElement.textContent = 'No files were selected for upload.';
-        event.preventDefault(); // Prevent submission
+        isValid = false;
     } else {
         // Check each file's type
         for (let i = 0; i < files.length; i++) {
             if (files[i].type !== 'audio/mpeg') {
                 errorElement.textContent = 'Only MP3 files are allowed.';
-                event.preventDefault(); // Prevent submission
+                isValid = false;
                 break;
             }
         }
 
     }
+    // Show the spinner only if all validation checks passed
+    if (isValid) {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    } else {
+        event.preventDefault(); // Prevent form submission if validation fails
+    }
 });
-
+console.log("Script loaded")
 document.getElementById('fileInput').addEventListener('change', function(event) {
     let files = event.target.files;
     let fileList = document.getElementById('fileList');
-
+    console.log("songs to upload");
     // Clear the list first
     fileList.innerHTML = '';
 
@@ -244,4 +251,11 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 
     fileList.appendChild(list);
 });
+//Delete confirmation
+function confirmDeletion() {
+    return confirm('Are you sure you want to delete this song?');
+}
 
+function showSpinner() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+}

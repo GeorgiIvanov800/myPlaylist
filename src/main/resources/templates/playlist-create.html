@@ -9,10 +9,11 @@
     <link rel="stylesheet" th:href="@{/css/reset-css.css}"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/playlistCreate.css}">
     <script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script src="https://kit.fontawesome.com/08b39fed13.js" crossorigin="anonymous"></script>
-    <script th:src="@{/js/main.js}"></script>
+
 </head>
 
 <body>
@@ -44,7 +45,8 @@
                     <!-- Songs in Playlist -->
                     <div class="card playlist-songs-card mb-3">
                         <div class="card-header">Songs in Playlist</div>
-                        <ul id="playlistSongs" class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+                        <ul id="playlistSongs" class="list-group list-group-flush"
+                            style="max-height: 300px; overflow-y: auto;">
 
                         </ul>
                         <div id="songIdsError" class="error-message"></div>
@@ -95,7 +97,8 @@
                                             class="list-group-item d-flex justify-content-between align-items-center song-item">
                                             <div>
                                                 <h6 class="song-title mb-1" th:text="${song.title}">Song Title</h6>
-                                                <small class="text-muted song-artist" th:text="${song.artist}">Song Artist</small>
+                                                <small class="text-muted song-artist" th:text="${song.artist}">Song
+                                                    Artist</small>
                                             </div>
                                             <button type="button" class="btn btn-outline-primary btn-sm add-song">
                                                 <i class="fas fa-plus"></i> Add
@@ -117,27 +120,42 @@
                                         class="list-group-item d-flex justify-content-between align-items-center song-item">
                                         <div>
                                             <h6 class="song-title mb-1" th:text="${song.title}">Song Title</h6>
-                                            <small class="text-muted song-artist" th:text="${song.artist}">Song Artist</small>
+                                            <small class="text-muted song-artist" th:text="${song.artist}">Song
+                                                Artist</small>
                                         </div>
                                         <div class="d-flex align-items-center">
-                                        <button type="button" class="btn btn-outline-primary btn-sm add-song me-1">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                        <form th:method="delete"
-                                              th:action="@{/playlist/delete/{songId}(songId=${song.id})}">
-                                            <input type="hidden" name="_method" value="delete" />
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i>
+                                            <button type="button" class="btn btn-outline-primary btn-sm add-song me-1">
+                                                <i class="fas fa-plus"></i>
                                             </button>
-                                        </form>
+                                            <form th:method="delete"
+                                                  th:action="@{/playlist/delete/{songId}(songId=${song.id})}"
+                                                  onsubmit="showSpinner();">
+                                                <input type="hidden" name="_method" value="delete"/>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm delete-song"
+                                                        onclick="return confirmDeletion();">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <!-- Add Song Button -->
-                        <form id="uploadForm" th:method="POST" th:action="@{/playlist/upload}" enctype="multipart/form-data">
-                            <input type="file" name="files" id="fileInput" multiple="true" accept=".mp3" />
+                        <form id="uploadForm" th:method="POST" th:action="@{/playlist/upload}"
+                              enctype="multipart/form-data">
+                            <!-- Information Checkbox -->
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="acknowledge" name="acknowledge"
+                                       required>
+                                <label class="form-check-label" for="acknowledge">
+                                    We apologize for any inconvenience.
+                                    Due to our limited resources, the upload process may take some time.
+                                    Please be patient and avoid refreshing the page until the upload is complete.
+                                    Your understanding is greatly appreciated.
+                                </label>
+                            </div>
+                            <input type="file" name="files" id="fileInput" multiple="true" accept=".mp3"/>
                             <div id="fileList" class="mt-2"></div> <!-- Placeholder for the file list -->
                             <span id="fileError" style="color: red;"></span>
                             <button type="submit" class="btn btn-primary mt-3">Upload songs</button>
@@ -145,6 +163,13 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div>
+            <i class="fas fa-music spinner-icon"></i>
+            <p>Doing some serious business here, please wait...</p>
         </div>
     </div>
 </div>

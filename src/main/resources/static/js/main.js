@@ -50,31 +50,3 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-
-// $.ajaxSetup({ cache: false });
-// $(document).ready(function(){
-//     $('#email').blur(function(){
-//         let email = $(this).val();
-//         $.get('/users/checkEmail', { email: email }, function(response){
-//             console.log(response);
-//             if(response) {
-//                 $('#emailError').text('Email already in use').show();
-//             } else {
-//                 $('#emailError').hide();
-//             }
-//         });
-//     });
-//
-//     $('#username').blur(function(){
-//         let username = $(this).val();
-//         $.get('/users/checkUsername', { username: username }, function(response){
-//             if(response) {
-//                 $('#usernameError').text('Username already in use').show();
-//             } else {
-//                 $('#usernameError').hide();
-//             }
-//         });
-//     });
-// });
-
-
