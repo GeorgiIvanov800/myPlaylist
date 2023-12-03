@@ -10,14 +10,14 @@ import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.UploadFilesService;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +29,8 @@ public class UploadFilesServiceImpl implements UploadFilesService {
     private final SongRepository songRepository;
     private final UserRepository userRepository;
     private final NextCloudWebDavClient nextCloudWebDavClient;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UploadFilesServiceImpl.class);
 
 
     public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient) {
@@ -43,8 +45,10 @@ public class UploadFilesServiceImpl implements UploadFilesService {
 //        TODO: IMPLEMENT AOP to check how fast is the upload doing
         //Upload the songs
         List<SongEntity> songs = new ArrayList<>();
+
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException(email + " not found"));
+
         String formattedEmail = email.replace("@", "_at_").replace(".", "_dot_");
 
         List<List<MultipartFile>> fileBatches = createFileBatches(Arrays.asList(files), 5); // Batch size set to 5
@@ -59,7 +63,7 @@ public class UploadFilesServiceImpl implements UploadFilesService {
 
                         List<String> pathAndShareLink = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
 
-                        SongEntity song = processAudioFiles(file, user, originalFileName);
+                        SongEntity song = processAudioFiles(convertedFile, user, originalFileName);
                         song.setFilePath(pathAndShareLink.get(0));
                         song.setNextCloudPath(pathAndShareLink.get(1));
                         songs.add(song);
@@ -68,26 +72,25 @@ public class UploadFilesServiceImpl implements UploadFilesService {
                 songRepository.saveAll(songs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return false;
         }
+        LOGGER.info("Successfully uploaded files {}", fileBatches.size());
         return true;
     }
 
-    private SongEntity processAudioFiles(MultipartFile multiPartFile, UserEntity user, String filename) {
+    private SongEntity processAudioFiles(File file, UserEntity user, String filename) {
 
-        File file;
         String extension = filename != null ? filename.substring(filename.lastIndexOf('.')) : "";
 
         try {
-            file = convertMultipartFileToFile(multiPartFile, extension);
             AudioFile audioFile = AudioFileIO.read(file);
             Tag tag = audioFile.getTag();
             Integer year = null;
             int defaultYear = 0;
 
             SongEntity song = new SongEntity();
-            song.setArtist(filename);
+            song.setArtist(filename.substring(0, filename.lastIndexOf('.')));
 
             if (tag.getFirst(FieldKey.YEAR) != null) {
                 try {
@@ -107,7 +110,7 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             return song;
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            LOGGER.error(e.getMessage());
             return null;
         }
     }
