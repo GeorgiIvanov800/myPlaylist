@@ -90,7 +90,7 @@ public class PlaylistController {
     @DeleteMapping("delete/{songId}")
     public String delete(@PathVariable("songId") Long id,
                          @AuthenticationPrincipal UserDetails principal) throws Exception {
-        System.out.println();
+
         songService.deleteSong(id);
 
         return "redirect:/playlist/create";

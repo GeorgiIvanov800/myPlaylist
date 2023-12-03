@@ -59,6 +59,7 @@ public class SongServiceImpl {
     public void deleteSong(Long songId) throws Exception {
         SongEntity songToDelete = songRepository.findById(songId)
                 .orElseThrow( () -> new IllegalArgumentException("Cant find song with id" + songId));
+
         for (PlaylistEntity playlist: songToDelete.getPlaylists()) {
             playlist.getSongs().remove(songToDelete);
             if (playlist.getSongs().isEmpty()) {

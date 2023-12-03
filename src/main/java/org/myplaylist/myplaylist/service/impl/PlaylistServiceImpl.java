@@ -45,22 +45,19 @@ public class PlaylistServiceImpl {
         this.playlistMapper = playlistMapper;
     }
 
-    public void createPlaylist(PlaylistBindingModel playlistBindingModel, String username) {
+    public void createPlaylist(PlaylistBindingModel playlistBindingModel, String email) {
 
         PlaylistEntity playlist = new PlaylistEntity();
         playlist.setName(playlistBindingModel.getName());
         playlist.setDescription(playlistBindingModel.getDescription());
         playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
 
-        Optional<UserEntity> userOptional = userRepository.findByEmail(username);
+        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            throw new LoginCredentialsException("User not found: " + username);
+            throw new LoginCredentialsException("User not found: " + email);
         }
 
         playlist.setUser(userOptional.get());
-
-        //get the songs by id
-//        List<SongEntity> songList = songRepository.findAllById(playlistBindingModel.getSongIds());
 
         List<SongEntity> songList = new ArrayList<>();
         for (Long songId : playlistBindingModel.getSongIds()) {
@@ -79,7 +76,6 @@ public class PlaylistServiceImpl {
     public Page<PlaylistViewModel> getUserPlaylist(Pageable pageable, Long userId) {
 
         Page<PlaylistEntity> byUser = playlistRepository.findByUserId(userId, pageable);
-        System.out.println();
         return byUser.map(playlistMapper::playlistEntityToViewModel);
     }
 
@@ -112,12 +108,14 @@ public class PlaylistServiceImpl {
         System.out.println(playlist.getPictureUrl());
     }
 
-    public List<SongViewModel> getSongsForPlaylist(Long playlistId) {
+    public List<SongViewModel> getSongsForPlaylist(Long playlistId, String email) {
+
         return playlistRepository.findById(playlistId)
                 .map(playlist -> playlist.getSongs().stream()
                         .limit(100)
-                        .map(playlistMapper::songEntityToViewModelWithoutOwner)
+                        .map(song -> playlistMapper.songEntityToViewModel(song, email))
                         .collect(Collectors.toList()))
-                .orElseThrow( () -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
     }
 }
+

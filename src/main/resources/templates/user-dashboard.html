@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="card-body">
                                     <!-- Display playlist picture or default picture -->
-                                    <p th:text="${playlist.description}">Playlist Description</p>
+                                    <p class="playlist-description" th:text="${playlist.description}">Playlist Description</p>
                                     <div>
                                         <h6>Songs in this playlist:</h6>
                                         <ul class="list-unstyled song-list" th:if="${playlist.songs.size() > 0}">
@@ -65,9 +65,9 @@
                                                 th:data-file-path="${song.filePath}"
                                                 th:data-formatted-duration="${song.formattedDuration()}">
 
-                                                <span th:text="${song.title}">Song Title</span>
-                                                <span class="highlight">by</span>
                                                 <span th:text="${song.artist}">Artist Name</span>
+                                                <span class="highlight">-</span>
+                                                <span th:text="${song.title}">Song Title</span>
                                                 <span th:text="${song.formattedDuration()}">Time</span>
                                                 <hr class="song-separator">
                                             </li>

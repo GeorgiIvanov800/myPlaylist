@@ -46,8 +46,10 @@ public class RestPlaylistController {
     }
     //Fetch songs for specific playlist
     @GetMapping("/{playlistId}/songs")
-    public ResponseEntity<List<SongViewModel>> getPlaylistSongs(@PathVariable Long playlistId) {
-        List<SongViewModel> songs = playlistService.getSongsForPlaylist(playlistId);
+    public ResponseEntity<List<SongViewModel>> getPlaylistSongs(@PathVariable Long playlistId,
+                                                                Principal principal) {
+        String email = principal.getName();
+        List<SongViewModel> songs = playlistService.getSongsForPlaylist(playlistId, email);
         return ResponseEntity.ok(songs);
     }
 }

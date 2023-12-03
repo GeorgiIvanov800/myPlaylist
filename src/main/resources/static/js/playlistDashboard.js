@@ -103,3 +103,4 @@ function toggleHiddenSongs() {
         el.classList.toggle('hidden');
     });
 }
+

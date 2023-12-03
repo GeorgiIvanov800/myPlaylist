@@ -18,13 +18,25 @@
     display: none;
 }
 
-.highlight {
-    color: red; /* Replace with your desired color */
-}
-
 .card-title {
     display: inline-block;
     margin-right: 10px; /* Adjust as needed */
+    margin-bottom: 10px; /* Space below the title */
+    font-size: 18px; /* Adjust as needed */
+}
+
+.card-body p {
+    margin-bottom: 10px; /* Space below the description */
+    /* If you want to truncate the description initially */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines you want to show initially */
+    -webkit-box-orient: vertical;
+}
+
+.card-body {
+    margin-top: 10px; /* Space above the card body */
 }
 
 .dropdown {
@@ -64,3 +76,7 @@
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+
+
+
