@@ -1,7 +1,6 @@
 //Event Listener on the Playlist Form
 document.addEventListener('DOMContentLoaded', function () {
     let form = document.getElementById('playlistForm');
-    console.log("Form element: ", form);
     //Submit button
     form.addEventListener('submit', function (e) {
 
@@ -64,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 console.error('Error:', error);
             });
+
     });
 });
 //Add Button
@@ -207,19 +207,23 @@ document.getElementById('uploadForm').addEventListener('submit', function (event
     let errorElement = document.getElementById('fileError');
     let isValid = true;
     errorElement.textContent = '';
+    errorElement.classList.remove('error-message');
 
     // Check the number of files
     if (files.length > 5) {
         errorElement.textContent = 'You can only upload up to 5 songs.';
+        errorElement.classList.add('error-message');
         isValid = false
     } else if (files.length === 0) {
         errorElement.textContent = 'No files were selected for upload.';
+        errorElement.classList.add('error-message');
         isValid = false;
     } else {
         // Check each file's type
         for (let i = 0; i < files.length; i++) {
             if (files[i].type !== 'audio/mpeg') {
                 errorElement.textContent = 'Only MP3 files are allowed.';
+                errorElement.classList.add('error-message');
                 isValid = false;
                 break;
             }
@@ -233,11 +237,12 @@ document.getElementById('uploadForm').addEventListener('submit', function (event
         event.preventDefault(); // Prevent form submission if validation fails
     }
 });
-console.log("Script loaded")
+
+
+
 document.getElementById('fileInput').addEventListener('change', function(event) {
     let files = event.target.files;
     let fileList = document.getElementById('fileList');
-    console.log("songs to upload");
     // Clear the list first
     fileList.innerHTML = '';
 
