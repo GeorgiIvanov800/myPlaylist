@@ -1,6 +1,13 @@
 //Event Listener on the Playlist Form
 document.addEventListener('DOMContentLoaded', function () {
     let form = document.getElementById('playlistForm');
+    // Clear any previous error messages and remove the error class before submitting
+    document.querySelectorAll('.playlist-form-error').forEach(el => {
+        el.textContent = '';
+        el.classList.remove('playlist-form-error');
+    });
+
+
     //Submit button
     form.addEventListener('submit', function (e) {
 
@@ -26,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let csrfToken = csrfTokenMeta.getAttribute('content');
         let csrfHeader = csrfHeaderMeta.getAttribute('content');
 
+
         fetch('/api/playlist', {
             method: 'POST',
             headers: {
@@ -39,15 +47,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!response.ok) {
                     return response.json().then(err => {
                         // Clear any previous error messages
-                        document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-
+                        document.querySelectorAll('.playlist-form-error').forEach(el => {
+                            el.textContent = '';
+                            el.classList.remove('playlist-form-error'); // Clear specific class
+                        });
                         // Display new error messages next to the respective fields
                         Object.entries(err).forEach(([field, message]) => {
                             const errorElement = document.getElementById(field + 'Error');
                             if (errorElement) {
                                 errorElement.textContent = message;
+                                errorElement.classList.add('playlist-form-error'); // Add specific class
                             }
-                            console.log(err);
                         });
 
                         throw new Error("Validation errors occurred");
@@ -63,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 console.error('Error:', error);
             });
-
     });
 });
 //Add Button
@@ -212,18 +221,18 @@ document.getElementById('uploadForm').addEventListener('submit', function (event
     // Check the number of files
     if (files.length > 5) {
         errorElement.textContent = 'You can only upload up to 5 songs.';
-        errorElement.classList.add('error-message');
+        errorElement.classList.add('upload-form-error');
         isValid = false
     } else if (files.length === 0) {
         errorElement.textContent = 'No files were selected for upload.';
-        errorElement.classList.add('error-message');
+        errorElement.classList.add('upload-form-error');
         isValid = false;
     } else {
         // Check each file's type
         for (let i = 0; i < files.length; i++) {
             if (files[i].type !== 'audio/mpeg') {
                 errorElement.textContent = 'Only MP3 files are allowed.';
-                errorElement.classList.add('error-message');
+                errorElement.classList.add('upload-form-error');
                 isValid = false;
                 break;
             }

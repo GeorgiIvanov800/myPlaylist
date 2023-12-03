@@ -8,7 +8,7 @@
     font-size: 1em;
     color: #1a1d20;
 }
-/* Loading Overlay Style */
+
 #loadingOverlay {
     display: none;
     position: fixed;
@@ -29,7 +29,7 @@
     text-align: center;
 }
 
-/* Spinner*/
+
 .spinner-icon {
     font-size: 40px;
     animation: spin 2s linear infinite;
@@ -39,22 +39,6 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-/* Error field */
-/*#fileError {*/
-/*    min-height: 20px;*/
-/*    font-size: 1em;*/
-/*    font-weight: bold;*/
-/*    margin-bottom: 10px;*/
-/*}*/
-
-.error-message {
-    padding: 10px;
-    border: 1px solid #dc3545;
-    background-color: #fff3cd;
-    color: #856404;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
 
 #fileError {
     min-height: 20px;
@@ -63,4 +47,21 @@
     margin-bottom: 10px;
 }
 
+.upload-form-error {
+    padding: 10px;
+    border: 1px solid #dc3545;
+    background-color: #fff3cd;
+    color: #856404;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.playlist-form-error {
+    color: #dc3545;
+    padding: 10px;
+    border: 1px solid #dc3545;
+    background-color: #fff3cd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
