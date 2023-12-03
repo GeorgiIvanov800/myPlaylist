@@ -61,7 +61,11 @@ public class SongServiceImpl {
                 .orElseThrow( () -> new IllegalArgumentException("Cant find song with id" + songId));
         for (PlaylistEntity playlist: songToDelete.getPlaylists()) {
             playlist.getSongs().remove(songToDelete);
-            playlistRepository.save(playlist);
+            if (playlist.getSongs().isEmpty()) {
+                playlistRepository.delete(playlist);
+            } else {
+                playlistRepository.save(playlist);
+            }
         }
         nextCloudWebDavClient.deleteFile(songToDelete.getNextCloudPath());
         songRepository.deleteById(songId);

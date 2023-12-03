@@ -12,6 +12,7 @@ import org.myplaylist.myplaylist.service.UploadFilesService;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,6 +68,13 @@ public class UploadFilesServiceImpl implements UploadFilesService {
                         song.setFilePath(pathAndShareLink.get(0));
                         song.setNextCloudPath(pathAndShareLink.get(1));
                         songs.add(song);
+
+                        if (convertedFile.exists()) {
+                            boolean isDeleted = convertedFile.delete();
+                            if (!isDeleted) {
+                                LOGGER.warn("Temporary file deletion failed for file: " + convertedFile.getAbsolutePath());
+                            }
+                        }
                     }
                 }
                 songRepository.saveAll(songs);
