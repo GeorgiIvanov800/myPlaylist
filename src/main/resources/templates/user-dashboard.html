@@ -43,27 +43,18 @@
                                          class="img-fluid" alt="Playlist Cover">
                                 </div>
                                 <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
+                                <div class="dropdown">
+                                    <button class="dropbtn">
+                                        <i class="fa-regular fa-pen-to-square"></i>                                    </button>
+                                    <div class="dropdown-content">
+                                        <a href="#" onclick="editPlaylist(${playlist.id})">Edit</a>
+                                        <a href="#" onclick="uploadImage(${playlist.id})">Upload Image</a>
+                                        <a href="#" onclick="deletePlaylist(${playlist.id})">Delete</a>
+                                    </div>
+                                </div>
                                 <div class="card-body">
                                     <!-- Display playlist picture or default picture -->
                                     <p th:text="${playlist.description}">Playlist Description</p>
-                                    <!-- Image Upload Form for each Playlist -->
-                                    <div class="image-upload-form">
-                                        <p class="upload-instructions">Customize your playlist with an image:</p>
-                                        <form th:action="@{/playlist/{id}/upload-image(id=${playlist.id})}"
-                                              method="post" enctype="multipart/form-data" class="imageUploadForm">
-                                            <div class="input-group mb-3">
-                                                <input type="file" name="picture" accept="image/png, image/jpeg"
-                                                       class="form-control file-input" id="inputGroupFile01">
-                                                <button type="submit" class="btn btn-outline-secondary upload-button"
-                                                        id="theUploadButton" disabled>Upload
-                                                </button>
-                                            </div>
-                                            <p>Maximum file size: 1MB</p>
-                                            <div class="spinner" style="display: none;">
-                                                <div class="loader"></div>
-                                            </div>
-                                        </form>
-                                    </div>
                                     <div>
                                         <h6>Songs in this playlist:</h6>
                                         <ul class="list-unstyled song-list" th:if="${playlist.songs.size() > 0}">
