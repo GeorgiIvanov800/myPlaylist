@@ -21,8 +21,10 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         let playlistId = document.getElementById('playlistId').value;
         let url = playlistId ? '/api/playlist/update/' + playlistId : '/api/playlist';
-        let method = playlistId ? 'PUT' : 'POST'; // Use PUT for update and POST for create
-        console.log(method);
+        // Use PUT for update and POST for create
+        let method = playlistId ? 'PUT' : 'POST';
+
+
         let name = document.getElementById('playlistName').value;
         let description = document.getElementById('playlistDescription').value;
         let songIds = [];
@@ -77,7 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 // Simple alert for success
-                alert("Playlist created successfully!");
+                if (method === 'POST') {
+                    alert("Playlist created successfully!");
+                } else {
+                    alert("Playlist updated successfully!");
+                }
                 window.location.href = "/users/dashboard";
             })
             .catch(error => {
@@ -98,7 +104,8 @@ function editPlaylist(playlistId) {
             // Change the heading and button text for edit mode
             document.querySelector('h2.text-center').textContent = 'Edit Your Playlist';
             document.getElementById('playlistSubmitButton').textContent = 'Update Playlist';
-
+            document.querySelectorAll('.delete-song').forEach(button => button.style.display = 'none');
+            document.getElementById('uploadForm').remove();
             // Clear existing songs and populate with new ones
             let playlistSongsElement = document.getElementById('playlistSongs');
             playlistSongsElement.innerHTML = ''; // Clear existing songs
@@ -155,6 +162,11 @@ document.addEventListener('DOMContentLoaded', function () {
 const addedSongIds = new Set();
 
 function addSongToPlaylist(songId, songTitle, songArtist) {
+
+    if (songTitle === null) {
+        songTitle = '';
+    }
+
     const playlistSongs = document.getElementById('playlistSongs');
     const li = document.createElement('li');
     console.log(`Adding song with ID: ${songId}`);
@@ -167,7 +179,7 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
             <small class="text-muted song-artist">${songArtist}</small>
         </div>
         <button type="button" class="btn btn-outline-danger btn-sm remove-song">
-            <i class="fas fa-minus"></i> Remove
+            <i class="fas fa-minus"></i>
         </button>
     `;
     playlistSongs.appendChild(li);

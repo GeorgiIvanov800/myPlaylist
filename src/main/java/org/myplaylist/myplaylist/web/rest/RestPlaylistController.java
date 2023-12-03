@@ -63,9 +63,10 @@ public class RestPlaylistController {
 
     @PutMapping("update/{id}")
     public ResponseEntity<?> updatePlaylist(@PathVariable Long id,
-                                            @RequestBody PlaylistBindingModel playlistBindingModel,
+                                            @Valid @RequestBody PlaylistBindingModel playlistBindingModel,
                                             BindingResult bindingResult,
                                             Principal principal) {
+        System.out.println();
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.groupingBy(FieldError::getField,

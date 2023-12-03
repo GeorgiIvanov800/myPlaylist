@@ -60,6 +60,13 @@ public class PlaylistServiceImpl {
 
         playlist.setUser(userOptional.get());
 
+        getSongs(playlistBindingModel, playlist);
+
+        LOGGER.info("Saving playlist {}", playlist.getName());
+        playlistRepository.save(playlist);
+    }
+
+    private void getSongs(PlaylistBindingModel playlistBindingModel, PlaylistEntity playlist) {
         List<SongEntity> songList = new ArrayList<>();
         for (Long songId : playlistBindingModel.getSongIds()) {
             songRepository.findById(songId).ifPresent(song -> {
@@ -69,9 +76,6 @@ public class PlaylistServiceImpl {
             });
         }
         playlist.setSongs(songList);
-
-        LOGGER.info("Saving playlist {}", playlist.getName());
-        playlistRepository.save(playlist);
     }
 
     public Page<PlaylistViewModel> getUserPlaylist(Pageable pageable, Long userId) {
@@ -110,7 +114,6 @@ public class PlaylistServiceImpl {
     }
 
     public List<SongViewModel> getSongsForPlaylist(Long playlistId, String email) {
-
         return playlistRepository.findById(playlistId)
                 .map(playlist -> playlist.getSongs().stream()
                         .limit(100)
@@ -130,18 +133,9 @@ public class PlaylistServiceImpl {
         playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
 
         // Update songs in the playlist if necessary
-        List<SongEntity> updatedSongList = new ArrayList<>();
-        for (Long songId : playlistBindingModel.getSongIds()) {
-            songRepository.findById(songId).ifPresent(song -> {
-                if (!updatedSongList.contains(song)) {
-                    updatedSongList.add(song);
-                }
-            });
-        }
-        playlist.setSongs(updatedSongList);
+        getSongs(playlistBindingModel, playlist);
 
-        //check if the user updating the playlist is the owner
-        //
+        //TODO:check if the user updating the playlist is the owner
 
         LOGGER.info("Updating playlist {}", playlist.getName());
         playlistRepository.save(playlist);
