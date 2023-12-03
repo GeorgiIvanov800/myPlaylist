@@ -63,10 +63,11 @@ public class PlaylistController {
 
     @PostMapping("/upload")
     public String uploadSongs(@RequestParam("files") MultipartFile[] files,
-                              RedirectAttributes redirectAttributes, Principal principal) {
-//        TODO:Provide clear feedback for successful uploads and notifications for any issues or errors.
-        if (files.length > 20) {
-            redirectAttributes.addFlashAttribute("message", "You can only upload up to 20 songs.");
+                              RedirectAttributes redirectAttributes,
+                              Principal principal) {
+
+        if (files.length > 5) {
+            redirectAttributes.addFlashAttribute("message", "You can only upload up to 5 songs.");
             return "redirect:/playlist/create";
         }
 

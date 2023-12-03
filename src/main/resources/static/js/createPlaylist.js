@@ -202,24 +202,46 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 //Check how many files the user want to upload and that they are all in mp3 format
-document.getElementById('uploadForm').addEventListener('submit', function(event) {
+document.getElementById('uploadForm').addEventListener('submit', function (event) {
     let files = document.getElementById('fileInput').files;
-    let errorMessage = '';
+    let errorElement = document.getElementById('fileError');
+    errorElement.textContent = '';
 
-    if (files.length > 20) {
-        errorMessage = 'You can only upload up to 20 songs.';
-    }
-
-    for (let i = 0; i < files.length; i++) {
-        if (files[i].type !== 'audio/mpeg') {
-            errorMessage = 'All files must be in MP3 format.';
-            break;
+    // Check the number of files
+    if (files.length > 5) {
+        errorElement.textContent = 'You can only upload up to 5 songs.';
+        event.preventDefault(); // Prevent submission
+    } else if (files.length === 0) {
+        errorElement.textContent = 'No files were selected for upload.';
+        event.preventDefault(); // Prevent submission
+    } else {
+        // Check each file's type
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].type !== 'audio/mpeg') {
+                errorElement.textContent = 'Only MP3 files are allowed.';
+                event.preventDefault(); // Prevent submission
+                break;
+            }
         }
+
+    }
+});
+
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    let files = event.target.files;
+    let fileList = document.getElementById('fileList');
+
+    // Clear the list first
+    fileList.innerHTML = '';
+
+    // Create a list of selected file names
+    let list = document.createElement('ul');
+    for (let i = 0; i < files.length; i++) {
+        let li = document.createElement('li');
+        li.textContent = files[i].name;
+        list.appendChild(li);
     }
 
-    if (errorMessage) {
-        document.getElementById('fileError').innerText = errorMessage;
-        event.preventDefault();
-    }
+    fileList.appendChild(list);
 });
 

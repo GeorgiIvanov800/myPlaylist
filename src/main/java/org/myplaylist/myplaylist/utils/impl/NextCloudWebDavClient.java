@@ -23,7 +23,6 @@ import org.myplaylist.myplaylist.utils.XmlParser;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -168,7 +167,7 @@ public class NextCloudWebDavClient {
             if (e.getMessage().contains("404")) {
                 return false; // The Folder does not exist
             }
-            throw e; // Other IO exceptions should be handled or thrown
+            throw e;
         }
     }
 

@@ -138,6 +138,7 @@
                         <!-- Add Song Button -->
                         <form id="uploadForm" th:method="POST" th:action="@{/playlist/upload}" enctype="multipart/form-data">
                             <input type="file" name="files" id="fileInput" multiple="true" accept=".mp3" />
+                            <div id="fileList" class="mt-2"></div> <!-- Placeholder for the file list -->
                             <span id="fileError" style="color: red;"></span>
                             <button type="submit" class="btn btn-primary mt-3">Upload songs</button>
                         </form>
