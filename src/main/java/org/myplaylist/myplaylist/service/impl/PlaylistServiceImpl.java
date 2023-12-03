@@ -14,6 +14,7 @@ import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,40 @@ public class PlaylistServiceImpl {
                         .map(song -> playlistMapper.songEntityToViewModel(song, email))
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
+    }
+
+    public void updatePlaylist(Long playlistId, PlaylistBindingModel playlistBindingModel, String email) {
+        // Retrieve the existing playlist
+        PlaylistEntity playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new IllegalArgumentException("Playlist not found: " + playlistId)); // TODO make a custom exception Resource not found
+
+        // Apply updates
+        playlist.setName(playlistBindingModel.getName());
+        playlist.setDescription(playlistBindingModel.getDescription());
+        playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
+
+        // Update songs in the playlist if necessary
+        List<SongEntity> updatedSongList = new ArrayList<>();
+        for (Long songId : playlistBindingModel.getSongIds()) {
+            songRepository.findById(songId).ifPresent(song -> {
+                if (!updatedSongList.contains(song)) {
+                    updatedSongList.add(song);
+                }
+            });
+        }
+        playlist.setSongs(updatedSongList);
+
+        //check if the user updating the playlist is the owner
+        //
+
+        LOGGER.info("Updating playlist {}", playlist.getName());
+        playlistRepository.save(playlist);
+    }
+
+    public PlaylistViewModel findById(Long id) {
+       return playlistRepository.findById(id)
+                .map(playlistMapper::playlistEntityToViewModel)
+                .orElseThrow(() -> new IllegalArgumentException("Playlist not found: " + id)); // TODO make a custom exception Resource not found
     }
 }
 

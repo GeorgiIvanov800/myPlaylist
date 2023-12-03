@@ -27,7 +27,8 @@
         <!-- Playlist Details Box -->
         <div class="col-lg-5 col-md-6 mb-3">
             <div class="playlist-details-box p-3 shadow-sm">
-                <form id="playlistForm" th:action="@{/playlist/create}" method="post">
+                <form id="playlistForm" th:action="@{api/playlist/create}" method="POST">
+                    <input type="hidden" id="playlistId" name="playlistId" value="">
                     <!-- Playlist Name -->
                     <div class="form-group">
                         <input type="text" id="playlistName" name="name" class="form-control"
@@ -63,7 +64,7 @@
                     </div>
 
                     <input type="hidden" id="songIds" name="songIds" th:value="songIds"/>
-                    <button type="submit" class="btn btn-primary">Create Playlist</button>
+                    <button type="submit" id="playlistSubmitButton" class="btn btn-primary">Create Playlist</button>
                 </form>
             </div>
         </div>

@@ -1,6 +1,13 @@
 //Event Listener on the Playlist Form
 document.addEventListener('DOMContentLoaded', function () {
     let form = document.getElementById('playlistForm');
+
+    let pathSegments = window.location.pathname.split('/');
+    let playlistId = pathSegments[pathSegments.length - 1];
+    console.log(playlistId);
+    if (playlistId && !isNaN(playlistId)) {
+        editPlaylist(playlistId);
+    }
     // Clear any previous error messages and remove the error class before submitting
     document.querySelectorAll('.playlist-form-error').forEach(el => {
         el.textContent = '';
@@ -12,7 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
 
         e.preventDefault();
-
+        let playlistId = document.getElementById('playlistId').value;
+        let url = playlistId ? '/api/playlist/update/' + playlistId : '/api/playlist';
+        let method = playlistId ? 'PUT' : 'POST'; // Use PUT for update and POST for create
+        console.log(method);
         let name = document.getElementById('playlistName').value;
         let description = document.getElementById('playlistDescription').value;
         let songIds = [];
@@ -34,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let csrfHeader = csrfHeaderMeta.getAttribute('content');
 
 
-        fetch('/api/playlist', {
-            method: 'POST',
+        fetch(url, {
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -59,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 errorElement.classList.add('playlist-form-error'); // Add specific class
                             }
                         });
-
+                        console.log(method);
                         throw new Error("Validation errors occurred");
                     });
                 }
@@ -75,6 +85,35 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 });
+//Edit Playlist
+function editPlaylist(playlistId) {
+    fetch('/api/playlist/' + playlistId)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('playlistId').value = playlistId;
+            document.getElementById('playlistName').value = data.name;
+            document.getElementById('playlistDescription').value = data.description;
+            document.getElementById('playlistGenre').value = data.genre;
+
+            // Change the heading and button text for edit mode
+            document.querySelector('h2.text-center').textContent = 'Edit Your Playlist';
+            document.getElementById('playlistSubmitButton').textContent = 'Update Playlist';
+
+            // Clear existing songs and populate with new ones
+            let playlistSongsElement = document.getElementById('playlistSongs');
+            playlistSongsElement.innerHTML = ''; // Clear existing songs
+            if (data.songs && Array.isArray(data.songs)) {
+                data.songs.forEach(song => {
+                    addSongToPlaylist(song.id, song.title, song.artist);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+
+
 //Add Button
 document.addEventListener('DOMContentLoaded', function () {
     const searchResults = document.getElementById('addSongs');

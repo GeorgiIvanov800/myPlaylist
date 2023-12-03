@@ -1,5 +1,6 @@
 package org.myplaylist.myplaylist.web;
 
+import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.UploadFilesService;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
@@ -36,16 +37,26 @@ public class PlaylistController {
         this.playlistService = playlistService;
     }
 
-    @GetMapping("/create")
-    public String create(Model model, Principal principal) {
+    @GetMapping({"/create", "/create/{id}"})
+    public String createOrUpdatePlaylist(Model model,
+                                         @PathVariable(name = "id", required = false) Long id,
+                                         Principal principal) {
         String email = principal.getName();
-
         List<SongViewModel> songs = songService.getAllSongs();
 
         List<SongViewModel> userSongs = songService.getUserSongs(email);
 
+        if (id != null) {
+            // Load the playlist by id and add it to the model
+            PlaylistViewModel playlist = playlistService.findById(id);
+            model.addAttribute("playlist", playlist);
+
+            // Add other necessary attributes for edit mode
+        }
+
         model.addAttribute("songs", songs);
         model.addAttribute("userSongs", userSongs);
+
         return "playlist-create";
     }
 

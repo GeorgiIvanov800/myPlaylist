@@ -2,6 +2,7 @@ package org.myplaylist.myplaylist.web.rest;
 
 import jakarta.validation.Valid;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
+import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -51,5 +52,29 @@ public class RestPlaylistController {
         String email = principal.getName();
         List<SongViewModel> songs = playlistService.getSongsForPlaylist(playlistId, email);
         return ResponseEntity.ok(songs);
+    }
+
+    //Populate the fields
+    @GetMapping("/{id}")
+    public ResponseEntity<PlaylistViewModel> getPlaylist(@PathVariable Long id) {
+        PlaylistViewModel playlist = playlistService.findById(id);
+        return ResponseEntity.ok(playlist);
+    }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<?> updatePlaylist(@PathVariable Long id,
+                                            @RequestBody PlaylistBindingModel playlistBindingModel,
+                                            BindingResult bindingResult,
+                                            Principal principal) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.groupingBy(FieldError::getField,
+                            Collectors.mapping(FieldError::getDefaultMessage, Collectors.joining(", "))));
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        String email = principal.getName();
+        // Find the existing playlist by ID
+        playlistService.updatePlaylist(id, playlistBindingModel, email);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Playlist updated successfully"));
     }
 }
