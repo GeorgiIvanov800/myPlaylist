@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/user-dashboard.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/music-player.css}">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script src="https://kit.fontawesome.com/08b39fed13.js" crossorigin="anonymous"></script>
@@ -33,6 +35,7 @@
                 <!-- User's Playlists -->
                 <h4>Your Playlists</h4>
                 <div class="row">
+             <!--try with Pagable playlistrs.getContent-->
                     <th:block th:each="playlist : ${playlist}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
@@ -47,8 +50,17 @@
                                     </button>
                                     <div class="dropdown-content">
                                         <a th:href="@{/playlist/create/{id}(id=${playlist.id})}">Edit</a>
-                                        <a th:href= "@{dashboard/upload-image/{id}(${playlist.id})}">Upload Image</a>
-                                        <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}" method="post" class="delete-form">
+                                        <form id="imageUploadForm"
+                                              th:action="@{/users/dashboard/upload-image/{id}(id=${playlist.id()})}"
+                                              method="post"
+                                              enctype="multipart/form-data">
+                                            <input type="file" name="picture" id="picture" style="display: none;">
+                                            <label for="picture" id="uploadLabel" class="link-style-button">Upload Image</label>
+                                            <button type="submit" style="display: none;">Submit</button>
+                                        </form>
+                                        <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}"
+                                              method="post"
+                                              class="delete-form">
                                             <input type="hidden" name="_method" value="delete"/>
                                             <button type="submit" class="link-style-button">Delete</button>
                                         </form>

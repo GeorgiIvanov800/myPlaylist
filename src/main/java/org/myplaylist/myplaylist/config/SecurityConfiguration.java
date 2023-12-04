@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/error").permitAll()
                         //all other requests are authenticated
                         .anyRequest().authenticated()
-                //TODO add a page which will be only accessible by admins or moderators
+                //TODO add a page which will be only accessible by admins or moderators and maybe for the blog page only admins or moderator should be able to write new blogs
         ).formLogin(
                 formLogin -> {
                     formLogin

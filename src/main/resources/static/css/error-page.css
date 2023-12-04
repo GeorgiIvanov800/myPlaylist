@@ -1,0 +1,16 @@
+/* error-style.css */
+.broken-record {
+    max-width: 200px; /* or any other size */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    font-size: 2rem;
+    color: #333;
+}
+
+.error-details {
+    color: #666;
+    margin-bottom: 20px;
+}

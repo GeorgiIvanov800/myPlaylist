@@ -1,18 +1,19 @@
 // Inform the User that the upload picture size should be max of 1mb
+//and trigger the upload
 document.addEventListener('DOMContentLoaded', function () {
-    const fileInputs = document.querySelectorAll('.file-input');
+    const fileInput = document.getElementById('picture');
+    const imageUploadForm = document.getElementById('imageUploadForm');
 
-    fileInputs.forEach(input => {
-        input.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file && file.size > 1048576) { // 1 MB
-                alert('Sorry but the file size should be less than 1MB');
-                this.value = ''; // Reset the input
-            }
-        });
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file && file.size > 1048576) { // 1MB size limit
+            alert('Sorry, but the file size should be less than 1MB');
+            this.value = ''; // Reset the file input
+        } else {
+            imageUploadForm.submit(); // Automatically submit the form when a file is selected
+        }
     });
 });
-
 
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.show-more').forEach(function(link) {
