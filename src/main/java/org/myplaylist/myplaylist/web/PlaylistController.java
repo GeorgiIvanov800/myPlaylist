@@ -51,25 +51,12 @@ public class PlaylistController {
             PlaylistViewModel playlist = playlistService.findById(id);
             model.addAttribute("playlist", playlist);
 
-            // Add other necessary attributes for edit mode
         }
 
         model.addAttribute("songs", songs);
         model.addAttribute("userSongs", userSongs);
 
         return "playlist-create";
-    }
-
-
-    @PostMapping("/{playlistId}/upload-image")
-    public String uploadPlaylistImage(@PathVariable Long playlistId,
-                                      @RequestParam("picture") MultipartFile pictureFile) throws IOException {
-
-        String filename = StringUtils.cleanPath(Objects.requireNonNull(pictureFile.getOriginalFilename()));
-
-        playlistService.updatePlaylistImage(playlistId, "/playlist-images/" + filename, pictureFile, filename);
-
-        return "redirect:/users/dashboard";
     }
 
     @PostMapping("/upload")

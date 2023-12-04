@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>MyPlaylist</title>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" th:href="@{/css/reset-css.css}"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
@@ -49,7 +47,7 @@
                                     </button>
                                     <div class="dropdown-content">
                                         <a th:href="@{/playlist/create/{id}(id=${playlist.id})}">Edit</a>
-                                        <a href="#" onclick="uploadImage(${playlist.id})">Upload Image</a>
+                                        <a th:href= "@{dashboard/upload-image/{id}(${playlist.id})}">Upload Image</a>
                                         <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}" method="post" class="delete-form">
                                             <input type="hidden" name="_method" value="delete"/>
                                             <button type="submit" class="link-style-button">Delete</button>

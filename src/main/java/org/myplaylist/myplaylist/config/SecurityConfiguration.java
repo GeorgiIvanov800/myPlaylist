@@ -26,6 +26,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //Config
         //Define which urls are visible by which users
+
         return httpSecurity.authorizeHttpRequests(
                 authorizeRequests -> authorizeRequests
                         //all resources which are static in js, images, css are available for anyone
@@ -66,8 +67,9 @@ public class SecurityConfiguration {
                             .rememberMeParameter("rememberme")
                             .rememberMeCookieName("rememberme")
                             .tokenValiditySeconds(7 * 24 * 60 * 60); //Cookie will live only 1 week
-                }
-        ).build();
+                })
+//                .csrf().disable()
+                .build();
 
     }
 
@@ -82,8 +84,5 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     }
-
-
-
 
 }

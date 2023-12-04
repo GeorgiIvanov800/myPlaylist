@@ -12,11 +12,10 @@ public class PlaylistBindingModel {
     @Size(min = 3, max = 20 ,message = "Name must be between 3 and 20 characters")
     private String name;
     @NotEmpty(message = "You should give your playlist a simple description")
-    @Size(min = 3, max = 20 ,message = "Description name must be between 3 and 20 characters")
+    @Size(min = 3, max = 50 ,message = "Description name must be between 3 and 50 characters")
     private String description;
     @NotNull(message = "Please choose a genre for your playlist if you are not sure what the genre is just use Manjda")
     private PlaylistGenreEnums genre;
-    @NotNull(message = "Playlist without songs is it really a playlist?!")
     @NotEmpty(message = "Playlist without songs is it really a playlist?!")
     private List<Long> songIds;
     private String pictureUrl;

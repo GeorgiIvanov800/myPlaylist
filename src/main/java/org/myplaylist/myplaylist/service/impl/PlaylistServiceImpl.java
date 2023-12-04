@@ -7,7 +7,9 @@ import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
+import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
+import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.repository.PlaylistRepository;
@@ -150,6 +152,42 @@ public class PlaylistServiceImpl {
     @Transactional
     public void deletePlaylist(Long id) {
         playlistRepository.deleteById(id);
+    }
+
+    public boolean isOwner(Long id, String email) {
+        return isOwner(
+                playlistRepository.findById(id).orElse(null),
+                email
+        );
+    }
+
+    private boolean isOwner(PlaylistEntity playlistEntity, String email) {
+        if ( playlistEntity == null || email == null) {
+            // anonymous users own no songs
+            // missing songs are meaningless
+            return false;
+        }
+
+        UserEntity viewerEntity =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new IllegalArgumentException("Unknown user with email..." + email));
+
+        if (isAdmin(viewerEntity)) {
+            // all admins own all offers
+            return true;
+        }
+
+        return Objects.equals(
+                playlistEntity.getUser().getId(),
+                viewerEntity.getId());
+    }
+    private boolean isAdmin(UserEntity userEntity) {
+        return userEntity
+                .getRoles()
+                .stream()
+                .map(UserRoleEntity::getRole)
+                .anyMatch(r -> UserRoleEnum.ADMIN == r);
     }
 }
 
