@@ -3,9 +3,12 @@ package org.myplaylist.myplaylist.model.binding;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.myplaylist.myplaylist.model.entity.PlaylistRatingEntity;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PlaylistBindingModel {
     @NotEmpty(message = "You should give your playlist a name")

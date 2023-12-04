@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface PlaylistService {
 
@@ -31,5 +32,5 @@ public interface PlaylistService {
 
     boolean isOwner(Long id, String email);
 
-    void ratePlaylist(Long id, String username, RatingType ratingType);
+    Map<String, Integer> ratePlaylist(Long id, String username, RatingType ratingType);
 }

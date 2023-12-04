@@ -159,12 +159,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @Transactional
-    public void ratePlaylist(Long id, String username, RatingType ratingType) {
+    public Map<String, Integer> ratePlaylist(Long id, String email, RatingType ratingType) {
         PlaylistEntity playlist = playlistRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Playlist not found: " + id));
 
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ObjectNotFoundException("User not found: " + username));
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("User not found: " + email));
 
         //Check if the user has already rated the playlist
         Optional<PlaylistRatingEntity> existingRating = playlist.getRatings()
@@ -184,6 +184,27 @@ public class PlaylistServiceImpl implements PlaylistService {
             playlist.getRatings().add(newRating);
         }
         playlistRepository.save(playlist);
+
+
+        PlaylistEntity updatedEntity = playlistRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Playlist not found: " + id));
+
+        int likeCount = (int) updatedEntity.getRatings()
+                .stream()
+                .filter( playlistRatingEntity ->
+                        playlistRatingEntity.getRatingType() == RatingType.LIKE)
+                .count();
+        int dislikeCount = (int) updatedEntity.getRatings()
+                .stream()
+                .filter( playlistRatingEntity ->
+                        playlistRatingEntity.getRatingType() == RatingType.DISLIKE)
+                .count();
+
+        Map<String, Integer> counts = new HashMap<>();
+        counts.put("likeCount", likeCount);
+        counts.put("dislikeCount", dislikeCount);
+
+        return counts;
     }
 
 

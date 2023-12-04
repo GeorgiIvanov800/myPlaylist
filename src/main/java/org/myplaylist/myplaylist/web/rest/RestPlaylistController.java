@@ -2,10 +2,10 @@ package org.myplaylist.myplaylist.web.rest;
 
 import jakarta.validation.Valid;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
+import org.myplaylist.myplaylist.model.enums.RatingType;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/playlist")
 public class RestPlaylistController {
     private final PlaylistServiceImpl playlistService;
-
-
 
     public RestPlaylistController(PlaylistServiceImpl playlistService) {
         this.playlistService = playlistService;
@@ -80,5 +78,18 @@ public class RestPlaylistController {
         // Find the existing playlist by ID
         playlistService.updatePlaylist(id, playlistBindingModel, email);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Playlist updated successfully"));
+    }
+    //Rate the playlist
+    @PostMapping("/{playlistId}/like")
+    public ResponseEntity<?> likePlaylist(@PathVariable Long playlistId, Principal principal) {
+        Map<String, Integer> counts = playlistService.ratePlaylist(playlistId, principal.getName(), RatingType.LIKE);
+
+        return ResponseEntity.ok(counts);
+    }
+
+    @PostMapping("/{playlistId}/dislike")
+    public ResponseEntity<?> dislikePlaylist(@PathVariable Long playlistId, Principal principal) {
+        Map<String, Integer> counts = playlistService.ratePlaylist(playlistId, principal.getName(), RatingType.DISLIKE);
+        return ResponseEntity.ok(counts);
     }
 }
