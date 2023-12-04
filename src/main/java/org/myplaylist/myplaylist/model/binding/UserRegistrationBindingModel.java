@@ -72,4 +72,9 @@ public class UserRegistrationBindingModel {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+
+    public String fullName() {
+        return firstName + " " +  lastName;
+    }
 }

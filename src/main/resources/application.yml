@@ -16,7 +16,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        show_sql: true
+        show_sql: false
     hibernate:
       ddl-auto: update
   sql:
@@ -50,9 +50,15 @@ nextcloud:
   password: ${NEXT_CLOUD_PASSWORD}
   share-link: ${NEXT_CLOUD_SHARE_LINK}
 
+mail:
+  myPlaylist: "myplaylist@mail.org"
+  host: localhost
+  port: 1025
+  username: ${MAIL_USER:myPlaylist}
+  password: ${MAIL_PASSWORD:gogata9212058445}
+
 logging:
   level:
 #    org.hibernate.SQL: DEBUG
-#    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.bind: TRACE
 #    org.springframework.security: TRACE
-     org.apache.logging.log4j: TRACE

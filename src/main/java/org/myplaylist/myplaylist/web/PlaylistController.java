@@ -15,20 +15,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
+
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+
 
 
 @Controller
 @RequestMapping("/playlist")
 public class PlaylistController {
     private final SongServiceImpl songService;
-
     private final UploadFilesService uploadFilesService;
-
     private final PlaylistServiceImpl playlistService;
 
     public PlaylistController(SongServiceImpl songService, UploadFilesService uploadFilesService, PlaylistServiceImpl playlistService) {

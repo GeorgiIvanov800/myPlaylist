@@ -18,4 +18,6 @@ public interface PlaylistRepository extends JpaRepository<PlaylistEntity, Long> 
     @Query("SELECT COUNT(songs) FROM PlaylistEntity playlist JOIN playlist.songs songs WHERE playlist.user.id = :userId")
     Long countTotalSongsByUserId(Long userId);
     Optional<PlaylistEntity> findById(Long id);
+
+
 }

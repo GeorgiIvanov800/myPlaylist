@@ -8,9 +8,11 @@ import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
+import org.myplaylist.myplaylist.model.event.UserRegisterEvent;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.repository.UserRoleRepository;
 import org.myplaylist.myplaylist.service.UserService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +20,18 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
-
     private final UserRoleRepository userRoleRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final UserMapper userMapper;
+    private final ApplicationEventPublisher appEventPublisher;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, ApplicationEventPublisher appEventPublisher) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.appEventPublisher = appEventPublisher;
     }
 
     @Override
@@ -53,12 +53,18 @@ public class UserServiceImpl implements UserService {
         //Create a role entity every new user should have the role of USER
         UserRoleEntity userRole = userRoleRepository.findByRole(UserRoleEnum.USER);
 
-        user.setActive(true);
+        user.setActive(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(userRole);
 
         //Save the user in the DB
         userRepository.save(user);
+
+        appEventPublisher.publishEvent(new UserRegisterEvent(
+                "UserService",
+                userRegistrationBindingModel.getEmail(),
+                userRegistrationBindingModel.fullName()
+        ));
     }
 
 
@@ -92,9 +98,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean usernameExists(String username) {
-        boolean isPresent = userRepository.findByUsername(username).isPresent();
-        System.out.println();
-        return isPresent;
+
+        return userRepository.findByUsername(username).isPresent();
     }
 
 }

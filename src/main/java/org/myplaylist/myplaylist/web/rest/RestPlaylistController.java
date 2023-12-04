@@ -5,6 +5,7 @@ import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/playlist")
 public class RestPlaylistController {
     private final PlaylistServiceImpl playlistService;
+
+
 
     public RestPlaylistController(PlaylistServiceImpl playlistService) {
         this.playlistService = playlistService;

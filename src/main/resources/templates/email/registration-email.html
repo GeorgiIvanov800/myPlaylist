@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello, <th:block th:text="${username}">Gosho</th:block>!</h1>
+Welcome to My Playlist!
+<a class="card-link" th:href="@{http://localhost:8080/user/activate(activation_link=*{activation_link})}">Activation Link</a>
+Please follow the  <a class="card-link" th:href="@{http://localhost:8080/user/activate(activation_link=*{activation_link})}">link</a> in order to activate your account.
+
+Please follow the link to activate your account
+</body>
+</html>

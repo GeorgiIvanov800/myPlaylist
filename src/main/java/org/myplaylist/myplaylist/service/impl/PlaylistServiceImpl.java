@@ -189,5 +189,6 @@ public class PlaylistServiceImpl {
                 .map(UserRoleEntity::getRole)
                 .anyMatch(r -> UserRoleEnum.ADMIN == r);
     }
+
 }
 
