@@ -1,6 +1,5 @@
 package org.myplaylist.myplaylist.web;
 
-import org.myplaylist.myplaylist.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/users")
 public class UserLoginController {
 
-    private final UserService userService;
-
-    public UserLoginController(UserService userService) {
-        this.userService = userService;
-    }
-
-
     @GetMapping("/login")
     public String login() {
 
@@ -30,7 +22,6 @@ public class UserLoginController {
     public String onFailure(
             @ModelAttribute("email") String email,
             Model model) {
-        //TODO: make it with redirect attributes
 
         model.addAttribute("email", email);
         model.addAttribute("bad_credentials", "true");

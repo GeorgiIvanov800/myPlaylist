@@ -1,6 +1,8 @@
 package org.myplaylist.myplaylist.model.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class UserEntity extends BaseEntity {
     private String lastName;
     @Column(nullable = false, unique = true)
     private String username;
+    private LocalDateTime registerDate;
     @OneToMany(mappedBy = "user")
     private List<PlaylistEntity> playlists = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -77,6 +80,14 @@ public class UserEntity extends BaseEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public LocalDateTime getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(LocalDateTime registerDate) {
+        this.registerDate = registerDate;
     }
 
     public List<PlaylistEntity> getPlaylists() {

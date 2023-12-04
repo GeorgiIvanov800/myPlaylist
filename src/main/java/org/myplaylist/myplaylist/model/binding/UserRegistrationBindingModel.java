@@ -4,7 +4,13 @@ package org.myplaylist.myplaylist.model.binding;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import org.myplaylist.myplaylist.model.validation.FieldMatch;
+import org.myplaylist.myplaylist.model.validation.UniqueUserEmail;
+@FieldMatch(
+        first = "password",
+        second = "confirmPassword",
+        message = "Passwords did not match"
+)
 public class UserRegistrationBindingModel {
     @NotEmpty
     @Size(min = 3, max = 20, message = "Username should be between 3 and 20 characters")
@@ -15,6 +21,7 @@ public class UserRegistrationBindingModel {
     private String lastName;
     @NotEmpty(message = "Email cannot be empty")
     @Pattern(regexp = "^[\\w-_.+]*[\\w-_.]@([\\w]+\\.)+[\\w]+[\\w]$", message = "Invalid Email")
+    @UniqueUserEmail
     private String email;
 
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must contain both characters and numbers")

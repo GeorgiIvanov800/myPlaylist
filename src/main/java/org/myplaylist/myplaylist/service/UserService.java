@@ -11,6 +11,4 @@ public interface UserService {
 
     boolean usernameExists(String username);
 
-    void login(UserLoginBindingModel userLoginBindingModel);
-
 }

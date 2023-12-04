@@ -3,6 +3,7 @@ package org.myplaylist.myplaylist.model.entity;
 import jakarta.persistence.*;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class PlaylistEntity extends BaseEntity {
     private String pictureUrl;
     @Column(nullable = false)
     private String description;
+    private LocalDateTime registerDate;
     @ManyToMany
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
@@ -51,6 +53,14 @@ public class PlaylistEntity extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(LocalDateTime registerDate) {
+        this.registerDate = registerDate;
     }
 
     public List<SongEntity> getSongs() {

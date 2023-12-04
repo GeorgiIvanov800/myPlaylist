@@ -21,8 +21,6 @@ public class MyPlaylistUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        //TODO:
-        System.out.println();
         return userRepository.findByEmail(email)
                 .map(this::map)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
