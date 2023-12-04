@@ -1,5 +1,6 @@
 package org.myplaylist.myplaylist.model.view;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public record PlaylistViewModel(
@@ -8,6 +9,7 @@ public record PlaylistViewModel(
         String genre,
         String pictureUrl,
         String description,
+        LocalDateTime createdOn,
         Set<SongViewModel> songs,
         UserViewModel user
 ) {}

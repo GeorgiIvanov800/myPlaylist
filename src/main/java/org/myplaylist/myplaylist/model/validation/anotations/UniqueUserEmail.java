@@ -1,7 +1,8 @@
-package org.myplaylist.myplaylist.model.validation;
+package org.myplaylist.myplaylist.model.validation.anotations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import org.myplaylist.myplaylist.model.validation.validators.UniqueUserEmailValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

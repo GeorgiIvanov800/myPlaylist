@@ -11,6 +11,7 @@ import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.myplaylist.myplaylist.repository.PlaylistRepository;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
+import org.myplaylist.myplaylist.service.SongService;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class SongServiceImpl {
+public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
     private final PlaylistMapper playlistMapper;
@@ -35,17 +36,16 @@ public class SongServiceImpl {
         this.playlistRepository = playlistRepository;
         this.nextCloudWebDavClient = nextCloudWebDavClient;
     }
-
+    @Override
     public List<SongViewModel> getAllSongs() {
         List<SongEntity> songEntities = songRepository.findAllByUserIsNull();
-        List<SongViewModel> songs = new ArrayList<>();
 
         return songEntities.stream()
                 .map(playlistMapper::songEntityToViewModelWithoutOwner)
                 .collect(Collectors.toList());
     }
 
-
+    @Override
     public List<SongViewModel> getUserSongs(String email) {
         List<SongEntity> userSongs = songRepository.findAllByUser_Email(email);
 
@@ -54,7 +54,7 @@ public class SongServiceImpl {
                 .collect(Collectors.toList());
 
     }
-
+    @Override
     @Transactional
     public void deleteSong(Long songId) throws Exception {
         SongEntity songToDelete = songRepository.findById(songId)
@@ -71,7 +71,7 @@ public class SongServiceImpl {
         nextCloudWebDavClient.deleteFile(songToDelete.getNextCloudPath());
         songRepository.deleteById(songId);
     }
-
+    @Override
     public boolean isOwner(Long id, String email) {
         return isOwner(
                 songRepository.findById(id).orElse(null),

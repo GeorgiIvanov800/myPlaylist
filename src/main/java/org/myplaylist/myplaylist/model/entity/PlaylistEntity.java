@@ -5,8 +5,6 @@ import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Table(name = "playlists")
 @Entity
@@ -19,7 +17,7 @@ public class PlaylistEntity extends BaseEntity {
     private String pictureUrl;
     @Column(nullable = false)
     private String description;
-    private LocalDateTime registerDate;
+    private LocalDateTime createdOn;
     @ManyToMany
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
@@ -55,12 +53,11 @@ public class PlaylistEntity extends BaseEntity {
         this.description = description;
     }
 
-    public LocalDateTime getRegisterDate() {
-        return registerDate;
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
-
-    public void setRegisterDate(LocalDateTime registerDate) {
-        this.registerDate = registerDate;
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
     public List<SongEntity> getSongs() {

@@ -1,14 +1,12 @@
 package org.myplaylist.myplaylist.service;
 
-import org.myplaylist.myplaylist.model.binding.UserLoginBindingModel;
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
+import org.springframework.security.core.Authentication;
 
 public interface UserService {
 
     void registerUser(UserRegistrationBindingModel userRegistrationBindingModel);
 
-    boolean emailExists(String email);
-
-    boolean usernameExists(String username);
+    Authentication login(String email);
 
 }

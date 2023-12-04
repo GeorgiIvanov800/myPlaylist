@@ -1,8 +1,6 @@
 package org.myplaylist.myplaylist.service.impl;
 
 import org.myplaylist.myplaylist.config.UserMapper;
-import org.myplaylist.myplaylist.exception.LoginCredentialsException;
-import org.myplaylist.myplaylist.model.binding.UserLoginBindingModel;
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
@@ -20,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -56,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
         user.setActive(false); // false by default, until the user activates the account
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRegisterDate(LocalDateTime.now());
         user.getRoles().add(userRole);
 
         //Save the user in the DB
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
         ));
     }
 
-
+    @Override
     public Authentication login(String email) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -81,23 +80,6 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return auth;
-    }
-
-    public Optional<UserEntity> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public boolean emailExists(String email) {
-        boolean isPresent = userRepository.findByEmail(email).isPresent();
-        System.out.println();
-        return isPresent;
-    }
-
-    @Override
-    public boolean usernameExists(String username) {
-
-        return userRepository.findByUsername(username).isPresent();
     }
 
 }

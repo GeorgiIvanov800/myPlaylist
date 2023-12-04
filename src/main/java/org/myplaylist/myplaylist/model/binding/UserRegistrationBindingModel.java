@@ -4,8 +4,10 @@ package org.myplaylist.myplaylist.model.binding;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.myplaylist.myplaylist.model.validation.FieldMatch;
-import org.myplaylist.myplaylist.model.validation.UniqueUserEmail;
+import org.myplaylist.myplaylist.model.validation.anotations.FieldMatch;
+import org.myplaylist.myplaylist.model.validation.anotations.UniqueUserEmail;
+import org.myplaylist.myplaylist.model.validation.anotations.UniqueUsername;
+
 @FieldMatch(
         first = "password",
         second = "confirmPassword",
@@ -14,6 +16,7 @@ import org.myplaylist.myplaylist.model.validation.UniqueUserEmail;
 public class UserRegistrationBindingModel {
     @NotEmpty
     @Size(min = 3, max = 20, message = "Username should be between 3 and 20 characters")
+    @UniqueUsername
     private String username;
     @NotEmpty(message = "First Name cannot be empty")
     private String firstName;
