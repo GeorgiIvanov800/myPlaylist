@@ -35,7 +35,7 @@
                 <!-- User's Playlists -->
                 <h4>Your Playlists</h4>
                 <div class="row">
-             <!--try with Pagable playlistrs.getContent-->
+                    <!--try with Pagable playlistrs.getContent-->
                     <th:block th:each="playlist : ${playlist}">
                         <div class="col-md-4 mb-4">
                             <div class="card">
@@ -55,7 +55,8 @@
                                               method="post"
                                               enctype="multipart/form-data">
                                             <input type="file" name="picture" id="picture" style="display: none;">
-                                            <label for="picture" id="uploadLabel" class="link-style-button">Upload Image</label>
+                                            <label for="picture" id="uploadLabel" class="link-style-button">Upload
+                                                Image</label>
                                             <button type="submit" style="display: none;">Submit</button>
                                         </form>
                                         <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}"
@@ -94,6 +95,18 @@
                                 </div>
                             </div>
                             <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'">Play Playlist</button>
+                            <div class="card-footer">
+                                <div class="ratings">
+                <span class="likes">
+                    <i class="fa fa-thumbs-up"></i>
+                    <span th:text="${#lists.size(playlist.ratings.?[rating == 'LIKE'])}">0</span> Likes
+                </span>
+                                    <span class="dislikes">
+                    <i class="fa fa-thumbs-down"></i>
+                    <span th:text="${#lists.size(playlist.ratings.?[rating == 'DISLIKE'])}">0</span> Dislikes
+                </span>
+                                </div>
+                            </div>
                         </div>
                     </th:block>
                 </div>

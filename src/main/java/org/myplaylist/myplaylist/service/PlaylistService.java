@@ -1,6 +1,7 @@
 package org.myplaylist.myplaylist.service;
 
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
+import org.myplaylist.myplaylist.model.enums.RatingType;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 import org.springframework.data.domain.Page;
@@ -29,4 +30,6 @@ public interface PlaylistService {
     void deletePlaylist(Long id);
 
     boolean isOwner(Long id, String email);
+
+    void ratePlaylist(Long id, String username, RatingType ratingType);
 }

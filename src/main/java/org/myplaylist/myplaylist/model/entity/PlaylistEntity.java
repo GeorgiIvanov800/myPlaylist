@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "playlists")
 @Entity
@@ -25,6 +27,8 @@ public class PlaylistEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PlaylistRatingEntity> ratings = new HashSet<>();
 
     public PlaylistEntity() {
     }
@@ -81,5 +85,13 @@ public class PlaylistEntity extends BaseEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public Set<PlaylistRatingEntity> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<PlaylistRatingEntity> ratings) {
+        this.ratings = ratings;
     }
 }

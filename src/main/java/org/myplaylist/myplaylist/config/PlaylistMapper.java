@@ -4,7 +4,9 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
+import org.myplaylist.myplaylist.model.entity.PlaylistRatingEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
+import org.myplaylist.myplaylist.model.view.PlaylistRatingViewModel;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 
@@ -19,7 +21,7 @@ public interface PlaylistMapper {
     @Mapping(target = "formattedDuration", source = "duration")
     SongViewModel songEntityToViewModelWithoutOwner(SongEntity song);
     PlaylistViewModel playlistEntityToViewModel(PlaylistEntity playlistEntity);
-
+    PlaylistRatingViewModel playlistRatingEntityToViewModel(PlaylistRatingEntity playlistRatingEntity);
 
     default String formatDuration(Duration duration) {
         if (duration == null) {

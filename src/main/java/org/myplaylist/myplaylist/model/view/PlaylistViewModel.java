@@ -1,5 +1,7 @@
 package org.myplaylist.myplaylist.model.view;
 
+import org.myplaylist.myplaylist.model.entity.PlaylistRatingEntity;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -11,5 +13,6 @@ public record PlaylistViewModel(
         String description,
         LocalDateTime createdOn,
         Set<SongViewModel> songs,
-        UserViewModel user
+        UserViewModel user,
+        Set<PlaylistRatingViewModel> ratings
 ) {}

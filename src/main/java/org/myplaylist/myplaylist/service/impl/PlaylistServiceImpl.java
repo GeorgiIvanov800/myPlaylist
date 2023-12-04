@@ -4,11 +4,9 @@ import jakarta.transaction.Transactional;
 import org.myplaylist.myplaylist.config.PlaylistMapper;
 import org.myplaylist.myplaylist.exception.ObjectNotFoundException;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
-import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
-import org.myplaylist.myplaylist.model.entity.SongEntity;
-import org.myplaylist.myplaylist.model.entity.UserEntity;
-import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
+import org.myplaylist.myplaylist.model.entity.*;
 import org.myplaylist.myplaylist.model.enums.PlaylistGenreEnums;
+import org.myplaylist.myplaylist.model.enums.RatingType;
 import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
@@ -47,6 +45,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         this.userRepository = userRepository;
         this.playlistMapper = playlistMapper;
     }
+
     @Override
     public void createPlaylist(PlaylistBindingModel playlistBindingModel, String email) {
 
@@ -68,16 +67,19 @@ public class PlaylistServiceImpl implements PlaylistService {
         LOGGER.info("Saving playlist {}", playlist.getName());
         playlistRepository.save(playlist);
     }
+
     @Override
     public Page<PlaylistViewModel> getUserPlaylist(Pageable pageable, Long userId) {
 
         Page<PlaylistEntity> byUser = playlistRepository.findByUserId(userId, pageable);
         return byUser.map(playlistMapper::playlistEntityToViewModel);
     }
+
     @Override
     public Long getTotalSongCountForUser(Long userId) {
         return playlistRepository.countTotalSongsByUserId(userId);
     }
+
     @Override
     public void updatePlaylistImage(Long playlistId, String pictureUrl, MultipartFile pictureFile, String filename) throws IOException {
 
@@ -103,6 +105,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         System.out.println(playlist.getPictureUrl());
     }
+
     @Override
     public List<SongViewModel> getSongsForPlaylist(Long playlistId, String email) {
         return playlistRepository.findById(playlistId)
@@ -112,6 +115,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new ObjectNotFoundException("Playlist ID: " + playlistId + " not found"));
     }
+
     @Override
     public void updatePlaylist(Long playlistId, PlaylistBindingModel playlistBindingModel, String email) {
         // Retrieve the existing playlist
@@ -131,17 +135,20 @@ public class PlaylistServiceImpl implements PlaylistService {
         LOGGER.info("Updating playlist {}", playlist.getName());
         playlistRepository.save(playlist);
     }
+
     @Override
     public PlaylistViewModel findById(Long id) {
-       return playlistRepository.findById(id)
+        return playlistRepository.findById(id)
                 .map(playlistMapper::playlistEntityToViewModel)
                 .orElseThrow(() -> new ObjectNotFoundException("Playlist not found: " + id));
     }
+
     @Override
     @Transactional
     public void deletePlaylist(Long id) {
         playlistRepository.deleteById(id);
     }
+
     @Override
     public boolean isOwner(Long id, String email) {
         return isOwner(
@@ -150,8 +157,38 @@ public class PlaylistServiceImpl implements PlaylistService {
         );
     }
 
+    @Override
+    @Transactional
+    public void ratePlaylist(Long id, String username, RatingType ratingType) {
+        PlaylistEntity playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Playlist not found: " + id));
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ObjectNotFoundException("User not found: " + username));
+
+        //Check if the user has already rated the playlist
+        Optional<PlaylistRatingEntity> existingRating = playlist.getRatings()
+                .stream()
+                .filter(r -> r.getUser().equals(user))
+                .findFirst();
+
+        if (existingRating.isPresent()) {
+            //update rating
+            existingRating.get().setRatingType(ratingType);
+        } else {
+            //Create new rating
+            PlaylistRatingEntity newRating = new PlaylistRatingEntity();
+            newRating.setPlaylist(playlist);
+            newRating.setUser(user);
+            newRating.setRatingType(ratingType);
+            playlist.getRatings().add(newRating);
+        }
+        playlistRepository.save(playlist);
+    }
+
+
     private boolean isOwner(PlaylistEntity playlistEntity, String email) {
-        if ( playlistEntity == null || email == null) {
+        if (playlistEntity == null || email == null) {
             // anonymous users have no playlists
             // missing playlists are meaningless
             return false;
@@ -171,6 +208,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlistEntity.getUser().getId(),
                 viewerEntity.getId());
     }
+
     private boolean isAdmin(UserEntity userEntity) {
         return userEntity
                 .getRoles()
