@@ -41,7 +41,7 @@
                         <div class="card-body">
                             <h5 class="text-center card-title" th:text="${topRated.getName()}">Playlist Name</h5>
                             <p class="vertical-separator"></p>
-                            <p class="text-center playlist-description" th:text="${topRated.description}">Playlist Description</p>
+                            <p class="playlist-description" th:text="${topRated.description}">Playlist Description</p>
                             <p class="vertical-separator"></p>
                             <ul class="list-unstyled song-list"
                                 th:if="${topRated.songs.size() > 0}">
@@ -71,7 +71,7 @@
                                 <div class="right-content">
                                     <a href="#" th:href="@{/play/playlists/{id}(id=${topRated.id})}"
                                        class="btn btn-primary btn-sm">
-                                        <i class="fa fa-play"></i> Listen
+                                        <i class="fa fa-play"></i> Listen, Rate, Comment
                                     </a>
                                 </div>
                             </div>
@@ -96,10 +96,7 @@
                         </div>
                         <div class="card-body">
                             <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
-                            <p class="vertical-separator"></p>
-                            <p class="text-center playlist-description" th:text="${playlist.description}">Playlist
-                                Description</p>
-                            <p class="vertical-separator"></p>
+                            <p class="playlist-description" th:text="${playlist.description}">Playlist Description</p>
                             <ul class="list-unstyled song-list"
                                 id="'song-list-' + ${stat.index}" th:if="${playlist.songs.size() > 0}">
                                 <!-- Display songs with conditional visibility -->

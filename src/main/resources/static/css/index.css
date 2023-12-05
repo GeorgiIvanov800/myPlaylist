@@ -29,11 +29,11 @@
 }
 
 .likes i.fa-thumbs-up {
-    color: #007bff;
+    color: green;
 }
 
 .dislikes i.fa-thumbs-down {
-    color: #dc3545;
+    color: red;
 }
 
 .likes i.fa-thumbs-up,

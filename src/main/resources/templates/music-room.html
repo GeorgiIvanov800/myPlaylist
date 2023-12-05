@@ -27,11 +27,11 @@
                         <div class="left-content">
                                   <span class="likes">
                                    <i class="fa fa-thumbs-up"></i>
-                                  <span th:text="${playlist.likeCount}">0</span> Likes</span>
+                                  <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes
                             <span class="dislikes">
                                     <i class="fa fa-thumbs-down"></i>
-                                    <span th:text="${playlist.dislikeCount}">0</span> Dislikes</span>
-                            <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
+                                    <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
+                            <p>Created by: <span th:text="${playlist.user.username}">Username</span> </p>
                         </div>
                         <div class="right-content">
                             <a href="#" th:href="@{/play/playlists/{id}(id=${playlist.id})}"
@@ -60,8 +60,12 @@
     <div class="row mt-4">
         <div class="col-md-12">
             <h3>Rate this Playlist</h3>
-            <button class="btn btn-success">Like</button>
-            <button class="btn btn-danger">Dislike</button>
+            <button th:id="likeButton_ + ${playlist.id}"
+                    class="btn btn-success"
+                    th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">Like</button>
+            <button th:id="dislikeButton_ + ${playlist.id}"
+                    class="btn btn-danger"
+                    th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'DISLIKE\')'">Dislike</button>
 
             <!-- User Comments -->
             <h3 class="mt-4">Comments</h3>
@@ -81,5 +85,7 @@
         </div>
     </div>
 </div>
+
+<script th:src="@{/js/music-room.js}"></script>
 </body>
 </html>

@@ -73,6 +73,7 @@ function ratePlaylist(playlistId, ratingType) {
 
     console.log(document.getElementById(`likeCount_${playlistId}`)); // For debugging
     console.log(document.getElementById(`dislikeCount_${playlistId}`)); // For debugging
+    console.log("Iam here");
 
     fetch(`/api/playlist/${playlistId}/${ratingType.toLowerCase()}`, {
         method: 'POST',
