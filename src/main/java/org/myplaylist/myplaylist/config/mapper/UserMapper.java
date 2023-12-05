@@ -1,4 +1,4 @@
-package org.myplaylist.myplaylist.config;
+package org.myplaylist.myplaylist.config.mapper;
 
 import org.mapstruct.Mapper;
 import org.myplaylist.myplaylist.model.binding.UserLoginBindingModel;

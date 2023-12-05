@@ -6,7 +6,6 @@ import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,12 +26,6 @@ public class DashboardController {
 
     public DashboardController(PlaylistServiceImpl playlistService) {
         this.playlistService = playlistService;
-    }
-
-
-    @GetMapping()
-    public String index() {
-        return "index";
     }
 
     @GetMapping("/users/dashboard")

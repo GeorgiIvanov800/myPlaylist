@@ -1,7 +1,7 @@
 package org.myplaylist.myplaylist.service.impl;
 
 import jakarta.transaction.Transactional;
-import org.myplaylist.myplaylist.config.PlaylistMapper;
+import org.myplaylist.myplaylist.config.mapper.PlaylistMapper;
 import org.myplaylist.myplaylist.exception.ObjectNotFoundException;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.entity.*;
@@ -20,7 +20,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

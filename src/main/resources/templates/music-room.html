@@ -20,8 +20,9 @@
                     <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
                     <p class="vertical-separator"></p>
                     <p class="playlist-description" th:text="${playlist.description}">Playlist
-                    <button class="btn btn-primary">Play All</button>
                 </div>
+
+
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <div class="left-content">
@@ -31,13 +32,13 @@
                             <span class="dislikes">
                                     <i class="fa fa-thumbs-down"></i>
                                     <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
-                            <p>Created by: <span th:text="${playlist.user.username}">Username</span> </p>
+                            <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
                         </div>
                         <div class="right-content">
-                            <a href="#" th:href="@{/play/playlists/{id}(id=${playlist.id})}"
+                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'"
                                class="btn btn-primary btn-sm">
                                 <i class="fa fa-play"></i> Play
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -85,7 +86,34 @@
         </div>
     </div>
 </div>
+<div class="music-player mb-5" id="musicPlayer">
+    <img th:src="@{/images/ne22wl.png}" class="img-fluid" alt="PlayerPicture">
+    <div class="dash">
+        <a href="#mute" class="fa fa-volume-up"></a>
+        <span class="volume-level">
+			        <em style="width: 75%"></em></span>
+        <div class="seeker">
+            <div class="wheel">
+                <div class="progress"></div>
+                <!-- Draggable Dot -->
+                <div id="progressDot" class="progress-dot"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <a href="#back" class="fa fa-fast-backward"></a>
+            <a href="#play" class="fa fa-pause"></a>
+            <a href="#forward" class="fa fa-fast-forward"></a>
+        </div>
+        <div class="info">
+            <i><span name="current">0:00</span> / <span name="duration">0:00</span></i>
+            <label></label>
+            <small></small>
+        </div>
+    </div>
+</div>
 
 <script th:src="@{/js/music-room.js}"></script>
+<script th:src="@{/js/lib/howler.core.min.js}"></script>
+<script th:src="@{/js/newPlayer.js}"></script>
 </body>
 </html>

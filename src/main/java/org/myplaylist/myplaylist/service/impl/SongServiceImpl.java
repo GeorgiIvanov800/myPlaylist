@@ -1,7 +1,7 @@
 package org.myplaylist.myplaylist.service.impl;
 
 import jakarta.transaction.Transactional;
-import org.myplaylist.myplaylist.config.PlaylistMapper;
+import org.myplaylist.myplaylist.config.mapper.PlaylistMapper;
 import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
@@ -15,7 +15,6 @@ import org.myplaylist.myplaylist.service.SongService;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

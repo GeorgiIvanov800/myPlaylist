@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head}">
+</head>
+
+<body>
+<div class="wrapper">
+    <nav th:replace="~{fragments/nav-bar}"></nav>
+    <header>
+        <h1 class="header-title">Welcome to MyPlaylist.org</h1>
+        <p class="header-description">Your favorite music corner</p>
+        <th:block sec:authorize="isAuthenticated()">
+            <th:block th:text="${#authentication.principal.displayUsername}"></th:block>
+        </th:block>
+        <th:block sec:authorize="!isAuthenticated()">
+            Anonymous!
+        </th:block>
+    </header>
+
+    <section class="container mt-4">
+        <h2 class="text-center">Admin's Picks</h2>
+        <div id="adminsPickCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Carousel items -->
+        </div>
+    </section>
+
+<!--     Top Rated Playlists-->
+    <section class="container mt-4">
+        <h2 class="text-center">Top Rated Playlists</h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <th:block th:each="topRated : ${topRated.content}">
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 playlist-card">
+                        <div class="image-wrapper">
+                            <img th:src="${topRated.getPictureUrl() != null and !topRated.getPictureUrl().isEmpty() ? topRated.pictureUrl : '/playlist-images/default.jpg'}"
+                                 class="card-img-top"
+                                 alt="Playlist Cover">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center card-title" th:text="${topRated.getName()}">Playlist Name</h5>
+                            <p class="vertical-separator"></p>
+                            <p class="playlist-description" th:text="${topRated.description}">Playlist Description</p>
+                            <p class="vertical-separator"></p>
+                            <ul class="list-unstyled song-list"
+                                th:if="${topRated.songs.size() > 0}">
+                                <!-- Display songs with conditional visibility -->
+                                <li th:each="song, stat : ${topRated.songs}"
+                                    th:classappend="${stat.count > 3} ? 'hidden' : ''"
+                                    class="mb-2 song-item">
+                                    <span th:text="${song.artist}">Artist Name</span> -
+                                    <span th:text="${song.title}">Song Title</span>
+                                    <span th:text="${song.formattedDuration()}">Time</span>
+                                    <hr class="song-separator">
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div class="left-content">
+                                  <span class="likes">
+                                   <i class="fa fa-thumbs-up"></i>
+                                  <span th:id="'likeCount_' + ${topRated.id}" th:text="${topRated.likeCount}">0</span> Likes</span>
+                                    <span class="dislikes">
+                                    <i class="fa fa-thumbs-down"></i>
+                                    <span th:id="'dislikeCount_' + ${topRated.id}" th:text="${topRated.dislikeCount}">0</span> Dislikes</span>
+                                    <p>Created by: <span th:text="${topRated.user.username}">Username</span></p>
+                                </div>
+                                <div class="right-content">
+                                    <a href="#" th:href="@{/play/playlists/{id}(id=${topRated.id})}"
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fa fa-play"></i> Listen, Rate, Comment
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </section>
+
+    <!-- Newly Added Playlists -->
+    <section class="container mt-4">
+        <h2 class="text-center">Newly Added Playlists</h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <th:block th:each="playlist : ${playlist.content}">
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 playlist-card">
+                        <div class="image-wrapper">
+                            <img th:src="${playlist.getPictureUrl() != null and !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}"
+                                 class="card-img-top"
+                                 alt="Playlist Cover">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
+                            <p class="playlist-description" th:text="${playlist.description}">Playlist Description</p>
+                            <ul class="list-unstyled song-list"
+                                id="'song-list-' + ${stat.index}" th:if="${playlist.songs.size() > 0}">
+                                <!-- Display songs with conditional visibility -->
+                                <li th:each="song, stat : ${playlist.songs}"
+                                    th:classappend="${stat.count > 3} ? 'hidden' : ''"
+                                    class="mb-2 song-item">
+                                    <span th:text="${song.artist}">Artist Name</span> -
+                                    <span th:text="${song.title}">Song Title</span>
+                                    <span th:text="${song.formattedDuration()}">Time</span>
+                                    <hr class="song-separator">
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div class="left-content">
+                                  <span class="likes">
+                                   <i class="fa fa-thumbs-up"></i>
+                                  <span th:text="${playlist.likeCount}">0</span></span>
+                                    <span class="dislikes">
+                                    <i class="fa fa-thumbs-down"></i>
+                                    <span th:text="${playlist.dislikeCount}">0</span></span>
+                                    <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
+                                </div>
+                                <div class="right-content">
+                                    <a href="#" th:href="@{/play/playlists/{id}(id=${playlist.id})}"
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fa fa-play"></i> Listen, Rate, Comment
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </section>
+
+
+    <!-- User Engagement Section -->
+    <section class="container mt-4 text-center">
+        <h2>Join Our Community</h2>
+        <p>Create and share your playlists with music lovers like you!</p>
+        <a class="btn btn-primary" th:href="@{/users/register}">Sign Up</a>
+    </section>
+
+
+</div>
+<!-- Wrapper Ends -->
+<footer class="footer bg-blur">
+    <div class="container text-center">
+        <p>&copy; 2023 MyPlaylist.org. All rights reserved.</p>
+        <p>Privacy Policy | Terms of Use</p>
+    </div>
+</footer>
+<script th:src="@{/js/index.js}"></script>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 package org.myplaylist.myplaylist.service.impl;
 
-import org.myplaylist.myplaylist.config.UserMapper;
+import org.myplaylist.myplaylist.config.mapper.UserMapper;
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;

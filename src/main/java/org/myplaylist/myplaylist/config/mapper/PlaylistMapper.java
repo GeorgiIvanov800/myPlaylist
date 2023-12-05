@@ -1,12 +1,10 @@
-package org.myplaylist.myplaylist.config;
+package org.myplaylist.myplaylist.config.mapper;
 
 import org.mapstruct.*;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
-import org.myplaylist.myplaylist.model.entity.PlaylistRatingEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.enums.RatingType;
-import org.myplaylist.myplaylist.model.view.PlaylistRatingViewModel;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;
 
