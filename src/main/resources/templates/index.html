@@ -69,7 +69,7 @@
                                     <p>Created by: <span th:text="${topRated.user.username}">Username</span></p>
                                 </div>
                                 <div class="right-content">
-                                    <a href="#" th:href="@{/playlists/{id}(id=${topRated.id})}"
+                                    <a href="#" th:href="@{/play/playlists/{id}(id=${topRated.id})}"
                                        class="btn btn-primary btn-sm">
                                         <i class="fa fa-play"></i> Listen
                                     </a>
@@ -127,7 +127,7 @@
                                     <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
                                 </div>
                                 <div class="right-content">
-                                    <a href="#" th:href="@{/playlists/{id}(id=${playlist.id})}"
+                                    <a href="#" th:href="@{/play/playlists/{id}(id=${playlist.id})}"
                                        class="btn btn-primary btn-sm">
                                         <i class="fa fa-play"></i> Listen
                                     </a>

@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -232,12 +233,11 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Cacheable("topRatedPlaylists")
     public Page<PlaylistViewModel> topRatedPlaylists(Pageable pageable) {
 
-        pageable = PageRequest.of(0, 10); // Example: first 10 results
+        pageable = PageRequest.of(0, 10);
 
         Page<PlaylistEntity> topRated = playlistRepository.findTopRatedPlaylists(pageable);
         return topRated.map(playlistMapper::playlistEntityToViewModel);
     }
-
 
     private boolean isOwner(PlaylistEntity playlistEntity, String email) {
         if (playlistEntity == null || email == null) {
@@ -280,6 +280,5 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
         playlist.setSongs(songList);
     }
-
 }
 

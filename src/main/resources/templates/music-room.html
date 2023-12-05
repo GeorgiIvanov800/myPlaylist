@@ -1,32 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<head th:replace="~{fragments/head}">
 </head>
 <body>
+
+<nav th:replace="~{fragments/nav-bar}"></nav>
 <div class="container mt-4">
     <div class="row">
         <!-- Playlist Information -->
-        <div class="col-md-6">
-            <div class="card">
-                <img src="playlist-cover-url.jpg" class="card-img-top" alt="Playlist Cover">
+        <div class="col-md-4">
+            <div class="card h-100 playlist-card">
+                <div class="image-wrapper">
+                    <img th:src="${playlist.getPictureUrl() != null and !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}"
+                         class="card-img-top"
+                         alt="Playlist Cover">
+                    <hr class="song-separator">
+                </div>
+                <hr class="song-separator">
                 <div class="card-body">
-                    <h5 class="card-title">Playlist Name</h5>
-                    <p class="card-text">Playlist Description...</p>
+                    <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
+                    <p class="vertical-separator"></p>
+                    <p class="text-center playlist-description" th:text="${playlist.description}">Playlist
                     <button class="btn btn-primary">Play All</button>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <div class="left-content">
+                                  <span class="likes" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">
+                                   <i class="fa fa-thumbs-up"></i>
+                                  <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes</span>
+                            <span class="dislikes"
+                                  th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'DISLIKE\')'">
+                                    <i class="fa fa-thumbs-down"></i>
+                                    <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes</span>
+                            <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
+                        </div>
+                        <div class="right-content">
+                            <a href="#" th:href="@{/play/playlists/{id}(id=${playlist.id})}"
+                               class="btn btn-primary btn-sm">
+                                <i class="fa fa-play"></i> Play
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Song List -->
         <div class="col-md-6">
-            <ul class="list-group">
-                <li class="list-group-item" th:each="song : ${playlist.songs}">
-                    <span>Artist - Song Title</span>
-                    <span class="float-end">3:45</span>
+            <ul class="list-group song-list">
+            <li class="list-group-item" th:each="song : ${playlist.songs}">
+                    <span th:text="${song.artist}">Artist Name</span> -
+                    <span th:text="${song.title}">Song Title</span>
+                    <span th:text="${song.formattedDuration()}">Time</span>
                 </li>
-                <!-- Repeat for each song -->
             </ul>
         </div>
     </div>
