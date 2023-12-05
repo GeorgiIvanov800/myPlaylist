@@ -117,19 +117,18 @@
                         <div class="card-footer">
                             <div class="d-flex justify-content-between">
                                 <div class="left-content">
-                                  <span class="likes" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">
+                                  <span class="likes">
                                    <i class="fa fa-thumbs-up"></i>
-                                  <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes</span>
-                                    <span class="dislikes"
-                                          th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'DISLIKE\')'">
+                                  <span th:text="${playlist.likeCount}">0</span></span>
+                                    <span class="dislikes">
                                     <i class="fa fa-thumbs-down"></i>
-                                    <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes</span>
+                                    <span th:text="${playlist.dislikeCount}">0</span></span>
                                     <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
                                 </div>
                                 <div class="right-content">
                                     <a href="#" th:href="@{/play/playlists/{id}(id=${playlist.id})}"
                                        class="btn btn-primary btn-sm">
-                                        <i class="fa fa-play"></i> Listen
+                                        <i class="fa fa-play"></i> Listen, Rate, Comment
                                     </a>
                                 </div>
                             </div>

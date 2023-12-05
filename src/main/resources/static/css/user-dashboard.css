@@ -19,10 +19,9 @@
 }
 
 .card-title {
-    display: inline-block;
     margin-right: 10px;
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size:20px;
     text-align: center;
     text-decoration-color: #3dd5f3;
 }

@@ -34,17 +34,6 @@
 
 .dislikes i.fa-thumbs-down {
     color: #dc3545;
-    cursor: pointer;
-}
-
-.likes i.fa-thumbs-up:hover,
-.dislikes i.fa-thumbs-down:hover {
-    color: #0056b3;
-    transform: scale(1.1);
-}
-
-.dislikes i.fa-thumbs-down:hover {
-    color: #a71d2a;
 }
 
 .likes i.fa-thumbs-up,
