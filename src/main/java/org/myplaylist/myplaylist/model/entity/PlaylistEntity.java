@@ -7,19 +7,22 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 @Table(name = "playlists")
 @Entity
 public class PlaylistEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PlaylistGenreEnums genre;
     private String pictureUrl;
     @Column(nullable = false)
     private String description;
+    @Column(name = "created_on")
     private LocalDateTime createdOn;
+    private boolean isPrivate;
     @ManyToMany
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
@@ -64,6 +67,12 @@ public class PlaylistEntity extends BaseEntity {
         this.createdOn = createdOn;
     }
 
+    public boolean getIsPrivate() {
+        return isPrivate;
+    }
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
     public List<SongEntity> getSongs() {
         return songs;
     }

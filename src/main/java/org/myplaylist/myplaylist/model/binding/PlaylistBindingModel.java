@@ -22,6 +22,7 @@ public class PlaylistBindingModel {
     @NotEmpty(message = "Playlist without songs is it really a playlist?!")
     private List<Long> songIds;
     private String pictureUrl;
+    private boolean isPrivate;
 
     public PlaylistBindingModel() {
     }
@@ -64,5 +65,12 @@ public class PlaylistBindingModel {
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public boolean getIsPrivate() {
+        return isPrivate;
+    }
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }

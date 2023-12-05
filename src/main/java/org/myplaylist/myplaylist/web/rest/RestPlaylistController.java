@@ -59,6 +59,7 @@ public class RestPlaylistController {
     @GetMapping("/{id}")
     public ResponseEntity<PlaylistViewModel> getPlaylist(@PathVariable Long id) {
         PlaylistViewModel playlist = playlistService.findById(id);
+
         return ResponseEntity.ok(playlist);
     }
 

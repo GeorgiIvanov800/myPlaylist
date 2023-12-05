@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let pathSegments = window.location.pathname.split('/');
     let playlistId = pathSegments[pathSegments.length - 1];
-    console.log(playlistId);
     if (playlistId && !isNaN(playlistId)) {
         editPlaylist(playlistId);
     }
@@ -29,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let description = document.getElementById('playlistDescription').value;
         let songIds = [];
         let genre = document.getElementById('playlistGenre').value;
+        let isPrivate = document.getElementById('isPrivate').checked;
 
         songIds = Array.from(document.querySelectorAll('#playlistSongs li'))
             .map(li => li.dataset.songId);
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Accept': 'application/json',
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({name, description, songIds, genre})
+            body: JSON.stringify({name, description, songIds, genre, isPrivate})
         })
             .then(response => {
                 if (!response.ok) {
@@ -96,18 +96,23 @@ function editPlaylist(playlistId) {
     fetch('/api/playlist/' + playlistId)
         .then(response => response.json())
         .then(data => {
+            console.log("Received data:", data); // Add this line
             document.getElementById('playlistId').value = playlistId;
             document.getElementById('playlistName').value = data.name;
             document.getElementById('playlistDescription').value = data.description;
             document.getElementById('playlistGenre').value = data.genre;
+            document.getElementById('isPrivate').checked = data.isPrivate;
+            console.log("is private: ", data.isPrivate)
 
             // Change the heading and button text for edit mode
             document.querySelector('h2.text-center').textContent = 'Edit Your Playlist';
             document.getElementById('playlistSubmitButton').textContent = 'Update Playlist';
             document.querySelectorAll('.delete-song').forEach(button => button.style.display = 'none');
             document.getElementById('uploadForm').remove();
+
             // Clear existing songs and populate with new ones
             let playlistSongsElement = document.getElementById('playlistSongs');
+
             playlistSongsElement.innerHTML = ''; // Clear existing songs
             if (data.songs && Array.isArray(data.songs)) {
                 data.songs.forEach(song => {
@@ -169,7 +174,6 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
 
     const playlistSongs = document.getElementById('playlistSongs');
     const li = document.createElement('li');
-    console.log(`Adding song with ID: ${songId}`);
 
     li.setAttribute('data-song-id', songId);
     li.className = 'list-group-item d-flex justify-content-between align-items-center';
@@ -185,7 +189,6 @@ function addSongToPlaylist(songId, songTitle, songArtist) {
     playlistSongs.appendChild(li);
     //Disable the added button when songs are added to the playlist
     const addButton = document.querySelector(`li[data-song-id="${songId}"] .add-song`);
-    console.log("Targeted add button:", addButton);
     //Add song id to the set to keep track which songs are added
     addedSongIds.add(songId);
     if (addButton) {

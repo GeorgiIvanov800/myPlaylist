@@ -14,6 +14,7 @@ public class PlaylistViewModel {
     private UserViewModel user;
     private int likeCount;
     private int dislikeCount;
+    private boolean isPrivate;
 
     public PlaylistViewModel() {
     }
@@ -96,5 +97,12 @@ public class PlaylistViewModel {
 
     public void setDislikeCount(int dislikeCount) {
         this.dislikeCount = dislikeCount;
+    }
+
+    public boolean getIsPrivate() {
+        return isPrivate;
+    }
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }

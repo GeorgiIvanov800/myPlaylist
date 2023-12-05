@@ -49,11 +49,18 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public void createPlaylist(PlaylistBindingModel playlistBindingModel, String email) {
 
-        PlaylistEntity playlist = new PlaylistEntity();
-        playlist.setName(playlistBindingModel.getName());
-        playlist.setDescription(playlistBindingModel.getDescription());
-        playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
+//        PlaylistEntity playlist = new PlaylistEntity();
+
+        System.out.println();
+
+        PlaylistEntity playlist = playlistMapper.playListBindingModelToEntity(playlistBindingModel);
+
+//        playlist.setName(playlistBindingModel.getName());
+//        playlist.setDescription(playlistBindingModel.getDescription());
+//        playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
         playlist.setCreatedOn(LocalDateTime.now());
+        playlist.setIsPrivate(playlistBindingModel.getIsPrivate());
+
 
         Optional<UserEntity> userOptional = userRepository.findByEmail(email); // Or I should use the service
         if (userOptional.isEmpty()) {
@@ -103,7 +110,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         playlist.setPictureUrl(pictureUrl);
         playlistRepository.save(playlist);
 
-        System.out.println(playlist.getPictureUrl());
     }
 
     @Override
@@ -126,6 +132,8 @@ public class PlaylistServiceImpl implements PlaylistService {
         playlist.setName(playlistBindingModel.getName());
         playlist.setDescription(playlistBindingModel.getDescription());
         playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
+        playlist.setIsPrivate(playlistBindingModel.getIsPrivate());
+
 
         // Update songs in the playlist if necessary
         updateSongsInPlaylist(playlistBindingModel, playlist);
@@ -205,6 +213,17 @@ public class PlaylistServiceImpl implements PlaylistService {
         counts.put("dislikeCount", dislikeCount);
 
         return counts;
+    }
+
+    @Override
+    public Page<PlaylistViewModel> findByLatestCreated(Pageable pageable) {
+
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+
+        Page<PlaylistEntity> byDate = playlistRepository.findByIsPrivateFalseAndCreatedOnAfter(oneWeekAgo, pageable);
+
+        return byDate.map(playlistMapper::playlistEntityToViewModel);
+
     }
 
 

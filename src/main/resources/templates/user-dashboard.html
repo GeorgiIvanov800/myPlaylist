@@ -50,13 +50,13 @@
                                     </button>
                                     <div class="dropdown-content">
                                         <a th:href="@{/playlist/create/{id}(id=${playlist.id})}">Edit</a>
-                                        <form id="imageUploadForm"
+                                        <form th:class="'image-upload-form'"
                                               th:action="@{/users/dashboard/upload-image/{id}(id=${playlist.id})}"
                                               method="post"
-                                              enctype="multipart/form-data">
-                                            <input type="file" name="picture" id="picture" style="display: none;">
-                                            <label for="picture" id="uploadLabel" class="link-style-button">Upload
-                                                Image</label>
+                                              enctype="multipart/form-data"
+                                              th:data-playlist-id="${playlist.id}">
+                                            <input type="file" th:id="'picture' + ${playlist.id}" name="picture" style="display: none;">
+                                            <label th:for="'picture' + ${playlist.id}" class="link-style-button">Upload Image</label>
                                             <button type="submit" style="display: none;">Submit</button>
                                         </form>
                                         <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}"

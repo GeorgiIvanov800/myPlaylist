@@ -1,29 +1,35 @@
 // Inform the User that the upload picture size should be max of 1mb
 //and trigger the upload
 document.addEventListener('DOMContentLoaded', function () {
-    const fileInput = document.getElementById('picture');
-    const imageUploadForm = document.getElementById('imageUploadForm');
-
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file && file.size > 1048576) { // 1MB size limit
-            alert('Sorry, but the file size should be less than 1MB');
-            this.value = ''; // Reset the file input
-        } else {
-            imageUploadForm.submit(); // Automatically submit the form when a file is selected
-        }
+    // Select all file inputs within forms having the class 'image-upload-form'
+    const imageUploadForms = document.querySelectorAll('.image-upload-form input[type="file"]');
+    imageUploadForms.forEach(fileInput => {
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file && file.size > 1048576) { // 1MB size limit
+                alert('Sorry, but the file size should be less than 1MB');
+                this.value = ''; // Reset the file input
+                return;
+            }
+            if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+                alert('Sorry, only JPG and PNG files are allowed');
+                this.value = ''; // Reset the file input
+            } else {
+                this.closest('.image-upload-form').submit();
+            }
+        });
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.show-more').forEach(function(link) {
-        link.addEventListener('click', function(event) {
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.show-more').forEach(function (link) {
+        link.addEventListener('click', function (event) {
             event.preventDefault();
             let songList = this.previousElementSibling;
 
             // Remove hidden class to reveal songs
             let hiddenItems = songList.querySelectorAll('.hidden');
-            hiddenItems.forEach(function(item) {
+            hiddenItems.forEach(function (item) {
                 item.classList.remove('hidden');
             });
 
@@ -42,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     //Hide the last visible separator
-    document.querySelectorAll('.song-list').forEach(function(songList) {
+    document.querySelectorAll('.song-list').forEach(function (songList) {
         let separators = songList.querySelectorAll('.song-separator');
         if (separators.length) {
             separators[separators.length - 1].style.display = 'none';

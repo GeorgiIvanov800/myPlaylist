@@ -62,7 +62,11 @@
                         </select>
                         <div id="genreError" class="playlist-form-error"></div>
                     </div>
-
+                    <!-- Private Playlist Checkbox -->
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="isPrivate" name="isPrivate">
+                        <label class="form-check-label" for="isPrivate">Make this playlist private</label>
+                    </div>
                     <input type="hidden" id="songIds" name="songIds" th:value="songIds"/>
                     <button type="submit" id="playlistSubmitButton" class="btn btn-primary">Create Playlist</button>
                 </form>

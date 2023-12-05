@@ -1,6 +1,7 @@
 package org.myplaylist.myplaylist.config;
 
 import org.mapstruct.*;
+import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
 import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.entity.PlaylistRatingEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
@@ -13,6 +14,8 @@ import java.time.Duration;
 
 @Mapper(componentModel = "spring")
 public interface PlaylistMapper {
+
+    PlaylistEntity playListBindingModelToEntity(PlaylistBindingModel playlistBindingModel);
     @Mapping(target = "formattedDuration", source = "duration")
     @Mapping(target = "userIsOwner", expression = "java(isOwner(song, currentUserEmail))")
     SongViewModel songEntityToViewModel(SongEntity song, @Context String currentUserEmail);
@@ -36,8 +39,6 @@ public interface PlaylistMapper {
         playlistViewModel.setLikeCount(likeCount);
         playlistViewModel.setDislikeCount(dislikeCount);
     }
-
-
 
     default String formatDuration(Duration duration) {
         if (duration == null) {

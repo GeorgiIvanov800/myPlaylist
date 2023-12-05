@@ -33,4 +33,6 @@ public interface PlaylistService {
     boolean isOwner(Long id, String email);
 
     Map<String, Integer> ratePlaylist(Long id, String username, RatingType ratingType);
+
+    Page<PlaylistViewModel> findByLatestCreated(Pageable pageable);
 }

@@ -56,7 +56,22 @@ public class DashboardController {
     @PostMapping("/users/dashboard/upload-image/{playlistId}")
     public String uploadPlaylistImage(@PathVariable Long playlistId,
                                                  @RequestParam("picture") MultipartFile pictureFile) throws IOException {
-        System.out.println();
+        if (pictureFile != null && !pictureFile.isEmpty()) {
+            String contentType = pictureFile.getContentType();
+
+            // Check if file is larger than 1 MB
+            if (pictureFile.getSize() > 1048576) {
+                // Handle file size error
+                return "redirect:/users/dashboard";
+            }
+
+            // Check if file is JPG or PNG
+            if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
+
+                return "redirect:/users/dashboard";
+            }
+        }
+
         String filename = StringUtils.cleanPath(Objects.requireNonNull(pictureFile.getOriginalFilename()));
 
         playlistService.updatePlaylistImage(playlistId, "/playlist-images/" + filename, pictureFile, filename);
