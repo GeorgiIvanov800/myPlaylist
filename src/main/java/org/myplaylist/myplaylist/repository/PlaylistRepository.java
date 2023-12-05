@@ -20,4 +20,7 @@ public interface PlaylistRepository extends JpaRepository<PlaylistEntity, Long> 
     Optional<PlaylistEntity> findById(Long id);
 
     Page<PlaylistEntity> findByIsPrivateFalseAndCreatedOnAfter(LocalDateTime oneWeekAgo, Pageable pageable);
+    @Query("SELECT p FROM PlaylistEntity p LEFT JOIN p.ratings r WHERE r.ratingType = 'LIKE' GROUP BY p ORDER BY COUNT(r) DESC")
+    Page<PlaylistEntity> findTopRatedPlaylists(Pageable pageable);
+
 }

@@ -16,7 +16,9 @@ import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.PlaylistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -224,6 +226,16 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         return byDate.map(playlistMapper::playlistEntityToViewModel);
 
+    }
+
+    @Override
+    @Cacheable("topRatedPlaylists")
+    public Page<PlaylistViewModel> topRatedPlaylists(Pageable pageable) {
+
+        pageable = PageRequest.of(0, 10); // Example: first 10 results
+
+        Page<PlaylistEntity> topRated = playlistRepository.findTopRatedPlaylists(pageable);
+        return topRated.map(playlistMapper::playlistEntityToViewModel);
     }
 
 

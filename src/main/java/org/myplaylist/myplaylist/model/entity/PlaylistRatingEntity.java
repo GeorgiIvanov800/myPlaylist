@@ -7,6 +7,7 @@ import org.myplaylist.myplaylist.model.enums.RatingType;
 @Table(name = "playlist_ratings")
 public class PlaylistRatingEntity extends BaseEntity {
     @ManyToOne
+    @JoinColumn(name = "playlist_id")
     private PlaylistEntity playlist;
     @ManyToOne
     private UserEntity user;

@@ -35,4 +35,6 @@ public interface PlaylistService {
     Map<String, Integer> ratePlaylist(Long id, String username, RatingType ratingType);
 
     Page<PlaylistViewModel> findByLatestCreated(Pageable pageable);
+
+    Page<PlaylistViewModel> topRatedPlaylists(Pageable pageable);
 }

@@ -38,3 +38,38 @@ function updateRatingCount(playlistId, likeCount, dislikeCount) {
     likeCountElement.textContent = likeCount;
     dislikeCountElement.textContent = dislikeCount;
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.show-more').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            let songList = this.previousElementSibling;
+
+            // Remove hidden class to reveal songs
+            let hiddenItems = songList.querySelectorAll('.hidden');
+            hiddenItems.forEach(function (item) {
+                item.classList.remove('hidden');
+            });
+
+            // Hide the "Show More" link
+            this.style.display = 'none';
+
+            // all separators are visible
+            let separators = songList.querySelectorAll('.song-separator');
+            separators.forEach(separator => separator.style.display = 'block');
+
+            // Then hide the last one
+            if (separators.length) {
+                separators[separators.length - 1].style.display = 'none';
+            }
+        });
+    });
+
+    //Hide the last visible separator
+    document.querySelectorAll('.song-list').forEach(function (songList) {
+        let separators = songList.querySelectorAll('.song-separator');
+        if (separators.length) {
+            separators[separators.length - 1].style.display = 'none';
+        }
+    });
+});

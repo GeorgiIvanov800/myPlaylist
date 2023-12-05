@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.show-more').forEach(function (link) {
         link.addEventListener('click', function (event) {

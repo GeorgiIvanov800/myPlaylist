@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Playlist Information -->
+        <div class="col-md-6">
+            <div class="card">
+                <img src="playlist-cover-url.jpg" class="card-img-top" alt="Playlist Cover">
+                <div class="card-body">
+                    <h5 class="card-title">Playlist Name</h5>
+                    <p class="card-text">Playlist Description...</p>
+                    <button class="btn btn-primary">Play All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Song List -->
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item" th:each="song : ${playlist.songs}">
+                    <span>Artist - Song Title</span>
+                    <span class="float-end">3:45</span>
+                </li>
+                <!-- Repeat for each song -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Rating and Comment Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Rate this Playlist</h3>
+            <button class="btn btn-success">Like</button>
+            <button class="btn btn-danger">Dislike</button>
+
+            <!-- User Comments -->
+            <h3 class="mt-4">Comments</h3>
+            <textarea class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+            <button class="btn btn-primary mt-2">Submit Comment</button>
+
+            <!-- Display Comments -->
+            <div class="comments mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Username</h6>
+                        <p class="card-text">User comment...</p>
+                    </div>
+                </div>
+                <!-- Repeat for each comment -->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

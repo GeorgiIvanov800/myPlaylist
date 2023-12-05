@@ -30,7 +30,7 @@ public class PlaylistEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "playlist")
     private Set<PlaylistRatingEntity> ratings = new HashSet<>();
 
     public PlaylistEntity() {
