@@ -42,32 +42,40 @@
                 <div class="col-md-3 mb-3">
                     <div class="card h-100 playlist-card">
                         <div class="image-wrapper">
-                            <img th:src="${playlist.getPictureUrl() != null and !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}" class="card-img-top" alt="Playlist Cover">
+                            <img th:src="${playlist.getPictureUrl() != null and !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}"
+                                 class="card-img-top"
+                                 alt="Playlist Cover">
                         </div>
                         <div class="card-body">
                             <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
+                            <p class="vertical-separator"></p>
                             <p class="text-center playlist-description" th:text="${playlist.description}">Playlist Description</p>
-                            <ul class="list-unstyled song-list" th:if="${playlist.songs.size() > 0}">
+                            <p class="vertical-separator"></p>
+                            <ul class="list-unstyled song-list"
+                                id="'song-list-' + ${stat.index}" th:if="${playlist.songs.size() > 0}">
                                 <!-- Display songs with conditional visibility -->
-                                <li th:each="song, stat : ${playlist.songs}" th:classappend="${stat.count > 3} ? 'hidden' : ''" class="mb-2 song-item">
+                                <li th:each="song, stat : ${playlist.songs}"
+                                    th:classappend="${stat.count > 3} ? 'hidden' : ''"
+                                    class="mb-2 song-item">
                                     <span th:text="${song.artist}">Artist Name</span> -
                                     <span th:text="${song.title}">Song Title</span>
                                     <span th:text="${song.formattedDuration()}">Time</span>
+                                    <hr class="song-separator">
                                 </li>
                             </ul>
                             <!-- Show More link -->
-                            <a href="#" th:if="${playlist.songs.size() > 3}" class="show-more">... and more</a>
+                            <a href="#" th:if="${playlist.songs.size() > 3}" class="show-more">and more</a>
                         </div>
                         <div class="card-footer">
                             <div class="ratings">
-                        <span class="likes" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">
-                            <i class="fa fa-thumbs-up"></i>
-                            <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes
-                        </span>
+                               <span class="likes" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">
+                                  <i class="fa fa-thumbs-up"></i>
+                                 <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes
+                               </span>
                                 <span class="dislikes" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'DISLIKE\')'">
-                            <i class="fa fa-thumbs-down"></i>
-                            <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
-                        </span>
+                                  <i class="fa fa-thumbs-down"></i>
+                                <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
+                               </span>
                             </div>
                         </div>
                     </div>
@@ -93,6 +101,7 @@
         <p>Privacy Policy | Terms of Use</p>
     </div>
 </footer>
+<script th:src="@{/js/index.js}"></script>
 </body>
 
 </html>
