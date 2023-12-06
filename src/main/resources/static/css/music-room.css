@@ -3,3 +3,18 @@
     overflow-y: auto;
 }
 
+.song-list-music-room .list-group-item {
+    cursor: pointer;
+}
+
+.song-list-music-room .list-group-item:hover {
+    background-color: cornflowerblue; /* Change as per your color scheme */
+}
+
+.song-list-music-room .list-group-item {
+    border: 1px solid #ddd; /* Example style */
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 5px;
+}
+

@@ -2,8 +2,7 @@
 let sound = null;
 let currentSongIndex = 0;
 let playlist = []; // Initialize playlist at the top
-
-
+//Load the playlist in the player on a page load
 document.addEventListener('DOMContentLoaded', () => {
     let playlistIdElement = document.getElementById('playlistId');
     let playlistId = playlistIdElement.getAttribute('data-id');
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function to load and play a song
 function loadSong(index) {
     let song = playlist[index];
-    console.log('Loading song:', song);
     if (sound) {
         sound.unload();
     }
@@ -20,7 +18,6 @@ function loadSong(index) {
         src: [song.url],
         html5: true,
         onplay: function() {
-            console.log('Song playing:', song.title);
             updateProgress(); // Start updating the progress when the song plays
         },
         onend: function() {
@@ -172,8 +169,7 @@ function loadPlaylist(playlistId) {
                     formattedDuration: song.formattedDuration
                 };
             });
-
-            attachDoubleClickListeners();
+            attachClickListeners();
             if (playlist.length > 0) {
                 updatePlaylistDisplay(songs); // Update the playlist display
             }
@@ -227,11 +223,11 @@ function updatePlaylistDisplay(songs) {
     });
 }
 
-function attachDoubleClickListeners() {
+function attachClickListeners() {
     const songItems = document.querySelectorAll('.list-group.song-list-music-room .list-group-item');
 
     songItems.forEach((item, index) => {
-        item.addEventListener('dblclick', () => {
+        item.addEventListener('click', () => {
             loadSong(index);
         });
     });
