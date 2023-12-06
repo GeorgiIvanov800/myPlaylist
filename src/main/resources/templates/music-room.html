@@ -17,7 +17,6 @@
                 <div class="image-wrapper">
                     <img th:src="${playlist.getPictureUrl() != null && !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}" class="card-img-top" alt="Playlist Cover">
                 </div>
-                <hr class="song-separator">
                 <div class="card-body">
                     <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
                     <p class="vertical-separator"></p>
