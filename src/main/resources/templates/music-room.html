@@ -87,8 +87,6 @@
                     </div>
                 </div>
             </div>
-
-
             <!-- Display Comments -->
             <div class="container">
                 <div class="row justify-content-center">
@@ -103,6 +101,8 @@
 
                                 <!-- Displaying the creation date -->
                                 <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
+                                <a th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report</a>
+
                             </div>
                         </div>
                     </div>

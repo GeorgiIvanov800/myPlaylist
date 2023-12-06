@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RateLimitingService {
 
     private final ConcurrentHashMap<String, AtomicInteger> requestCounts = new ConcurrentHashMap<>();
-    private static final int MAX_REQUESTS_PER_MINUTE = 10; // Example limit
+    private static final int MAX_REQUESTS_PER_MINUTE = 100;
 
     public boolean isAllowed(String clientIp) {
         requestCounts.putIfAbsent(clientIp, new AtomicInteger(0));

@@ -147,7 +147,9 @@
                             </div>
                         </div>
                         <!-- Add Song Button -->
-                        <form id="uploadForm" th:method="POST" th:action="@{/playlist/upload}"
+                        <form id="uploadForm"
+                              th:method="post"
+                              th:action="@{/playlist/upload}"
                               enctype="multipart/form-data">
                             <!-- Information Checkbox -->
                             <div class="form-check mb-3">
