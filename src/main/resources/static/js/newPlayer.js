@@ -2,9 +2,13 @@
 let sound = null;
 let currentSongIndex = 0;
 let playlist = []; // Initialize playlist at the top
-let isDraggingProgressDot = false;
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    let playlistIdElement = document.getElementById('playlistId');
+    let playlistId = playlistIdElement.getAttribute('data-id');
+    loadPlaylist(playlistId);
+});
 // Function to load and play a song
 function loadSong(index) {
     let song = playlist[index];
@@ -24,7 +28,8 @@ function loadSong(index) {
         }
     });
     updateNowPlaying(song.title, song.artist, song.formattedDuration);
-    console.log('Playing song:', song.title, 'from URL:', song.url);
+
+    document.getElementById('musicPlayer').classList.add('visible');
     sound.play();
 }
 
@@ -159,7 +164,6 @@ function loadPlaylist(playlistId) {
             return response.json();
         })
         .then(songs => {
-            console.log('Songs received:', songs);
             playlist = songs.map(song => {
                 return {
                     title: song.title,
@@ -168,10 +172,9 @@ function loadPlaylist(playlistId) {
                     formattedDuration: song.formattedDuration
                 };
             });
-            document.getElementById('musicPlayer').classList.add('visible');
 
+            attachDoubleClickListeners();
             if (playlist.length > 0) {
-                loadSong(0); // Load the first song from the new playlist
                 updatePlaylistDisplay(songs); // Update the playlist display
             }
         })
@@ -180,6 +183,14 @@ function loadPlaylist(playlistId) {
             // Handle errors (like showing an alert or a message to the user)
         });
 }
+
+// Play button event listener
+function playFirstSong() {
+    if (playlist.length > 0 && (!sound || !sound.playing())) {
+        loadSong(0); // Load and play the first song
+    }
+}
+
 
 // Populate playlist display (unchanged)
 function populatePlaylistFromDOM() {
@@ -194,15 +205,16 @@ function populatePlaylistFromDOM() {
         url = "/" + url;
         return { title, artist, url, formattedDuration };
     });
+
 }
 
 populatePlaylistFromDOM();
 
 // Update playlist display as before (unchanged)
 function updatePlaylistDisplay(songs) {
-    console.log('Updating playlist display', songs);
+
     const playlistElement = document.getElementById('playlistSongs');
-    console.log('Playlist element:', playlistElement);
+
     playlistElement.innerHTML = ''; // Clear the existing list
 
     songs.forEach((song, index) => {
@@ -212,6 +224,16 @@ function updatePlaylistDisplay(songs) {
             loadSong(index); // Load and play the song when clicked
         };
         playlistElement.appendChild(songItem);
+    });
+}
+
+function attachDoubleClickListeners() {
+    const songItems = document.querySelectorAll('.list-group.song-list-music-room .list-group-item');
+
+    songItems.forEach((item, index) => {
+        item.addEventListener('dblclick', () => {
+            loadSong(index);
+        });
     });
 }
 

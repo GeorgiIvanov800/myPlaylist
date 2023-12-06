@@ -36,9 +36,11 @@
                             <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
                         </div>
                         <div class="right-content">
-                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'" class="btn btn-primary btn-sm">
+                            <button th:onclick="playFirstSong()" class="btn btn-primary btn-sm">
                                 <i class="fa fa-play"></i> Play
                             </button>
+                            <div id="playlistId" th:attr="data-id=${playlist.id}" style="display:none;"></div>
+
                         </div>
                     </div>
                 </div>
