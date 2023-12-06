@@ -2,7 +2,9 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/head}">
+<head th:include="~{fragments/head}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/music-room.css}">
+    <title>Music Room</title>
 </head>
 <body>
 
@@ -49,7 +51,7 @@
 
         <!-- Song List -->
         <div class="col-md-6">
-            <ul class="list-group song-list">
+            <ul class="list-group song-list-music-room">
             <li class="list-group-item" th:each="song, iterator : ${playlist.songs}">
                     <span th:text="${iterator.count + '.' + ' ' + song.artist}">Artist Name</span> -
                     <span th:text="${song.title}">Song Title</span>
@@ -79,7 +81,7 @@
                               th:object="${commentBindingModel}"
                               method="post">
                             <input type="hidden" name="playlistId" th:value="${playlist.id}">
-                            <textarea class="form-control" rows="3" th:field="*{textContent}" name="textContent" placeholder="Write a comment..."></textarea>
+                                <textarea class="form-control" rows="3" th:field="*{textContent}" name="textContent" placeholder="Write a comment..."></textarea>
                             <small id="messageError" class="invalid-feedback visible-error" th:if="${#fields.hasErrors('textContent')}" th:errors="*{textContent}">
                                 Comment can't be empty
                             </small>
@@ -102,14 +104,9 @@
 
                                 <!-- Displaying the creation date -->
                                 <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
-<!--                                <a th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>-->
-                                <a th:if="${comment.user.id() != #authentication}" th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>
-                                <!-- Displaying the authenticated user's name -->
-                                <small>Logged in as: <span th:text="${#authentication.name}"></span></small>
-
-                                <!-- Displaying the comment author's username -->
-                                <small>Comment by: <span th:text="${comment.user.username}"></span></small>
-
+                                <a th:if="${comment.user.username() != #authentication.principal.displayUsername}"
+                                   th:href="@{/reports/create/{commentId}(commentId=${comment.id})}"
+                                   class="btn btn-warning btn-sm">Report Comment</a>
                             </div>
                         </div>
                     </div>

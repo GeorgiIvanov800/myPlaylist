@@ -42,7 +42,7 @@ public class AdminController {
     @DeleteMapping("/reports/deleteComment/{commentId}")
     public String deleteComment(@PathVariable ("commentId") Long commentId,
                                 @AuthenticationPrincipal UserDetails principal) {
-        System.out.println();
+
         commentService.deleteCommentAndReport(commentId);
 
         return "redirect:/admin/panel";
