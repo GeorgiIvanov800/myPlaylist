@@ -13,34 +13,31 @@
     <div class="row">
         <!-- Playlist Information -->
         <div class="col-md-4">
-            <div class="card h-100 playlist-card">
+            <div class="card playlist-card">
                 <div class="image-wrapper">
-                    <img th:src="${playlist.getPictureUrl() != null and !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}"
-                         class="card-img-top"
-                         alt="Playlist Cover">
+                    <img th:src="${playlist.getPictureUrl() != null && !playlist.getPictureUrl().isEmpty() ? playlist.pictureUrl : '/playlist-images/default.jpg'}" class="card-img-top" alt="Playlist Cover">
                 </div>
                 <hr class="song-separator">
                 <div class="card-body">
                     <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
                     <p class="vertical-separator"></p>
-                    <p class="playlist-description" th:text="${playlist.description}">Playlist
+                    <p class="playlist-description" th:text="${playlist.description}">Playlist Description</p>
                 </div>
-
-
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <div class="left-content">
-                                  <span class="likes">
-                                   <i class="fa fa-thumbs-up"></i>
-                                  <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes
+                            <span class="likes">
+                                <i class="fa fa-thumbs-up"></i>
+                                <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes
+                            </span>
                             <span class="dislikes">
-                                    <i class="fa fa-thumbs-down"></i>
-                                    <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
-                            <p>Created by: <span th:text="${playlist.user.username}"/>Username</span></p>
+                                <i class="fa fa-thumbs-down"></i>
+                                <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
+                            </span>
+                            <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
                         </div>
                         <div class="right-content">
-                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'"
-                               class="btn btn-primary btn-sm">
+                            <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'" class="btn btn-primary btn-sm">
                                 <i class="fa fa-play"></i> Play
                             </button>
                         </div>
@@ -49,72 +46,55 @@
             </div>
         </div>
 
-        <!-- Song List -->
-        <div class="col-md-6">
-            <ul class="list-group song-list-music-room">
-            <li class="list-group-item" th:each="song, iterator : ${playlist.songs}">
-                    <span th:text="${iterator.count + '.' + ' ' + song.artist}">Artist Name</span> -
-                    <span th:text="${song.title}">Song Title</span>
-                    <span th:text="${song.formattedDuration() + ' min'}">Time</span>
-                </li>
-            </ul>
-        </div>
-    </div>
+        <!-- Song List and Comments Section -->
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-body">
+                    <!-- Song List -->
+                    <ul class="list-group song-list-music-room">
+                        <li class="list-group-item" th:each="song, iterator : ${playlist.songs}">
+                            <span th:text="${iterator.count + '.' + ' ' + song.artist}">Artist Name</span> -
+                            <span th:text="${song.title}">Song Title</span>
+                            <span th:text="${song.formattedDuration() + ' min'}">Duration</span>
+                        </li>
+                    </ul>
 
-    <!-- Rating and Comment Section -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h3>Rate this Playlist</h3>
-            <button th:id="likeButton_ + ${playlist.id}"
-                    class="btn btn-success"
-                    th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">Like</button>
-            <button th:id="dislikeButton_ + ${playlist.id}"
-                    class="btn btn-danger"
-                    th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'DISLIKE\')'">Dislike</button>
-
-            <!-- User Comments -->
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6 col-md-8 mt-4">
-                        <h3>Comments</h3>
-                        <form th:action="@{/comments/create}"
-                              th:object="${commentBindingModel}"
-                              method="post">
-                            <input type="hidden" name="playlistId" th:value="${playlist.id}">
-                                <textarea class="form-control" rows="3" th:field="*{textContent}" name="textContent" placeholder="Write a comment..."></textarea>
-                            <small id="messageError" class="invalid-feedback visible-error" th:if="${#fields.hasErrors('textContent')}" th:errors="*{textContent}">
-                                Comment can't be empty
-                            </small>
-                            <input type="submit" class="btn btn-primary mt-2" value="Submit Comment">
-                        </form>
+                    <!-- Rating Buttons -->
+                    <div class="mt-4">
+                        <h3>Rate this Playlist</h3>
+                        <button th:id="'likeButton_' + ${playlist.id}" class="btn btn-success" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'LIKE\')'">Like</button>
+                        <button th:id="'dislikeButton_' + ${playlist.id}" class="btn btn-danger" th:attr="onclick='ratePlaylist(' + ${playlist.id} + ', \'DISLIKE\')'">Dislike</button>
                     </div>
-                </div>
-            </div>
-            <!-- Display Comments -->
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6 col-md-8 comments mt-4">
+
+                    <!-- Comments Section -->
+                    <div class="comments mt-4">
+                        <h3>Comments</h3>
                         <div th:each="comment : ${comments}" class="card mb-2">
                             <div class="card-body">
-                                <!-- Displaying the username -->
                                 <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.user.username}">Username</h6>
-
-                                <!-- Displaying the comment text -->
                                 <p class="card-text" th:text="${comment.textContent}">User comment...</p>
-
-                                <!-- Displaying the creation date -->
                                 <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
-                                <a th:if="${comment.user.username() != #authentication.principal.displayUsername}"
-                                   th:href="@{/reports/create/{commentId}(commentId=${comment.id})}"
-                                   class="btn btn-warning btn-sm">Report Comment</a>
+                                <a th:if="${comment.user.username != #authentication.principal.displayUsername}" th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Add Comment Form -->
+                    <div class="mt-4">
+                        <h3>Add a Comment</h3>
+                        <form th:action="@{/comments/create}" th:object="${commentBindingModel}" method="post">
+                            <input type="hidden" name="playlistId" th:value="${playlist.id}">
+                            <textarea class="form-control" rows="3" th:field="*{textContent}" name="textContent" placeholder="Write a comment..."></textarea>
+                            <small id="messageError" class="invalid-feedback visible-error" th:if="${#fields.hasErrors('textContent')}" th:errors="*{textContent}">Comment can't be empty</small>
+                            <input type="submit" class="btn btn-primary mt-2" value="Submit Comment">
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!--Music Player-->
 <div class="music-player mb-5" id="musicPlayer">
     <img th:src="@{/images/ne22wl.png}" class="img-fluid" alt="PlayerPicture">
     <div class="dash">
@@ -140,7 +120,7 @@
         </div>
     </div>
 </div>
-
+<footer th:replace="~{fragments/footer}"></footer>
 <script th:src="@{/js/music-room.js}"></script>
 <script th:src="@{/js/lib/howler.core.min.js}"></script>
 <script th:src="@{/js/newPlayer.js}"></script>
