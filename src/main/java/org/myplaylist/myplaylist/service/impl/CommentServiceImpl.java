@@ -35,8 +35,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void create(CommentBindingModel commentBindingModel) {
-        UserEntity userId = userRepository.findById(commentBindingModel.getUserId())
+    public void create(CommentBindingModel commentBindingModel, String userEmail) {
+        UserEntity userId = userRepository.findByEmail(userEmail)
                 .orElseThrow( () -> new ObjectNotFoundException("User not found"));
 
         PlaylistEntity playlistId = playlistRepository.findById(commentBindingModel.getPlaylistId())

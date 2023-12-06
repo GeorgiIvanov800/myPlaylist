@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 public class CommentBindingModel {
     @NotEmpty(message = "Can't post an empty comment")
+    @Size(max = 250, message = "Please try to right something short")
     private String textContent;
 
     private LocalDateTime createdOn;

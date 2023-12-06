@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 
 @Controller
 @RequestMapping("/comments")
@@ -23,8 +25,9 @@ public class CommentController {
     @PostMapping("/create")
     public String createComment(@Valid CommentBindingModel commentBindingModel,
                                 BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes) {
-        System.out.println();
+                                RedirectAttributes redirectAttributes,
+                                Principal principal) {
+        String userEmail = principal.getName();
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("commentBindingModel", commentBindingModel);
@@ -32,7 +35,7 @@ public class CommentController {
             return "redirect:/play/playlists/" + commentBindingModel.getPlaylistId();
         }
 
-        commentService.create(commentBindingModel);
+        commentService.create(commentBindingModel, userEmail);
 
         return "redirect:/play/playlists/" + commentBindingModel.getPlaylistId();
     }

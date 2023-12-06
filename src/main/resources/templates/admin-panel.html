@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head}">
+</head>
+<body>
+<nav th:replace="~{fragments/nav-bar}"></nav>
+<div class="container mt-4">
+    <h1>Report Management</h1>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Reason</th>
+                <th>Comment Text</th>
+                <th>Reported By</th>
+                <th>Comment Author</th>
+                <th>Reported On</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="report : ${reports}">
+                <td th:text="${report.id}">1</td>
+                <td th:text="${report.description}">Description</td>
+                <td th:text="${report.reason}">Reason</td>
+                <td th:text="${report.commentEntity.textContent}">Comment Text</td>
+                <td th:text="${report.reportedBy.username}">Reporter's Username</td>
+                <td th:text="${report.commentEntity.user.username}">Comment Author's Username</td>
+                <td th:text="${#temporals.format(report.reportedOn, 'dd-MM-yyyy HH:mm')}">Reported On</td>
+                <td>
+                    <a th:href="@{/admin/reports/deleteComment/{commentId}(commentId=${report.commentEntity.id})}" class="btn btn-danger btn-sm">Delete Comment</a>
+                    <a th:href="@{/admin/reports/clearReport/{reportId}(reportId=${report.id})}" class="btn btn-secondary btn-sm">Clear Report</a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

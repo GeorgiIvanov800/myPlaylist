@@ -77,7 +77,6 @@
                               th:object="${commentBindingModel}"
                               method="post">
                             <input type="hidden" name="playlistId" th:value="${playlist.id}">
-                            <input type="hidden" name="userId" th:value="${playlist.user.id}">
                             <textarea class="form-control" rows="3" th:field="*{textContent}" name="textContent" placeholder="Write a comment..."></textarea>
                             <small id="messageError" class="invalid-feedback visible-error" th:if="${#fields.hasErrors('textContent')}" th:errors="*{textContent}">
                                 Comment can't be empty
@@ -101,8 +100,7 @@
 
                                 <!-- Displaying the creation date -->
                                 <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
-                                <a th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report</a>
-
+                                <a th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>
                             </div>
                         </div>
                     </div>

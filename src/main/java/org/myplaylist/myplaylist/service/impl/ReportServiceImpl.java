@@ -13,6 +13,7 @@ import org.myplaylist.myplaylist.service.ReportService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -50,8 +51,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public boolean hasUserAlreadyReportedComment(Long commentId, String userEmail) {
-        boolean hasReported = reportRepository.existsByCommentEntity_IdAndReportedBy_Email(commentId, userEmail);
-        System.out.println();
-        return hasReported;
+        return reportRepository.existsByCommentEntity_IdAndReportedBy_Email(commentId, userEmail);
+    }
+
+    @Override
+    public List<ReportEntity> allReports() {
+
+        return reportRepository.findAll();
     }
 }
