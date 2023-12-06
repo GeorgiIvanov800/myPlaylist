@@ -20,11 +20,11 @@
                 <div class="card-body">
                     <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
                     <p class="vertical-separator"></p>
-                    <p class="playlist-description" th:text="${playlist.description}">Playlist Description</p>
+                    <p class="playlist-description align-left" th:text="${playlist.description}">Playlist Description</p>
                 </div>
                 <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <div class="left-content">
+                    <div class="footer-content d-flex justify-content-between align-items-center">
+                    <div class="left-content">
                             <span class="likes">
                                 <i class="fa fa-thumbs-up"></i>
                                 <span th:id="'likeCount_' + ${playlist.id}" th:text="${playlist.likeCount}">0</span> Likes
@@ -36,6 +36,7 @@
                             <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
                         </div>
                         <div class="right-content">
+                            <p th:text="${playlist.songs.size() + ' Songs'}">Songs</p> <!-- Display the number of songs here -->
                             <button th:onclick="playFirstSong()" class="btn btn-primary btn-sm">
                                 <i class="fa fa-play"></i> Play
                             </button>
