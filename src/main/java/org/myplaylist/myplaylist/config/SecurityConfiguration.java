@@ -34,14 +34,15 @@ public class SecurityConfiguration {
                         //allow anyone to see the home page, the registration page and the login form
                         .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
                         .requestMatchers("/error").permitAll()
+                        //only admins have access to admin page
+                        .requestMatchers("/admin/panel").hasAnyRole("ADMIN")
                         //all other requests are authenticated
                         .anyRequest().authenticated()
-                //TODO add a page which will be only accessible by admins or moderators and maybe for the blog page only admins or moderator should be able to write new blogs
         ).formLogin(
                 formLogin -> {
                     formLogin
                             //redirect here when we access something which is not allowed.
-                            // also this is the page where we perform login.
+                            // also, this is the page where we perform login.
                             .loginPage("/users/login")
                             //the names of the input fields (user-register)
                             .usernameParameter("email")

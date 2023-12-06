@@ -53,10 +53,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentViewModel> findAllByPlaylistId(Long id) {
-    return commentRepository.findAllByPlaylistId(id)
-            .stream()
-            .map(commentMapper::commentEntityToViewModel)
-            .collect(Collectors.toList());
+
+
+        return commentRepository.findAllByPlaylistId(id)
+                .stream()
+                .map(commentMapper::commentEntityToViewModel)
+                .collect(Collectors.toList());
     }
 
     @Override
