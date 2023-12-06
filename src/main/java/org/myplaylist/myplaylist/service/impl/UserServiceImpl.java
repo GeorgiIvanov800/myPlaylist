@@ -90,4 +90,14 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow( () -> new ObjectNotFoundException("Unknown user with id:" + id));
     }
 
+    @Override
+    public String finByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .stream()
+                .findFirst()
+                .map(UserEntity::getUsername)
+                .orElse(null);
+
+    }
+
 }

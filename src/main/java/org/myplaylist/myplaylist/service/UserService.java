@@ -11,4 +11,6 @@ public interface UserService {
     Authentication login(String email);
 
     UserEntity findById(Long id);
+
+    String finByEmail(String email);
 }

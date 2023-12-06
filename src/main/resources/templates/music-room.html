@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/head}">
 </head>
 <body>
@@ -32,7 +34,7 @@
                             <span class="dislikes">
                                     <i class="fa fa-thumbs-down"></i>
                                     <span th:id="'dislikeCount_' + ${playlist.id}" th:text="${playlist.dislikeCount}">0</span> Dislikes
-                            <p>Created by: <span th:text="${playlist.user.username}">Username</span></p>
+                            <p>Created by: <span th:text="${playlist.user.username}"/>Username</span></p>
                         </div>
                         <div class="right-content">
                             <button th:onclick="'loadPlaylist(' + ${playlist.id} + ')'"
@@ -100,7 +102,14 @@
 
                                 <!-- Displaying the creation date -->
                                 <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
-                                <a th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>
+<!--                                <a th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>-->
+                                <a th:if="${comment.user.id() != #authentication}" th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>
+                                <!-- Displaying the authenticated user's name -->
+                                <small>Logged in as: <span th:text="${#authentication.name}"></span></small>
+
+                                <!-- Displaying the comment author's username -->
+                                <small>Comment by: <span th:text="${comment.user.username}"></span></small>
+
                             </div>
                         </div>
                     </div>
