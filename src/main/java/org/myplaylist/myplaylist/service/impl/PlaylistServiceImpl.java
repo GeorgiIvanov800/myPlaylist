@@ -51,15 +51,12 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public void createPlaylist(PlaylistBindingModel playlistBindingModel, String email) {
 
-//        PlaylistEntity playlist = new PlaylistEntity();
+
 
         System.out.println();
 
         PlaylistEntity playlist = playlistMapper.playListBindingModelToEntity(playlistBindingModel);
 
-//        playlist.setName(playlistBindingModel.getName());
-//        playlist.setDescription(playlistBindingModel.getDescription());
-//        playlist.setGenre(PlaylistGenreEnums.valueOf(String.valueOf(playlistBindingModel.getGenre())));
         playlist.setCreatedOn(LocalDateTime.now());
         playlist.setIsPrivate(playlistBindingModel.getIsPrivate());
 

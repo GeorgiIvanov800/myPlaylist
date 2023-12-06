@@ -1,6 +1,7 @@
 package org.myplaylist.myplaylist.service;
 
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
+import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.enums.RatingType;
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
 import org.myplaylist.myplaylist.model.view.SongViewModel;

@@ -70,18 +70,36 @@
 
             <!-- User Comments -->
             <h3 class="mt-4">Comments</h3>
-            <textarea class="form-control" rows="3" placeholder="Write a comment..."></textarea>
-            <button class="btn btn-primary mt-2">Submit Comment</button>
+            <form th:action="@{/comments/create}"
+                  th:object="${commentBindingModel}"
+                  method="post">
+                <input type="hidden" name="playlistId" th:value="${playlist.id}">
+                <input type="hidden" name="userId" th:value="${playlist.user.id()}">
+                <textarea class="form-control" rows="3" th:field="*{textContent}" name="textContent" placeholder="Write a comment..."></textarea>
+                <small id="messageError" class="invalid-feedback visible-error" th:if="${#fields.hasErrors('textContent')}" th:errors="*{textContent}">
+                    Comment can't be empty
+                </small>
+                <input type="submit" class="btn btn-primary mt-2" value="Submit Comment">
+            </form>
 
             <!-- Display Comments -->
-            <div class="comments mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-subtitle mb-2 text-muted">Username</h6>
-                        <p class="card-text">User comment...</p>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8 comments mt-4">
+                        <div th:each="comment : ${comments}" class="card mb-2">
+                            <div class="card-body">
+                                <!-- Displaying the username -->
+                                <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.user.username}">Username</h6>
+
+                                <!-- Displaying the comment text -->
+                                <p class="card-text" th:text="${comment.textContent}">User comment...</p>
+
+                                <!-- Displaying the creation date -->
+                                <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Repeat for each comment -->
             </div>
         </div>
     </div>

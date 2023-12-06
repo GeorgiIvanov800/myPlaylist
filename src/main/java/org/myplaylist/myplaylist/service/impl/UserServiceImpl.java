@@ -1,6 +1,7 @@
 package org.myplaylist.myplaylist.service.impl;
 
 import org.myplaylist.myplaylist.config.mapper.UserMapper;
+import org.myplaylist.myplaylist.exception.ObjectNotFoundException;
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
@@ -80,6 +81,13 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return auth;
+    }
+
+    @Override
+    public UserEntity findById(Long id) {
+
+        return userRepository.findById(id)
+                .orElseThrow( () -> new ObjectNotFoundException("Unknown user with id:" + id));
     }
 
 }

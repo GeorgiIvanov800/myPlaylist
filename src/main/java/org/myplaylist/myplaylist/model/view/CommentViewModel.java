@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record CommentViewModel(
         String textContent,
         LocalDateTime createdOn,
-        String authorName
+        UserViewModel user
 
 ) {
 }

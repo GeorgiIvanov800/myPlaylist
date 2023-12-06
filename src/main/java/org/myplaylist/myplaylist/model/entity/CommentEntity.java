@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 public class CommentEntity extends BaseEntity {
     @Column(name = "text_content", columnDefinition = "TEXT", nullable = false)
     private String textContent;
-
     private LocalDateTime createdOn;
     @ManyToOne
-    private UserEntity author;
+    private UserEntity user;
     @ManyToOne
     private PlaylistEntity playlist;
 
@@ -34,12 +33,12 @@ public class CommentEntity extends BaseEntity {
         this.createdOn = createdOn;
     }
 
-    public UserEntity getAuthor() {
-        return author;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setAuthor(UserEntity author) {
-        this.author = author;
+    public void setUser(UserEntity author) {
+        this.user = author;
     }
 
     public PlaylistEntity getPlaylist() {

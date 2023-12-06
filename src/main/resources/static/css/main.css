@@ -135,3 +135,9 @@ footer {
     text-align: center;
     padding: 1rem;
 }
+
+.visible-error {
+    display: block; /* Ensure the element is visible */
+    color: red; /* Example: Make the text color red for visibility */
+    /* Add any other styles you need */
+}
