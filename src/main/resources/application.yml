@@ -59,6 +59,6 @@ mail:
 
 logging:
   level:
-#    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL: DEBUG
 #    org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.security: TRACE
+#    org.springframework.security: TRACE
