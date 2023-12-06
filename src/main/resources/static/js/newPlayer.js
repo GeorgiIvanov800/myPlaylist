@@ -2,6 +2,8 @@
 let sound = null;
 let currentSongIndex = 0;
 let playlist = []; // Initialize playlist at the top
+let fastForwardInterval;
+let rewindInterval;
 //Load the playlist in the player on a page load
 document.addEventListener('DOMContentLoaded', () => {
     let playlistIdElement = document.getElementById('playlistId');
@@ -235,3 +237,39 @@ function attachClickListeners() {
 
 // Call this function on a page load or when the playlist is rendered
 populatePlaylistFromDOM();
+
+function startFastForward() {
+    if (sound && sound.playing()) {
+        fastForwardInterval = setInterval(() => {
+            let newPosition = sound.seek() + 5; // Move 5 seconds forward
+            if (newPosition < sound.duration()) {
+                sound.seek(newPosition);
+            } else {
+                clearInterval(fastForwardInterval); // Stop if at end of song
+            }
+            updateProgress();
+        }, 200);
+    }
+}
+
+function stopFastForward() {
+    clearInterval(fastForwardInterval);
+}
+
+function startRewind() {
+    if (sound && sound.playing()) {
+        rewindInterval = setInterval(() => {
+            let newPosition = sound.seek() - 5; // Move 5 seconds backward
+            if (newPosition > 0) {
+                sound.seek(newPosition);
+            } else {
+                clearInterval(rewindInterval); // Stop if at start of song
+            }
+            updateProgress();
+        }, 200);
+    }
+}
+
+function stopRewind() {
+    clearInterval(rewindInterval);
+}

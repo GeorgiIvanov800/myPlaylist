@@ -113,8 +113,14 @@
             <a href="#back" class="fa fa-fast-backward"></a>
             <a href="#play" class="fa fa-pause"></a>
             <a href="#forward" class="fa fa-fast-forward"></a>
-            <a href="#fast-backward" class="fa fa-backward" onclick="fastBackward()"></a>
-            <a href="#fast-forward" class="fa fa-forward" onclick="fastForward()"></a>
+            <a href="#fast-backward" class="fa fa-backward"
+               onmousedown="startRewind()"
+               onmouseup="stopRewind()"
+               onmouseleave="stopRewind()"></a>
+            <a href="#fast-forward" class="fa fa-forward"
+               onmousedown="startFastForward()"
+               onmouseup="stopFastForward()"
+               onmouseleave="stopFastForward()"></a>
 
         </div>
         <div class="info">
