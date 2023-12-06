@@ -6,6 +6,8 @@ import org.myplaylist.myplaylist.model.binding.ReportBindingModel;
 import org.myplaylist.myplaylist.model.entity.CommentEntity;
 import org.myplaylist.myplaylist.model.entity.ReportEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
+import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
+import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
 import org.myplaylist.myplaylist.repository.CommentRepository;
 import org.myplaylist.myplaylist.repository.ReportRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
@@ -19,7 +21,6 @@ import java.util.List;
 public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
     private final CommentRepository commentRepository;
-
     private final UserRepository userRepository;
 
     public ReportServiceImpl(ReportRepository reportRepository, CommentRepository commentRepository, UserRepository userRepository) {
@@ -56,7 +57,28 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<ReportEntity> allReports() {
-
         return reportRepository.findAll();
+    }
+
+    @Override
+    public void deleteReport(Long id) {
+        reportRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean isAdmin(String email) {
+        return isAdmin(
+                userRepository.findByEmail(email)
+                        .orElseThrow(
+                                () -> new ObjectNotFoundException("User with email: " + email + " cannot be found"))
+        );
+    }
+
+    private boolean isAdmin(UserEntity user) {
+        return user
+                .getRoles()
+                .stream()
+                .map(UserRoleEntity::getRole)
+                .anyMatch(r -> UserRoleEnum.ADMIN == r);
     }
 }

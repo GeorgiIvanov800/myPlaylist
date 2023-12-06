@@ -24,7 +24,7 @@
             </thead>
             <tbody>
             <tr th:each="report : ${reports}">
-                <td th:text="${report.id}">1</td>
+                <td th:text="${report.commentEntity.id}">1</td>
                 <td th:text="${report.description}">Description</td>
                 <td th:text="${report.reason}">Reason</td>
                 <td th:text="${report.commentEntity.textContent}">Comment Text</td>
@@ -32,9 +32,18 @@
                 <td th:text="${report.commentEntity.user.username}">Comment Author's Username</td>
                 <td th:text="${#temporals.format(report.reportedOn, 'dd-MM-yyyy HH:mm')}">Reported On</td>
                 <td>
-                    <a th:href="@{/admin/reports/deleteComment/{commentId}(commentId=${report.commentEntity.id})}" class="btn btn-danger btn-sm">Delete Comment</a>
-                    <a th:href="@{/admin/reports/clearReport/{reportId}(reportId=${report.id})}" class="btn btn-secondary btn-sm">Clear Report</a>
-
+                    <form th:action="@{/admin/reports/deleteComment/{commentId}(commentId=${report.commentEntity.id})}"
+                          method="post"
+                          class="delete-form">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="btn btn-secondary btn-sm">Delete Comment</button>
+                    </form>
+                    <form th:action="@{/admin/reports/clearReport/{reportId}(reportId=${report.id})}"
+                          method="post"
+                          class="delete-form">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="btn btn-secondary btn-sm">Clear Report</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

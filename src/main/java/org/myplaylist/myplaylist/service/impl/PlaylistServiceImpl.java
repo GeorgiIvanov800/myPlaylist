@@ -1,6 +1,7 @@
 package org.myplaylist.myplaylist.service.impl;
 
 import jakarta.transaction.Transactional;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.myplaylist.myplaylist.config.mapper.PlaylistMapper;
 import org.myplaylist.myplaylist.exception.ObjectNotFoundException;
 import org.myplaylist.myplaylist.model.binding.PlaylistBindingModel;
@@ -51,17 +52,13 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public void createPlaylist(PlaylistBindingModel playlistBindingModel, String email) {
 
-
-
-        System.out.println();
-
         PlaylistEntity playlist = playlistMapper.playListBindingModelToEntity(playlistBindingModel);
 
         playlist.setCreatedOn(LocalDateTime.now());
         playlist.setIsPrivate(playlistBindingModel.getIsPrivate());
 
 
-        Optional<UserEntity> userOptional = userRepository.findByEmail(email); // Or I should use the service
+        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             throw new ObjectNotFoundException("User with email: " + email + " not found.");
         }
@@ -99,8 +96,7 @@ public class PlaylistServiceImpl implements PlaylistService {
             Path filePath = uploadPath.resolve(filename);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            // Log error and/or rethrow as custom exception
-            throw new IllegalArgumentException("Error saving file: " + filename, e);
+            throw new FileUploadException("Error saving file: " + filename, e);
         }
 
 
@@ -111,7 +107,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     }
 
-    @Override
+    @Override //Get the songs for the playlist
     public List<SongViewModel> getSongsForPlaylist(Long playlistId, String email) {
         return playlistRepository.findById(playlistId)
                 .map(playlist -> playlist.getSongs().stream()
@@ -121,7 +117,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .orElseThrow(() -> new ObjectNotFoundException("Playlist ID: " + playlistId + " not found"));
     }
 
-    @Override
+    @Override //Update the playlist
     public void updatePlaylist(Long playlistId, PlaylistBindingModel playlistBindingModel, String email) {
         // Retrieve the existing playlist
         PlaylistEntity playlist = playlistRepository.findById(playlistId)
@@ -156,13 +152,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         playlistRepository.deleteById(id);
     }
 
-    @Override
-    public boolean isOwner(Long id, String email) {
-        return isOwner(
-                playlistRepository.findById(id).orElse(null),
-                email
-        );
-    }
+
 
     @Override
     @Transactional
@@ -233,6 +223,14 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         Page<PlaylistEntity> topRated = playlistRepository.findTopRatedPlaylists(pageable);
         return topRated.map(playlistMapper::playlistEntityToViewModel);
+    }
+
+    @Override
+    public boolean isOwner(Long id, String email) {
+        return isOwner(
+                playlistRepository.findById(id).orElse(null),
+                email
+        );
     }
 
     private boolean isOwner(PlaylistEntity playlistEntity, String email) {

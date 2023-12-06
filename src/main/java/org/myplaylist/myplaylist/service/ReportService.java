@@ -9,8 +9,8 @@ import java.util.List;
 public interface ReportService {
 
     void createReport(ReportBindingModel reportBindingModel,String user);
-
     boolean  hasUserAlreadyReportedComment(Long commentId, String userEmail);
-
     List<ReportEntity> allReports();
+    void deleteReport(Long id);
+    boolean isAdmin(String email);
 }

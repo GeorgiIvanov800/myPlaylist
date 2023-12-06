@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 403 - Forbidden</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/error-page.css}" type="text/css">
+</head>
+<body class="text-center">
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+            <img th:src="@{/images/broken-record-png.png}" alt="Broken Record" class="broken-record img-fluid mx-auto">
+            <h1 class="error-message">403 - Forbidden</h1>
+            <p class="error-details">
+                Sorry, you don't have permission to access this page.
+            </p>
+            <p th:text="${errorMessage}"></p>
+            <a href="/" class="btn btn-primary">Go to Homepage</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
