@@ -28,7 +28,7 @@ public class MusicController {
         this.userService = userService;
     }
 
-    @GetMapping({"/playlists/{id}"})
+    @GetMapping({"/playlists/{id}"}) //TODO: maybe too with request param
     public String playPlaylist(Model model,
                                @PathVariable(name = "id") Long id,
                                Principal principal) {

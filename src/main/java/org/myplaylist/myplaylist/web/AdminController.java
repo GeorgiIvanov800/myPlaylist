@@ -60,31 +60,24 @@ public class AdminController {
         return "redirect:/admin/panel";
     }
 
-    @PreAuthorize("@commentServiceImpl.isAdmin(#principal.username)")
+//    @PreAuthorize("@commentServiceImpl.isAdmin(#principal.username)") TODO: Remove after the unit tests are successful
+    @PreAuthorize("@userRoleChecker.isAdmin(#principal.name)")
     @DeleteMapping("/reports/clearReport/{reportId}")  //TODO: Try make it with Request Param
     public String clearReport(@PathVariable("reportId") Long reportId,
                               @AuthenticationPrincipal UserDetails principal) {
         reportService.deleteReport(reportId);
         return "redirect:/admin/panel";
     }
-    @PreAuthorize("@userServiceImpl.isAdmin(#principal.name)")
+//    @PreAuthorize("@userServiceImpl.isAdmin(#principal.name)")
+    @PreAuthorize("@userRoleChecker.isAdmin(#principal.name)")
     @PostMapping("/action")
     public String handleUserAction(@RequestParam Long userId,
                                    @RequestParam String action,
                                    @RequestParam(required = false) Long roleId,
                                    Principal principal) {
-        System.out.println();
-        switch (action) {
-            case "addRole":
-               userService.addOrRemoveRole(userId, roleId, action);
-                break;
-            case "removeRole":
-                userService.addOrRemoveRole(userId, roleId, action);
-                break;
-            default:
-                // Handle unknown action
-                break;
-        }
-        return "redirect:/admin/panel";
+
+      userService.addOrRemoveRole(userId, roleId, action);
+
+      return "redirect:/admin/panel";
     }
 }

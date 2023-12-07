@@ -82,21 +82,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Authentication login(String email) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                userDetails.getPassword(),
-                userDetails.getAuthorities()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        return auth;
-    }
-
-    @Override
     public UserEntity findById(Long id) {
 
         return userRepository.findById(id)

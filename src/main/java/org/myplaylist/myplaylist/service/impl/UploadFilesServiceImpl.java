@@ -4,8 +4,10 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
+import org.myplaylist.myplaylist.repository.PlaylistRepository;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.UploadFilesService;
@@ -29,18 +31,20 @@ public class UploadFilesServiceImpl implements UploadFilesService {
     private final SongRepository songRepository;
     private final UserRepository userRepository;
     private final NextCloudWebDavClient nextCloudWebDavClient;
+    private final PlaylistRepository playlistRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadFilesServiceImpl.class);
 
 
-    public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient) {
+    public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient, PlaylistRepository playlistRepository) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
         this.nextCloudWebDavClient = nextCloudWebDavClient;
+        this.playlistRepository = playlistRepository;
     }
 
 
     @Override
-    public boolean upload(String email, MultipartFile[] files) {
+    public boolean uploadSongs(String email, MultipartFile[] files) {
 //        TODO: IMPLEMENT AOP to check how fast is the upload doing
         //Upload the songs
         List<SongEntity> songs = new ArrayList<>();
@@ -83,6 +87,42 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             return false;
         }
         LOGGER.info("Successfully uploaded files {}", fileBatches.size());
+        return true;
+    }
+
+    @Override
+    public boolean uploadPlaylistImage(Long playlistId, MultipartFile imageFile, String email) {
+//        if (!isFileValid(imageFile)) {
+//            LOGGER.error("Invalid file format or size");
+//            return false;
+//        }
+
+        String formattedEmail = email.replace("@", "_at_").replace(".", "_dot_");
+        String originalFileName = imageFile.getOriginalFilename();
+        String remotePath = "PlaylistImages/" + playlistId + "/" + originalFileName;
+
+        try {
+            File convertedFile = convertMultipartFileToFile(imageFile, originalFileName);
+            List<String> pathAndShareLink = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
+
+            // Update the playlist entity with the new image path
+            PlaylistEntity playlist = playlistRepository.findById(playlistId)
+                    .orElseThrow(() -> new IllegalArgumentException("Playlist with id:" + playlistId + " not found"));
+            playlist.setPictureUrl(pathAndShareLink.get(0));
+            playlistRepository.save(playlist);
+
+            if (convertedFile.exists()) {
+                boolean isDeleted = convertedFile.delete();
+                if (!isDeleted) {
+                    LOGGER.warn("Temporary file deletion failed for file: " + convertedFile.getAbsolutePath());
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error uploading playlist image: " + e.getMessage());
+            return false;
+        }
+
+        LOGGER.info("Successfully uploaded playlist image for playlist {}", playlistId);
         return true;
     }
 

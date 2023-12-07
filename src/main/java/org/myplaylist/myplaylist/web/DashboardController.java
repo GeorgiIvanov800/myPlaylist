@@ -1,8 +1,9 @@
 package org.myplaylist.myplaylist.web;
 
 import org.myplaylist.myplaylist.model.view.PlaylistViewModel;
+import org.myplaylist.myplaylist.service.PlaylistService;
+import org.myplaylist.myplaylist.service.UploadFilesService;
 import org.myplaylist.myplaylist.service.impl.CustomUserDetails;
-import org.myplaylist.myplaylist.service.impl.PlaylistServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,16 +17,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Objects;
 
 
 @Controller
 public class DashboardController {
 
-    private final PlaylistServiceImpl playlistService;
+    private final PlaylistService playlistService;
 
-    public DashboardController(PlaylistServiceImpl playlistService) {
+    private final UploadFilesService uploadFilesService;
+
+    public DashboardController(PlaylistService playlistService, UploadFilesService uploadFilesService) {
         this.playlistService = playlistService;
+        this.uploadFilesService = uploadFilesService;
     }
 
     @GetMapping("/users/dashboard")
@@ -47,8 +52,9 @@ public class DashboardController {
     }
 
     @PostMapping("/users/dashboard/upload-image/{playlistId}")
-    public String uploadPlaylistImage(@PathVariable Long playlistId,
-                                                 @RequestParam("picture") MultipartFile pictureFile) throws IOException {
+    public String uploadPlaylistImage(@PathVariable Long playlistId, //TODO: Maybe with Request Param
+                                      @RequestParam("picture") MultipartFile pictureFile,
+                                      Principal principal) throws IOException {
         if (pictureFile != null && !pictureFile.isEmpty()) {
             String contentType = pictureFile.getContentType();
 
@@ -65,9 +71,8 @@ public class DashboardController {
             }
         }
 
-        String filename = StringUtils.cleanPath(Objects.requireNonNull(pictureFile.getOriginalFilename()));
 
-        playlistService.updatePlaylistImage(playlistId, "/playlist-images/" + filename, pictureFile, filename);
+        uploadFilesService.uploadPlaylistImage(playlistId, pictureFile, principal.getName());
 
         return "redirect:/users/dashboard";
     }

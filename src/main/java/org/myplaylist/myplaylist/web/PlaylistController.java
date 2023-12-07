@@ -73,7 +73,7 @@ public class PlaylistController {
         }
 
         String email = principal.getName();
-        boolean isSuccessful = uploadFilesService.upload(email, files);
+        boolean isSuccessful = uploadFilesService.uploadSongs(email, files);
 
         if (!isSuccessful) {
             redirectAttributes.addFlashAttribute("message", "Hmm something went wrong please try again");
