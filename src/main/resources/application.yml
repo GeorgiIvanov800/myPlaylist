@@ -57,6 +57,7 @@ mail:
   username: ${MAIL_USER:myPlaylist}
   password: ${MAIL_PASSWORD:gogata9212058445}
 
+
 logging:
   level:
 #    org.hibernate.SQL: DEBUG

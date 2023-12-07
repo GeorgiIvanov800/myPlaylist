@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +81,9 @@ class MyPlaylistUserDetailServiceTest {
                 .anyMatch(a -> expectedAuthority.equals(a.getAuthority()));
     }
 
+    /**
+     *
+     */
     private static UserEntity createTestUser() {
         UserEntity user = new UserEntity();
         user.setEmail("testuser@example.com");

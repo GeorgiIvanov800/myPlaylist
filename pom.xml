@@ -98,10 +98,14 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.icegreen/greenmail -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail</artifactId>
+            <version>2.1.0-alpha-3</version>
+            <scope>test</scope>
         </dependency>
+
 
 
 

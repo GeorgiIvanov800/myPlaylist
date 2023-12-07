@@ -59,26 +59,29 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         try {
             for (List<MultipartFile> batch : fileBatches) {
                 for (MultipartFile file : batch) {
-                    if (isFileValid(file)) {
-                        String originalFileName = file.getOriginalFilename();
-                        File convertedFile = convertMultipartFileToFile(file, originalFileName);
-                        String remotePath = "Songs/" + originalFileName;
+                    if (!isFileValid(file)) {
+                        LOGGER.warn("Invalid file encountered. Aborting upload.");
+                        return false; // Return false immediately if a file is invalid
+                    }
+                    String originalFileName = file.getOriginalFilename();
+                    File convertedFile = convertMultipartFileToFile(file, originalFileName);
+                    String remotePath = "Songs/" + originalFileName;
 
-                        List<String> pathAndShareLink = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
+                    List<String> pathAndShareLink = nextCloudWebDavClient.uploadFile(convertedFile, remotePath, formattedEmail);
 
-                        SongEntity song = processAudioFiles(convertedFile, user, originalFileName);
-                        assert song != null;
-                        song.setFilePath(pathAndShareLink.get(0));
-                        song.setNextCloudPath(pathAndShareLink.get(1));
-                        songs.add(song);
+                    SongEntity song = processAudioFiles(convertedFile, user, originalFileName);
+                    assert song != null;
+                    song.setFilePath(pathAndShareLink.get(0));
+                    song.setNextCloudPath(pathAndShareLink.get(1));
+                    songs.add(song);
 
-                        if (convertedFile.exists()) {
-                            boolean isDeleted = convertedFile.delete();
-                            if (!isDeleted) {
-                                LOGGER.warn("Temporary file deletion failed for file: " + convertedFile.getAbsolutePath());
-                            }
+                    if (convertedFile.exists()) {
+                        boolean isDeleted = convertedFile.delete();
+                        if (!isDeleted) {
+                            LOGGER.warn("Temporary file deletion failed for file: " + convertedFile.getAbsolutePath());
                         }
                     }
+
                 }
                 songRepository.saveAll(songs);
             }
@@ -158,6 +161,7 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             return null;
         }
     }
+
     //Convert MultipartFile to File
     private File convertMultipartFileToFile(MultipartFile multipartFile, String extension) throws IOException {
 

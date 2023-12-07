@@ -96,6 +96,4 @@ public class CommentServiceImpl implements CommentService {
                 .anyMatch(r -> UserRoleEnum.ADMIN == r);
 
     }
-
-
 }
