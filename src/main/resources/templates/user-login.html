@@ -19,8 +19,7 @@
             <!-- Email -->
             <div class="form-group col-md-12 mb-3 position-relative input-icon">
                 <label for="email" class="text-white font-weight-bold">Email</label>
-                <input id="email" name="email" th:value="${email}" type="text" class="form-control" placeholder="Email"
-                       required>
+                <input id="email" name="email" th:value="${email}" type="text" class="form-control" placeholder="Email" required>
             </div>
 
             <!-- Password -->
@@ -36,6 +35,10 @@
                 </p>
                 <p th:if="${activateAccount}" class="alert alert-success">
                     <span th:text="${activateAccount}"></span>
+                </p>
+
+                <p th:if="${notActive}" class="errors alert alert-danger">
+                    <span th:text="${notActive}"></span>
                 </p>
 
             </div>

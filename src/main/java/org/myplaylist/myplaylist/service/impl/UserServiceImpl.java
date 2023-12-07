@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -123,6 +124,12 @@ public class UserServiceImpl implements UserService {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isUserActive(String email) {
+        Optional<UserEntity> byEmail = userRepository.findByEmail(email);
+        return byEmail.get().isActive();
     }
 
 }

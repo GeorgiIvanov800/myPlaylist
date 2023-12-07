@@ -4,6 +4,8 @@ import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.springframework.security.core.Authentication;
 
+import java.util.Optional;
+
 public interface UserService {
 
     void registerUser(UserRegistrationBindingModel userRegistrationBindingModel);
@@ -15,5 +17,7 @@ public interface UserService {
     String finByEmail(String email);
 
     boolean activateUser(String token);
+
+    boolean isUserActive(String email);
 
 }
