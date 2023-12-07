@@ -72,25 +72,20 @@ public class AdminController {
     @PostMapping("/action")
     public String handleUserAction(@RequestParam Long userId,
                                    @RequestParam String action,
-                                   @RequestParam(required = false) Long addRoleId,
-                                   @RequestParam(required = false) Long removeRoleId,
+                                   @RequestParam(required = false) Long roleId,
                                    Principal principal) {
         System.out.println();
         switch (action) {
             case "addRole":
-               userService.addRole(userId, addRoleId);
+               userService.addOrRemoveRole(userId, roleId, action);
                 break;
             case "removeRole":
-                // Logic to remove a role from the user
-                // Use removeRoleId here
-                break;
-            case "banUser":
-                // Logic to set the user as inactive or "banned"
+                userService.addOrRemoveRole(userId, roleId, action);
                 break;
             default:
                 // Handle unknown action
                 break;
         }
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/panel";
     }
 }

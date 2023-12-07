@@ -27,7 +27,7 @@ public interface UserService {
 
     List<UserRoleEntity> getAllRoles();
 
-    void addRole(Long userId, Long roleId);
+    void addOrRemoveRole(Long userId, Long roleId, String action);
 
     boolean isAdmin(String email);
 }

@@ -72,9 +72,7 @@
                 <td>
                     <form th:action="@{/admin/action}" method="post">
                         <input type="hidden" name="userId" th:value="${user.id}" />
-                        <input type="hidden" name="addRoleId" th:id="'hiddenAddRoleId' + ${user.id}" value=""/>
-                        <input type="hidden" name="removeRoleId" th:id="${'hiddenAddRoleId' + user.id}" value=""/>
-                        <div class="dropdown-container-admin">
+                        <input type="hidden" name="roleId" th:id="${'hiddenRoleId' + user.id}" value=""/>                        <div class="dropdown-container-admin">
                         <select name="action"
                                 th:id="'actionSelect' + ${user.id}"
                                 th:onchange="'handleActionChange(this.value, ' + ${user.id} + ')'">
@@ -85,13 +83,13 @@
                         <select name="addRoleId"
                                 th:id="'addRoleSelect' + ${user.id}"
                                 style="display:none;"
-                                th:attr="onchange=|updateHiddenInput('add', this.value, ${user.id})|">
+                                th:attr="onchange=|updateHiddenRoleId(this.value, ${user.id})|">                            <option value="" disabled selected>Select a role to add</option>
                             <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.role}"></option>
                         </select>
                         <select name="removeRoleId"
                                 th:id="'removeRoleSelect' + ${user.id}"
                                 style="display:none;"
-                                th:attr="onchange=|updateHiddenInput('remove', this.value, ${user.id})|">
+                                th:attr="onchange=|updateHiddenRoleId(this.value, ${user.id})|">                            <option value="" disabled selected>Select a role to remove</option>
                             <option th:each="role : ${user.roles}" th:value="${role.id}" th:text="${role.role}"></option>
                         </select>
                         </div>
@@ -103,29 +101,6 @@
         </table>
     </div>
 </div>
-
-<script>
-
-    function updateHiddenInput(actionType, value, userId) {
-        console.log("Function called with actionType:", actionType);
-        console.log("Function called with value:", value);
-        console.log("Function called with userId:", userId);
-
-        console.log("Function called: ", actionType, value, userId); // This will log the values to the console
-        if(actionType === 'add') {
-            console.log("Setting hiddenAddRoleId value to:", value);
-            document.getElementById('hiddenAddRoleId' + userId).value = value;
-        } else if(actionType === 'remove') {
-            console.log("Setting hiddenRemoveRoleId value to:", value);
-            document.getElementById('hiddenRemoveRoleId'+ userId).value = value;
-        }
-    }
-    function handleActionChange(action, userId) {
-        document.getElementById('addRoleSelect' + userId).style.display = action === 'addRole' ? 'inherit' : 'none';
-        document.getElementById('removeRoleSelect' + userId).style.display = action === 'removeRole' ? 'inherit' : 'none';
-    }
-
-</script>
-
+<script th:src="@{/js/adminPanel.js}"></script>
 </body>
 </html>

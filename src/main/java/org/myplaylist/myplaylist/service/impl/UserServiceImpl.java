@@ -12,6 +12,8 @@ import org.myplaylist.myplaylist.repository.UserActivationLinkRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.repository.UserRoleRepository;
 import org.myplaylist.myplaylist.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ApplicationEventPublisher appEventPublisher;
     private final UserDetailsService userDetailsService;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository userRepository,
                            UserActivationLinkRepository userActivationLinkRepository,
@@ -145,18 +149,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addRole(Long userId, Long roleId) {
+    public void addOrRemoveRole(Long userId, Long roleId, String action) {
         //find the User
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("User with id:" + userId + " not found"));
-        //Find the role to add
+
+        //Find the role to add or remove
         UserRoleEntity role = userRoleRepository.findById(roleId)
                 .orElseThrow(() -> new ObjectNotFoundException("Role with id:" + roleId + " not found"));
-        //add the role to the corresponding user
-        user.getRoles()
-                .add(role);
 
+        switch (action) {
+            case "addRole":
+                addRoleToUser(user, role);
+                break;
+            case "removeRole":
+                removeRoleFromUser(user, role);
+                break;
+            default:
+                LOGGER.error("Unknown action: " + action);
+                break;
+        }
     }
+
+    private void addRoleToUser(UserEntity user, UserRoleEntity role) {
+        if (!user.getRoles().contains(role)) {
+            user.getRoles().add(role);
+            userRepository.save(user);
+            LOGGER.info("Role " + role.getRole() + " added to user " + user.getEmail());
+        } else {
+            LOGGER.error("User " + user.getEmail() + " already has the role: " + role.getRole());
+        }
+    }
+    private void removeRoleFromUser(UserEntity user, UserRoleEntity role) {
+        if (user.getRoles().size() <= 1) {
+            LOGGER.error("Cannot remove the last role from user " + user.getEmail());
+            return;
+        }
+
+        if (user.getRoles().remove(role)) {
+            userRepository.save(user);
+            LOGGER.info("Role " + role.getRole() + " removed from user " + user.getEmail());
+        } else {
+            LOGGER.error("User " + user.getEmail() + " does not have the role: " + role.getRole());
+        }
+    }
+
+
 
     @Override
     public boolean isAdmin(String email) {
@@ -177,6 +215,4 @@ public class UserServiceImpl implements UserService {
                 .anyMatch(r -> UserRoleEnum.ADMIN == r);
 
     }
-
-
 }
