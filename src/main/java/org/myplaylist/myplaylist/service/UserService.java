@@ -26,4 +26,8 @@ public interface UserService {
     Page<UserEntity> getAllUsers(Pageable pageable);
 
     List<UserRoleEntity> getAllRoles();
+
+    void addRole(Long userId, Long roleId);
+
+    boolean isAdmin(String email);
 }

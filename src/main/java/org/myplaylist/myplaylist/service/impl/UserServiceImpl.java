@@ -144,4 +144,39 @@ public class UserServiceImpl implements UserService {
         return userRoleRepository.findAll();
     }
 
+    @Override
+    public void addRole(Long userId, Long roleId) {
+        //find the User
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException("User with id:" + userId + " not found"));
+        //Find the role to add
+        UserRoleEntity role = userRoleRepository.findById(roleId)
+                .orElseThrow(() -> new ObjectNotFoundException("Role with id:" + roleId + " not found"));
+        //add the role to the corresponding user
+        user.getRoles()
+                .add(role);
+
+    }
+
+    @Override
+    public boolean isAdmin(String email) {
+        return isAdmin(
+                userRepository.findByEmail(email)
+                        .orElseThrow(
+                                () -> new ObjectNotFoundException("User with email: " + email + " not found")
+                        )
+        );
+    }
+
+    private boolean isAdmin(UserEntity userEntity) {
+
+        return userEntity
+                .getRoles()
+                .stream()
+                .map(UserRoleEntity::getRole)
+                .anyMatch(r -> UserRoleEnum.ADMIN == r);
+
+    }
+
+
 }

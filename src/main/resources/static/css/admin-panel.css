@@ -1,0 +1,13 @@
+.dropdown-container-admin {
+    display: initial;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown {
+    flex-grow: 1;
+}
+
+.action-button {
+    margin-top: 10px;
+}
