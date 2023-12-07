@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         //allow anyone to see the home page, the registration page and the login form
                         .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
+                        .requestMatchers("/user/activate", "/activation-failed").permitAll()
                         .requestMatchers("/error").permitAll()
                         //only admins have access to admin page
                         .requestMatchers("/admin/panel").hasAnyRole("ADMIN")

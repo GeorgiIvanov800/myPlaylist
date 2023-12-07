@@ -1,5 +1,6 @@
 package org.myplaylist.myplaylist.service;
 
+import org.myplaylist.myplaylist.model.entity.UserActivationLinkEntity;
 import org.myplaylist.myplaylist.model.event.UserRegisterEvent;
 
 public interface UserActivationService {
@@ -9,4 +10,6 @@ public interface UserActivationService {
     void cleanUpObsoleteActivationLinks();
 
     String createActivationLink(String userEmail);
+
+    UserActivationLinkEntity getToken(String token);
 }

@@ -5,6 +5,7 @@ VALUES
     (3, 1, 'gogata92@pm.me', 'Georgi', 'Ivanov', '95c1933b8ffe84f085f2839899d1673260be58dbd9c2c787ac35515805502c996417596dae9a92880aaa50a046fc7151', 'Gogata92');
 
 
+
 INSERT INTO roles (`id`, `role`)
 VALUES
     (1, 'ADMIN'),

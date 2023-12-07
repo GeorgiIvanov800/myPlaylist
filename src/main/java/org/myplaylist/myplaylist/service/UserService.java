@@ -13,4 +13,7 @@ public interface UserService {
     UserEntity findById(Long id);
 
     String finByEmail(String email);
+
+    boolean activateUser(String token);
+
 }

@@ -1,0 +1,47 @@
+.song-list-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.card-footer .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-footer .left-content {
+    text-align: left;
+}
+
+.card-footer .likes-dislikes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-footer .likes, .card-footer .dislikes {
+    display: flex;
+    align-items: center;
+}
+
+.card-footer .creator-name {
+    margin-top: 10px;
+}
+
+.card-footer .right-content {
+    text-align: right;
+}
+
+.card-footer .song-count {
+    margin-bottom: 10px;
+}
+
+.card-footer .btn {
+    display: block;
+}
+
+.song-separator {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: red;
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Activation Failed</title>
+    <!-- Add any additional head elements here (e.g., CSS links) -->
+</head>
+<body>
+<div class="container">
+    <h1>Account Activation Failed</h1>
+    <p th:if="${activationError}" th:text="${activationError}" class="text-bg-warning">
+
+    </p>
+    <p>Sorry something got wrong, Please try again after 24 hours to Register again</p>
+    <br>
+</div>
+</body>
+</html>

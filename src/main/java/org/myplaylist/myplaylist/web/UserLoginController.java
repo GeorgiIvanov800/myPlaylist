@@ -26,6 +26,7 @@ public class UserLoginController {
         model.addAttribute("email", email);
         model.addAttribute("bad_credentials", "true");
 
+
         return "user-login";
     }
 

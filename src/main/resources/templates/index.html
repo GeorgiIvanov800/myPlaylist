@@ -14,6 +14,29 @@
     <th:block sec:authorize="!isAuthenticated()">
         Anonymous!
     </th:block>
+
+    <section class="container my-10">
+        <h2 class="text-center mb-4 text-white">Unlock Your Music Journey</h2>
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card text-center">
+                    <img src="/images/ne22wl.png" class="card-img-top" alt="Welcome Image">
+                    <div class="card-body">
+                        <h5 class="card-title">Welcome to MyPlaylist.org!</h5>
+                        <p class="card-text">
+                            Explore the world of music, discover playlists, and enjoy your favorite tunes.
+                            Sign in or register to access personalized playlists, save your favorites, and more.
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/users/login}" class="btn btn-primary">Sign In</a>
+                            <a th:href="@{/users/register}" class="btn btn-secondary">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </header>
 </body>
 </html>

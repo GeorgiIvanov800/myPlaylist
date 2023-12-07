@@ -35,9 +35,10 @@ public class UserRegisterController {
 
             return "redirect:register";
         }
-
         userService.registerUser(userRegistrationBindingModel);
-        return "redirect:user-login";
+        redirectAttributes.addFlashAttribute("activateAccount", "An activation link was send to your email.Please check you mail for activation link");
+
+        return "redirect:/users/login";
     }
 
     @ModelAttribute

@@ -59,6 +59,12 @@ public class UserActivationServiceImpl implements UserActivationService {
         return activationLink;
     }
 
+    @Override
+    public UserActivationLinkEntity getToken(String token) {
+        return userActivationLinkRepository.findByActivationLink(token);
+    }
+
+
     private static String generateActivationLink() {
 
         StringBuilder activationLink = new StringBuilder();

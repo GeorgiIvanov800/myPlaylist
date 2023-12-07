@@ -3,10 +3,12 @@ package org.myplaylist.myplaylist.service.impl;
 import org.myplaylist.myplaylist.config.mapper.UserMapper;
 import org.myplaylist.myplaylist.exception.ObjectNotFoundException;
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
+import org.myplaylist.myplaylist.model.entity.UserActivationLinkEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
 import org.myplaylist.myplaylist.model.event.UserRegisterEvent;
+import org.myplaylist.myplaylist.repository.UserActivationLinkRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.repository.UserRoleRepository;
 import org.myplaylist.myplaylist.service.UserService;
@@ -24,6 +26,8 @@ import java.time.LocalDateTime;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+
+    private final UserActivationLinkRepository userActivationLinkRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -31,12 +35,14 @@ public class UserServiceImpl implements UserService {
     private final UserDetailsService userDetailsService;
 
     public UserServiceImpl(UserRepository userRepository,
+                           UserActivationLinkRepository userActivationLinkRepository,
                            UserRoleRepository userRoleRepository,
                            PasswordEncoder passwordEncoder,
                            UserMapper userMapper,
                            ApplicationEventPublisher appEventPublisher,
                            UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
+        this.userActivationLinkRepository = userActivationLinkRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
@@ -87,7 +93,7 @@ public class UserServiceImpl implements UserService {
     public UserEntity findById(Long id) {
 
         return userRepository.findById(id)
-                .orElseThrow( () -> new ObjectNotFoundException("Unknown user with id:" + id));
+                .orElseThrow(() -> new ObjectNotFoundException("Unknown user with id:" + id));
     }
 
     @Override
@@ -98,6 +104,25 @@ public class UserServiceImpl implements UserService {
                 .map(UserEntity::getUsername)
                 .orElse(null);
 
+    }
+
+    @Override
+    public boolean activateUser(String token) {
+        // Find the UserActivationLinkEntity by the provided token
+        UserActivationLinkEntity userActivationLink = userActivationLinkRepository.findByActivationLink(token);
+
+        if (userActivationLink != null) {
+
+            UserEntity user = userActivationLink.getUser();
+
+            if (!user.isActive()) {
+                user.setActive(true);
+                userRepository.save(user);
+                userActivationLinkRepository.delete(userActivationLink);
+                return true;
+            }
+        }
+        return false;
     }
 
 }
