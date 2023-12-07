@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 404 - Page Not Found</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/error-page.css}" type="text/css">
+</head>
+<body class="text-center">
+<div class="container">
+    <div class="row justify-content-center align-items-center" >
+        <div class="col-md-6">
+            <img th:src="@{/images/broken-record-png.png}" alt="Broken Record" class="broken-record img-fluid mx-auto">
+            <h1 class="error-message">Oops! Page not found.</h1>
+            <p class="error-details">
+                It looks like the page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+            </p>
+            <p th:text="${errorMessage}"></p>
+            <a href="/" class="btn btn-primary">Go to Homepage</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
