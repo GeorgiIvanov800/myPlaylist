@@ -2,9 +2,12 @@ package org.myplaylist.myplaylist.service;
 
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
+import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -21,4 +24,6 @@ public interface UserService {
     boolean isUserActive(String email);
 
     Page<UserEntity> getAllUsers(Pageable pageable);
+
+    List<UserRoleEntity> getAllRoles();
 }

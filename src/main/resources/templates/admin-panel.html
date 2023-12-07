@@ -70,20 +70,20 @@
                     <span th:each="role : ${user.roles}" th:text="${role.role} + ' '"></span>
                 </td>
                 <td>
-                    <form id="userActionForm" th:action="@{/admin/userAction}"
-                          method="post"
-                          onsubmit="return confirmAction()">
+                    <form th:action="@{/admin/userAction}" method="post" onsubmit="return confirmAction()">
                         <input type="hidden" name="userId" th:value="${user.id}" />
-                        <select name="action" id="actionSelect" onchange="handleActionChange(this.value)">
+                        <select name="action"
+                                th:id="'actionSelect' + ${user.id}"
+                                th:onchange="'handleActionChange(this.value, ' + ${user.id} + ')'">
                             <option value="">Select Action</option>
                             <option value="addRole">Add Role</option>
                             <option value="removeRole">Remove Role</option>
                             <option value="banUser">Ban User</option>
                         </select>
-                        <select name="addRoleId" id="addRoleSelect" style="display:none;">
-                            <option th:each="role : ${user.roles}" th:value="${role.id}" th:text="${role.role}"></option>
+                        <select name="addRoleId" th:id="'addRoleSelect' + ${user.id}" style="display:none;">
+                            <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.role}"></option>
                         </select>
-                        <select name="removeRoleId" id="removeRoleSelect" style="display:none;">
+                        <select name="removeRoleId" th:id="'removeRoleSelect' + ${user.id}" style="display:none;">
                             <option th:each="role : ${user.roles}" th:value="${role.id}" th:text="${role.role}"></option>
                         </select>
                         <button type="submit">Perform Action</button>
@@ -96,9 +96,9 @@
 </div>
 
 <script>
-    function handleActionChange(action) {
-        document.getElementById('addRoleSelect').style.display = action === 'addRole' ? 'block' : 'none';
-        document.getElementById('removeRoleSelect').style.display = action === 'removeRole' ? 'block' : 'none';
+    function handleActionChange(action, userId) {
+        document.getElementById('addRoleSelect' + userId).style.display = action === 'addRole' ? 'block' : 'none';
+        document.getElementById('removeRoleSelect' + userId).style.display = action === 'removeRole' ? 'block' : 'none';
     }
 
     function confirmAction() {

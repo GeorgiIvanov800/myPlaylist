@@ -2,6 +2,7 @@ package org.myplaylist.myplaylist.web;
 
 import org.myplaylist.myplaylist.model.entity.ReportEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
+import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.myplaylist.myplaylist.service.CommentService;
 import org.myplaylist.myplaylist.service.ReportService;
 import org.myplaylist.myplaylist.service.UserService;
@@ -44,9 +45,11 @@ public class AdminController {
 
         Page<UserEntity> users = userService.getAllUsers(pageable);
         List<ReportEntity> reports = reportService.allReports();
+        List<UserRoleEntity> roles = userService.getAllRoles();
 
         model.addAttribute("reports", reports);
         model.addAttribute("users", users);
+        model.addAttribute("roles", roles);
 
         return "admin-panel";
     }

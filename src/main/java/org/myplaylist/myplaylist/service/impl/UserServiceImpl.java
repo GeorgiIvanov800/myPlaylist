@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -136,6 +137,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserEntity> getAllUsers(Pageable pageable) {
         return userRepository.findAllBy(pageable);
+    }
+
+    @Override
+    public List<UserRoleEntity> getAllRoles() {
+        return userRoleRepository.findAll();
     }
 
 }
