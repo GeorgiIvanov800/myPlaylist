@@ -19,7 +19,7 @@ public class TopRatedPlaylistUpdate {
         this.playlistService = playlistService;
         this.cacheManager = cacheManager;
     }
-    @Scheduled(cron = "0 */12 * * *")
+    @Scheduled(cron = "0 0 */12 * * ?") //run this every 12 hours to update the top rated playlists
     public void updateTopRated() {
 
         // Clear the cache

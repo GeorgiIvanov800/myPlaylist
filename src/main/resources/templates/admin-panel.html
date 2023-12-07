@@ -50,5 +50,65 @@
         </table>
     </div>
 </div>
+<div class="container mt-4">
+    <h1>Role Management</h1>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Current Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}">1</td>
+                <td th:text="${user.username}">Username</td>
+                <td>
+                    <span th:each="role : ${user.roles}" th:text="${role.role} + ' '"></span>
+                </td>
+                <td>
+                    <form id="userActionForm" th:action="@{/admin/userAction}"
+                          method="post"
+                          onsubmit="return confirmAction()">
+                        <input type="hidden" name="userId" th:value="${user.id}" />
+                        <select name="action" id="actionSelect" onchange="handleActionChange(this.value)">
+                            <option value="">Select Action</option>
+                            <option value="addRole">Add Role</option>
+                            <option value="removeRole">Remove Role</option>
+                            <option value="banUser">Ban User</option>
+                        </select>
+                        <select name="addRoleId" id="addRoleSelect" style="display:none;">
+                            <option th:each="role : ${user.roles}" th:value="${role.id}" th:text="${role.role}"></option>
+                        </select>
+                        <select name="removeRoleId" id="removeRoleSelect" style="display:none;">
+                            <option th:each="role : ${user.roles}" th:value="${role.id}" th:text="${role.role}"></option>
+                        </select>
+                        <button type="submit">Perform Action</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function handleActionChange(action) {
+        document.getElementById('addRoleSelect').style.display = action === 'addRole' ? 'block' : 'none';
+        document.getElementById('removeRoleSelect').style.display = action === 'removeRole' ? 'block' : 'none';
+    }
+
+    function confirmAction() {
+        let action = document.getElementById('actionSelect').value;
+        if (action === 'banUser') {
+            return confirm('Are you sure you want to ban this user?');
+        }
+        return true; // No confirmation needed for other actions
+    }
+</script>
+
 </body>
 </html>

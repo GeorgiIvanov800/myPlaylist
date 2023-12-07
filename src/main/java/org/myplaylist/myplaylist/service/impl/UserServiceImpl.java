@@ -13,6 +13,8 @@ import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.repository.UserRoleRepository;
 import org.myplaylist.myplaylist.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +29,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
     private final UserActivationLinkRepository userActivationLinkRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -130,6 +131,11 @@ public class UserServiceImpl implements UserService {
     public boolean isUserActive(String email) {
         Optional<UserEntity> byEmail = userRepository.findByEmail(email);
         return byEmail.get().isActive();
+    }
+
+    @Override
+    public Page<UserEntity> getAllUsers(Pageable pageable) {
+        return userRepository.findAllBy(pageable);
     }
 
 }

@@ -42,7 +42,7 @@ public class UserActivationServiceImpl implements UserActivationService {
 
     @Override
     public void cleanUpObsoleteActivationLinks() {
-        //TODO: Implement
+        userActivationLinkRepository.deleteAll();
     }
 
     @Override

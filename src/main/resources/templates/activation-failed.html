@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Activation Failed</title>
-    <!-- Add any additional head elements here (e.g., CSS links) -->
+<head th:replace="~{fragments/head}">
 </head>
-<body>
-<div class="container">
-    <h1>Account Activation Failed</h1>
-    <p th:if="${activationError}" th:text="${activationError}" class="text-bg-warning">
-
+<body class="d-flex justify-content-center align-items-center">
+<div class="container activation-container">
+    <h1 class="activation-header">Account Activation Failed</h1>
+    <p th:if="${activationError}" th:text="${activationError}" class="custom-warning">
+        <!-- Activation error message will be displayed here -->
     </p>
-    <p>Sorry something got wrong, Please try again after 24 hours to Register again</p>
+    <p class="activation-text">We sincerely apologize for the inconvenience caused.
+        Unfortunately, there seems to have been an issue with your registration process.
+        Please kindly attempt to register again after 12 hours.
+        We appreciate your understanding and patience in this matter.
+        Thank you.
+        If you have any questions, don't hesitate to contact us click the link down bellow.
+    </p>
+    <a href="contact.html" class="contact-button">Contact Us</a> <!-- Contact Us button -->
     <br>
 </div>
 </body>
