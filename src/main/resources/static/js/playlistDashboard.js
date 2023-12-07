@@ -2,20 +2,28 @@
 //and trigger the upload
 document.addEventListener('DOMContentLoaded', function () {
     // Select all file inputs within forms having the class 'image-upload-form'
-    const imageUploadForms = document.querySelectorAll('.image-upload-form input[type="file"]');
-    imageUploadForms.forEach(fileInput => {
+    const fileInputs = document.querySelectorAll('.image-upload-form input[type="file"]');
+
+    fileInputs.forEach(fileInput => {
         fileInput.addEventListener('change', function () {
             const file = this.files[0];
-            if (file && file.size > 1048576) { // 1MB size limit
-                alert('Sorry, but the file size should be less than 1MB');
-                this.value = ''; // Reset the file input
-                return;
-            }
-            if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-                alert('Sorry, only JPG and PNG files are allowed');
-                this.value = ''; // Reset the file input
-            } else {
+            if (file) {
+                // Validate file size
+                if (file.size > 1048576) { // 1MB size limit
+                    alert('Sorry, but the file size should be less than 1MB');
+                    this.value = ''; // Reset the file input
+                    return;
+                }
+                // Validate file type
+                if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+                    alert('Sorry, only JPG and PNG files are allowed');
+                    this.value = ''; // Reset the file input
+                    return;
+                }
+
+                // If the file is valid, submit the form and show the spinner
                 this.closest('.image-upload-form').submit();
+                document.getElementById('loadingOverlay').style.display = 'flex';
             }
         });
     });
@@ -101,6 +109,10 @@ function updateRatingCount(playlistId, likeCount, dislikeCount) {
 
     likeCountElement.textContent = likeCount;
     dislikeCountElement.textContent = dislikeCount;
+}
+
+function showSpinner() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
 }
 
 

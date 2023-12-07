@@ -92,10 +92,6 @@ public class UploadFilesServiceImpl implements UploadFilesService {
 
     @Override
     public boolean uploadPlaylistImage(Long playlistId, MultipartFile imageFile, String email) {
-//        if (!isFileValid(imageFile)) {
-//            LOGGER.error("Invalid file format or size");
-//            return false;
-//        }
 
         String formattedEmail = email.replace("@", "_at_").replace(".", "_dot_");
         String originalFileName = imageFile.getOriginalFilename();

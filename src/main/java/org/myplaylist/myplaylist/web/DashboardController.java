@@ -23,9 +23,7 @@ import java.util.Objects;
 
 @Controller
 public class DashboardController {
-
     private final PlaylistService playlistService;
-
     private final UploadFilesService uploadFilesService;
 
     public DashboardController(PlaylistService playlistService, UploadFilesService uploadFilesService) {
@@ -52,26 +50,24 @@ public class DashboardController {
     }
 
     @PostMapping("/users/dashboard/upload-image/{playlistId}")
-    public String uploadPlaylistImage(@PathVariable Long playlistId, //TODO: Maybe with Request Param
+    public String uploadPlaylistImage(@PathVariable Long playlistId,
                                       @RequestParam("picture") MultipartFile pictureFile,
                                       Principal principal) throws IOException {
         if (pictureFile != null && !pictureFile.isEmpty()) {
             String contentType = pictureFile.getContentType();
 
-            // Check if file is larger than 1 MB
+            // Check if the file is larger than 1 MB
             if (pictureFile.getSize() > 1048576) {
-                // Handle file size error
+
                 return "redirect:/users/dashboard";
             }
 
-            // Check if file is JPG or PNG
+            // Check if the file is JPG or PNG
             if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
 
                 return "redirect:/users/dashboard";
             }
         }
-
-
         uploadFilesService.uploadPlaylistImage(playlistId, pictureFile, principal.getName());
 
         return "redirect:/users/dashboard";

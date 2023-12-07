@@ -46,7 +46,7 @@ public class NextCloudWebDavClient {
         int lastSlashIndex = remotePath.lastIndexOf('/');
         String fileName = remotePath.substring(lastSlashIndex + 1);
 
-        String userDirectoryPath = "/Songs/" + URLEncoder.encode(email, StandardCharsets.UTF_8).replace("+", "%20") + "/";
+        String userDirectoryPath = "/UsersUploads/" + URLEncoder.encode(email, StandardCharsets.UTF_8).replace("+", "%20") + "/";
 
         // Ensure the user-specific directory exists
         createSubfolderIfNotExists(userDirectoryPath);
@@ -77,7 +77,7 @@ public class NextCloudWebDavClient {
         if (statusCode == 201) {
             String shareLink = createShareLink(filePath);
             pathAndShareLink.add(shareLink);
-            pathAndShareLink.add(fullPath); //todo see this
+            pathAndShareLink.add(fullPath);
             return pathAndShareLink;
         } else {
             throw new RuntimeException("Failed to upload file. HTTP error code: " + statusCode);
