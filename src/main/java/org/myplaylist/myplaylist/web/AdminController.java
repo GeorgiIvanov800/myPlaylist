@@ -24,7 +24,6 @@ import java.util.List;
 public class AdminController {
     private final ReportService reportService;
     private final CommentService commentService;
-
     private final UserService userService;
 
 
