@@ -34,104 +34,76 @@ import java.util.List;
 public class NextCloudWebDavClient {
     private final NextCloudProperties nextCloudProperties;
     private final XmlParser xmlParser;
+    private static final String BASIC_AUTH = "Basic ";
+    private static final String AUTHORIZATION = HttpHeaders.AUTHORIZATION;
+    private static final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
+    private static final int SUCCESS_STATUS_CODE_UPLOAD = 201;
+    private static final int SUCCESS_STATUS_CODE_DELETE = 204;
+    private static final int SUCCESS_STATUS_CODE_SHARE_LINK = 200;
 
     public NextCloudWebDavClient(NextCloudProperties nextCloudProperties, XmlParser xmlParser) {
         this.nextCloudProperties = nextCloudProperties;
         this.xmlParser = xmlParser;
     }
 
+    private void validateResponse(HttpResponse response, int expectedStatusCode, String errorMessage) throws Exception {
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != expectedStatusCode) {
+            throw new RuntimeException(errorMessage + statusCode);
+        }
+    }
+
+    private HttpClient getHttpClient() {
+        return HttpClients.createDefault();
+    }
+
+    private String getBasicAuth() throws UnsupportedEncodingException {
+        String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
+        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(ISO_8859_1));
+        return BASIC_AUTH + new String(encodedAuth);
+    }
+
     public List<String> uploadFile(File file, String remotePath, String email) throws Exception {
         List<String> pathAndShareLink = new ArrayList<>();
-        // Split the remotePath to get the directory and the filename separately
-        int lastSlashIndex = remotePath.lastIndexOf('/');
-        String fileName = remotePath.substring(lastSlashIndex + 1);
-
+        String fileName = remotePath.substring(remotePath.lastIndexOf('/') + 1);
         String userDirectoryPath = "/UsersUploads/" + URLEncoder.encode(email, StandardCharsets.UTF_8).replace("+", "%20") + "/";
-
-        // Ensure the user-specific directory exists
         createSubfolderIfNotExists(userDirectoryPath);
         String filePath = userDirectoryPath + fileName;
-
-        // URL-encode only the fileName part
         String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
-
-        // Construct the full file path for the upload
         String fullPath = nextCloudProperties.getWebdavUrl() + userDirectoryPath + encodedFileName;
-
-        HttpClient client = HttpClients.createDefault();
+        HttpClient client = getHttpClient();
         HttpPut put = new HttpPut(fullPath);
-
-        // Basic authentication
-        String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
-        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
-        String authHeader = "Basic " + new String(encodedAuth);
-        put.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
-
-        // Set the file as the entity
+        put.setHeader(AUTHORIZATION, getBasicAuth());
         put.setEntity(new FileEntity(file));
-
-        // Execute the request
         HttpResponse response = client.execute(put);
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        if (statusCode == 201) {
-            String shareLink = createShareLink(filePath);
-            pathAndShareLink.add(shareLink);
-            pathAndShareLink.add(fullPath);
-            return pathAndShareLink;
-        } else {
-            throw new RuntimeException("Failed to upload file. HTTP error code: " + statusCode);
-        }
+        validateResponse(response, SUCCESS_STATUS_CODE_UPLOAD, "Failed to upload file. HTTP error code: ");
+        String shareLink = createShareLink(filePath);
+        pathAndShareLink.add(shareLink);
+        pathAndShareLink.add(fullPath);
+        return pathAndShareLink;
     }
 
     public void deleteFile(String filePath) throws Exception {
-
-        HttpClient client = HttpClients.createDefault();
+        HttpClient client = getHttpClient();
         HttpDelete delete = new HttpDelete(filePath);
-
-        // Basic authentication
-        String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
-        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
-        String authHeader = "Basic " + new String(encodedAuth);
-        delete.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
-
-        // Execute the request
+        delete.setHeader(AUTHORIZATION, getBasicAuth());
         HttpResponse response = client.execute(delete);
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        if (statusCode != 204) { // 204 No Content is the expected response for a successful deletion
-            throw new RuntimeException("Failed to delete file. HTTP error code: " + statusCode);
-        }
+        validateResponse(response, SUCCESS_STATUS_CODE_DELETE, "Failed to delete file. HTTP error code: ");
     }
 
     private String createShareLink(String remotePath) throws Exception {
-        HttpClient client = HttpClients.createDefault();
+        HttpClient client = getHttpClient();
         HttpPost post = new HttpPost(nextCloudProperties.getShareLink());
-
-        // Basic authentication
-        String auth = nextCloudProperties.getUsername() + ":" + nextCloudProperties.getPassword();
-        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.ISO_8859_1));
-        String authHeader = "Basic " + new String(encodedAuth);
-        post.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
+        post.setHeader(AUTHORIZATION, getBasicAuth());
         post.setHeader("OCS-APIRequest", "true");
-
-        // Set up the request body for creating a share
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("path", remotePath));
-        params.add(new BasicNameValuePair("shareType", "3")); // 3 for a public link
-        params.add(new BasicNameValuePair("permissions", "1")); // 1 for read-only
+        params.add(new BasicNameValuePair("shareType", "3"));
+        params.add(new BasicNameValuePair("permissions", "1"));
         post.setEntity(new UrlEncodedFormEntity(params));
-
-        // Execute the request
         HttpResponse response = client.execute(post);
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        // Handle the response to extract and store the shareable link
-        if (statusCode == 200) {
-            return extractShareLink(response);
-        } else {
-            throw new RuntimeException("Failed to create share link. HTTP error code: " + statusCode);
-        }
+        validateResponse(response, SUCCESS_STATUS_CODE_SHARE_LINK, "Failed to create share link. HTTP error code: ");
+        return extractShareLink(response);
     }
 
     private String extractShareLink(HttpResponse response) throws IOException, JAXBException {

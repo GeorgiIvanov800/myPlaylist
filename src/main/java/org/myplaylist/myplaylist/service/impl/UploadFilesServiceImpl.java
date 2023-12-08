@@ -33,6 +33,10 @@ public class UploadFilesServiceImpl implements UploadFilesService {
     private final NextCloudWebDavClient nextCloudWebDavClient;
     private final PlaylistRepository playlistRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadFilesServiceImpl.class);
+    private static final String YEAR_FIELD_KEY = "YEAR";
+    private static final int DEFAULT_YEAR = 0;
+    private static final String DEFAULT_ALBUM = "Unknown Album";
+    private static final String DEFAULT_GENRE = "Unknown Genre";
 
 
     public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient, PlaylistRepository playlistRepository) {
@@ -61,7 +65,7 @@ public class UploadFilesServiceImpl implements UploadFilesService {
                 for (MultipartFile file : batch) {
                     if (!isFileValid(file)) {
                         LOGGER.warn("Invalid file encountered. Aborting upload.");
-                        return false; // Return false immediately if a file is invalid
+                        return false;
                     }
                     String originalFileName = file.getOriginalFilename();
                     File convertedFile = convertMultipartFileToFile(file, originalFileName);
@@ -132,23 +136,24 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         try {
             AudioFile audioFile = AudioFileIO.read(file);
             Tag tag = audioFile.getTag();
-            Integer year = null;
-            int defaultYear = 0;
+            Integer year = DEFAULT_YEAR;
+            String album = DEFAULT_ALBUM;
+            String genre = DEFAULT_GENRE;
+
+            if (tag != null) {
+                String yearFieldString = tag.getFirst(YEAR_FIELD_KEY);
+                year = parseYearField(yearFieldString);
+
+                album = tag.getFirst(FieldKey.ALBUM) != null ? tag.getFirst(FieldKey.ALBUM) : DEFAULT_ALBUM;
+                genre = tag.getFirst(FieldKey.GENRE) != null ? tag.getFirst(FieldKey.GENRE) : DEFAULT_GENRE;
+            }
 
             SongEntity song = new SongEntity();
             assert filename != null;
             song.setArtist(filename.substring(0, filename.lastIndexOf('.')));
-
-            if (tag.getFirst(FieldKey.YEAR) != null) {
-                try {
-                    year = Integer.parseInt(tag.getFirst(FieldKey.YEAR));
-                } catch (NumberFormatException e) {
-                    year = defaultYear; // replace defaultYear with default value
-                }
-            }
-            song.setAlbum(tag.getFirst(FieldKey.ALBUM));
+            song.setAlbum(album);
             song.setYear(year);
-            song.setGenre(tag.getFirst(FieldKey.GENRE));
+            song.setGenre(genre);
             song.setDuration(Duration.ofSeconds(audioFile.getAudioHeader().getTrackLength()));
             song.setUser(user);
 
@@ -189,5 +194,13 @@ public class UploadFilesServiceImpl implements UploadFilesService {
             batches.add(new ArrayList<>(files.subList(start, end)));
         }
         return batches;
+    }
+
+    private Integer parseYearField(String yearFieldString) {
+        try {
+            return Integer.parseInt(yearFieldString);
+        } catch (NumberFormatException e) {
+            return DEFAULT_YEAR;
+        }
     }
 }
