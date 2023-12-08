@@ -55,14 +55,15 @@ public class UserRegistrationControllerTestIT {
     void testRegistration() throws Exception {
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/users/register")
-                                .param("email", "pesho@softuni.bg")
+                                .param("username", "peshkata")
                                 .param("firstName", "Pesho")
                                 .param("lastName", "Petrov")
-                                .param("password", "topsecret")
-                                .param("confirmPassword", "topsecret")
+                                .param("email", "pesho@softuni.bg")
+                                .param("password", "topsecret12345")
+                                .param("confirmPassword", "topsecret12345")
                                 .with(csrf())
                 ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/users/login"));
 
         greenMail.waitForIncomingEmail(1);
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();

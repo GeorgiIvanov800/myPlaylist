@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: never
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+myPlaylist:
+  default.admin.pass: topsecret
+  remember.me.key: topsecret
+
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+mail:
+  myPlaylist: "myPlaylist@example.com"
+  host: localhost
+  port: 3333
+  username: test@example.com
+  password: topsecret

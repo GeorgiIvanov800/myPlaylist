@@ -133,7 +133,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         // Update songs in the playlist if necessary
         updateSongsInPlaylist(playlistBindingModel, playlist);
 
-        //TODO:check if the user updating the playlist is the owner
 
         LOGGER.info("Updating playlist {}", playlist.getName());
         playlistRepository.save(playlist);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.myplaylist.myplaylist.config.mapper.UserMapper;
 import org.myplaylist.myplaylist.exception.ObjectNotFoundException;
@@ -21,9 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -297,9 +296,37 @@ public class UserServiceImplTest {
         // Assert
         verify(mockUserRepository).findById(userId);
         verify(mockUserRoleRepository).findById(roleId);
-        // Verify that LOGGER.error was called with the unknown action
+
     }
 
+    @Test
+    public void removeRoleFromNonExistingUserTest() {
+
+        when(mockUserRepository.findById(any())).thenReturn(Optional.empty());
+
+        try {
+            serviceToTest.addOrRemoveRole(1L, 1L, "removeRole");
+        } catch (ObjectNotFoundException e) {
+            assert (e.getMessage().equals("User with id:1 not found"));
+        }
+
+        verify(mockUserRepository, never()).save(any());
+    }
+
+    @Test
+    void testIsAdmin_UserIsAdmin() {
+        // Arrange
+        String userEmail = "admin@example.com";
+        UserEntity mockUser = createTestUser();
+
+        when(mockUserRepository.findByEmail(userEmail)).thenReturn(Optional.of(mockUser));
+
+        // Act
+        boolean isAdmin = serviceToTest.isAdmin(userEmail);
+
+        // Assert
+        assertTrue(isAdmin);
+    }
 
     private static UserEntity createTestUser() {
         UserEntity user = new UserEntity();

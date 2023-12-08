@@ -5,15 +5,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.myplaylist.myplaylist.model.entity.PlaylistEntity;
 import org.myplaylist.myplaylist.model.entity.SongEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.repository.PlaylistRepository;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,18 +56,15 @@ public class UploadFilesServiceImplTest {
     void uploadSongs_Success() throws Exception {
         // Arrange
         String email = "user@example.com";
-        MultipartFile file = mock(MultipartFile.class);
+        Path path = Paths.get("src/test/resources/ATB - Don't Stop.mp3");
+        byte[] content = Files.readAllBytes(path);
+        MockMultipartFile file = new MockMultipartFile("file", "test-audio.mp3", "audio/mpeg", content);
         MultipartFile[] files = new MultipartFile[]{file};
         UserEntity userEntity = new UserEntity();
-        List<SongEntity> songs = new ArrayList<>();
-
-
 
         when(mockUserRepository.findByEmail(email)).thenReturn(Optional.of(userEntity));
-        lenient().when(file.getOriginalFilename()).thenReturn("song.mp3");
-        lenient().when(file.isEmpty()).thenReturn(false);
-        lenient().when(mockNextCloudWebDavClient.uploadFile(any(File.class),
-                anyString(), anyString())).thenReturn(List.of("path", "shareLink"));
+        lenient().when(mockNextCloudWebDavClient.uploadFile(any(File.class), anyString(), anyString()))
+                .thenReturn(List.of("path", "shareLink"));
 
         // Act
         boolean result = serviceToTest.uploadSongs(email, files);
@@ -69,7 +72,6 @@ public class UploadFilesServiceImplTest {
         // Assert
         assertTrue(result);
         verify(mockSongRepository).saveAll(anyList());
-
     }
 
     @Test
@@ -132,5 +134,64 @@ public class UploadFilesServiceImplTest {
         assertFalse(serviceToTest.uploadSongs(email, files));
         verify(mockSongRepository, never()).saveAll(anyList());
     }
+
+    @Test
+    void uploadPlaylistImage_Success() throws Exception {
+        // Arrange
+        Long playlistId = 1L;
+        String email = "user@example.com";
+        MultipartFile imageFile = mock(MultipartFile.class);
+        PlaylistEntity playlist = new PlaylistEntity();
+        File convertedFile = mock(File.class);
+
+        when(imageFile.getOriginalFilename()).thenReturn("image.jpg");
+        when(imageFile.getBytes()).thenReturn(new byte[10]);
+        lenient().when(convertedFile.exists()).thenReturn(true);
+        when(mockPlaylistRepository.findById(playlistId)).thenReturn(Optional.of(playlist));
+        when(mockNextCloudWebDavClient.uploadFile(any(File.class), anyString(), anyString())).thenReturn(List.of("imagePath", "shareLink"));
+
+        // Act
+        boolean result = serviceToTest.uploadPlaylistImage(playlistId, imageFile, email);
+
+        // Assert
+        assertTrue(result);
+        assertEquals("imagePath", playlist.getPictureUrl());
+        verify(mockPlaylistRepository).save(playlist);
+    }
+
+    @Test
+    void uploadPlaylistImage_PlaylistNotFound() throws IOException {
+        // Arrange
+        Long playlistId = 1L;
+        String email = "user@example.com";
+        MultipartFile imageFile = mock(MultipartFile.class);
+
+        when(mockPlaylistRepository.findById(playlistId)).thenReturn(Optional.empty());
+        when(imageFile.getBytes()).thenReturn(new byte[10]);
+
+        // Act
+        boolean result = serviceToTest.uploadPlaylistImage(playlistId, imageFile, email);
+
+        //Assert
+        assertFalse(result);
+    }
+
+    @Test
+    void uploadPlaylistImage_UploadFailure() throws Exception {
+        // Arrange
+        Long playlistId = 1L;
+        String email = "user@example.com";
+        MultipartFile imageFile = mock(MultipartFile.class);
+        File convertedFile = mock(File.class);
+
+        when(imageFile.getOriginalFilename()).thenReturn("image.jpg");
+        when(imageFile.getBytes()).thenReturn(new byte[10]);
+        doThrow(new RuntimeException("Upload failed")).when(mockNextCloudWebDavClient).uploadFile(any(File.class), anyString(), anyString());
+
+        // Act & Assert
+        assertFalse(serviceToTest.uploadPlaylistImage(playlistId, imageFile, email));
+    }
+
+
 
 }
