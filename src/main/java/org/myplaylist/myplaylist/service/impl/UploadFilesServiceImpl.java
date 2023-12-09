@@ -11,6 +11,7 @@ import org.myplaylist.myplaylist.repository.PlaylistRepository;
 import org.myplaylist.myplaylist.repository.SongRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
 import org.myplaylist.myplaylist.service.UploadFilesService;
+import org.myplaylist.myplaylist.service.aop.WarnIfExecutionExceeds;
 import org.myplaylist.myplaylist.utils.impl.NextCloudWebDavClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,9 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         this.playlistRepository = playlistRepository;
     }
 
-
+    @WarnIfExecutionExceeds(
+            timeInMillis = 5000L
+    )
     @Override
     public boolean uploadSongs(String email, MultipartFile[] files) {
 //        TODO: IMPLEMENT AOP to check how fast is the upload doing
@@ -96,7 +99,9 @@ public class UploadFilesServiceImpl implements UploadFilesService {
         LOGGER.info("Successfully uploaded files {}", fileBatches.size());
         return true;
     }
-
+    @WarnIfExecutionExceeds(
+            timeInMillis = 2000L
+    )
     @Override
     public boolean uploadPlaylistImage(Long playlistId, MultipartFile imageFile, String email) {
 

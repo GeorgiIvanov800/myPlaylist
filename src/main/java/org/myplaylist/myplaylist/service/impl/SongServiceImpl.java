@@ -91,7 +91,7 @@ public class SongServiceImpl implements SongService {
                         .orElseThrow(() -> new IllegalArgumentException("Unknown user with email..." + email));
 
         if (isAdmin(viewerEntity)) {
-            // all admins own all offers
+            // all admins own all
             return true;
         }
 

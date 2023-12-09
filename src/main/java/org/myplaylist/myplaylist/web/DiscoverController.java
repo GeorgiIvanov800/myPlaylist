@@ -22,9 +22,9 @@ public class DiscoverController {
     }
 
     @GetMapping()
-    public String index(Model model,
+    public String discover(Model model,
                         @PageableDefault(
-                                size = 6,
+                                size = 5,
                                 sort = "createdOn",
                                 direction = Sort.Direction.DESC
                         ) Pageable pageable) {

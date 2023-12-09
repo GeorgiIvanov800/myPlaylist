@@ -45,3 +45,32 @@
     margin-bottom: 5px;
     color: red;
 }
+
+.cooler-box-new {
+    background-color: #343a40;
+    color: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+}
+
+.cooler-box-new h2 {
+    color: #f8c52c;
+}
+
+.cooler-box-top {
+    background-color: #343a40;
+    color: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+}
+
+.cooler-box-top h2 {
+    color: #e685b5;
+}
+
+
+

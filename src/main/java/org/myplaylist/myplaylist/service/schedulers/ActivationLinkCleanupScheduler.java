@@ -19,7 +19,7 @@ public class ActivationLinkCleanupScheduler {
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivationLinkCleanupScheduler.class);
-    @Scheduled(cron = "0 */12 * * * ?") // clean the activations links every 12 hours
+    @Scheduled(cron = "0 0 */12 * * ?") // clean the activations links every 12 hours
     public void cleanUp() {
         LOGGER.info("Clean up activation links triggered {}", LocalDateTime.now());
         userActivationService.cleanUpObsoleteActivationLinks();

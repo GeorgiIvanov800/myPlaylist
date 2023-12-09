@@ -36,7 +36,7 @@ public class DashboardController {
             (@AuthenticationPrincipal CustomUserDetails user,
              Model model,
              @PageableDefault(
-                     size = 6,
+                     size = 5,
                      sort = "id"
              ) Pageable pageable) {
         Long id = user.getUserId();
@@ -52,7 +52,7 @@ public class DashboardController {
     @PostMapping("/users/dashboard/upload-image/{playlistId}")
     public String uploadPlaylistImage(@PathVariable Long playlistId,
                                       @RequestParam("picture") MultipartFile pictureFile,
-                                      Principal principal) throws IOException {
+                                      Principal principal) {
         if (pictureFile != null && !pictureFile.isEmpty()) {
             String contentType = pictureFile.getContentType();
 

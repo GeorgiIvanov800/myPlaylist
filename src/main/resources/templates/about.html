@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}">
+</head>
+<body>
+<nav th:replace="~{fragments/nav-bar}"></nav>
+
+<div class="hero d-flex align-items-center">
+    <div class="text-box">
+        <h1>Welcome to Our Musical World</h1>
+        <p>Join us on a journey through soundscapes and melodies,
+            uniting people with the universal language of music.</p>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto cool-box">
+            <div class="row">
+                <div class="col-md-12">
+                    <img th:src="@{/images/n6exr7.jpg}" class="img-fluid rounded mb-4" alt="Team Photo" width="200">
+                    <p class="lead">We are a small team of <strong>music lovers</strong> who are passionate about bringing people together through music. Our goal is to create a platform where everyone can share, discover, and enjoy music in all its splendor.</p>
+                    <p class="lead">Whether you're a seasoned musician or just a music enthusiast, you're welcome here. We believe in the power of music to traverse borders, connect people, and bring joy to the heart.</p>
+                    <p class="lead">Join us on our journey to make the world a more melodious place!</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <div class="follow-us mt-4">
+                        <h2>Follow Us</h2>
+                        <p>Stay connected with us on social media!</p>
+                        <a href="https://www.facebook.com/yourpage" class="btn btn-primary">Facebook</a>
+                        <a href="https://www.twitter.com/yourpage" class="btn btn-info">Twitter</a>
+                        <a href="https://www.instagram.com/yourpage" class="btn btn-danger">Instagram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="contact-box">
+                <!-- Contact form here -->
+                <h2>Contact Us</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" id="message" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

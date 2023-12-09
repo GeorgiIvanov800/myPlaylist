@@ -31,7 +31,7 @@ public class RestPlaylistController {
                                             BindingResult bindingResult, Principal principal) {
         String username = principal.getName();
 
-        //TODO: Set Limit of 100 songs in a playlist
+
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.groupingBy(FieldError::getField,
