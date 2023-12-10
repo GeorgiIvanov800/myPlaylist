@@ -3,6 +3,7 @@ package org.myplaylist.myplaylist.service;
 import org.myplaylist.myplaylist.model.binding.UserRegistrationBindingModel;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
+import org.myplaylist.myplaylist.model.enums.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +19,7 @@ public interface UserService {
 
     boolean activateUser(String token);
 
-    boolean isUserActive(String email);
+    UserStatus getUserStatus(String email);
 
     Page<UserEntity> getAllUsers(Pageable pageable);
 
@@ -27,4 +28,6 @@ public interface UserService {
     void addOrRemoveRole(Long userId, Long roleId, String action);
 
     boolean isAdmin(String email);
+
+    boolean isActive(String email);
 }

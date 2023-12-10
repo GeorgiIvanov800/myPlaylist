@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:include="~{fragments/head}">
+<head th:insert="~{fragments/head}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/music-room.css}">
     <title>Music Room</title>
 </head>
@@ -76,7 +76,7 @@
                                 <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.user.username}">Username</h6>
                                 <p class="card-text" th:text="${comment.textContent}">User comment...</p>
                                 <small class="text-muted" th:text="${#temporals.format(comment.createdOn, 'dd-MM-yyyy HH:mm')}">Date</small>
-                                <a th:if="${comment.user.username != #authentication.principal.displayUsername}" th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm">Report Comment</a>
+                                <a th:if="${comment.user.username != #authentication.principal.displayUsername}" th:href="@{/reports/create/{commentId}(commentId=${comment.id})}" class="btn btn-warning btn-sm room">Report Comment</a>
                             </div>
                         </div>
                     </div>

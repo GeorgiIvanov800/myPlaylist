@@ -7,6 +7,7 @@ import org.myplaylist.myplaylist.model.entity.UserActivationLinkEntity;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
 import org.myplaylist.myplaylist.model.entity.UserRoleEntity;
 import org.myplaylist.myplaylist.model.enums.UserRoleEnum;
+import org.myplaylist.myplaylist.model.enums.UserStatus;
 import org.myplaylist.myplaylist.model.event.UserRegisterEvent;
 import org.myplaylist.myplaylist.repository.UserActivationLinkRepository;
 import org.myplaylist.myplaylist.repository.UserRepository;
@@ -118,9 +119,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserActive(String email) {
-        Optional<UserEntity> byEmail = userRepository.findByEmail(email);
-        return byEmail.get().isActive();
+    public UserStatus getUserStatus(String email) {
+        UserEntity byEmail = userRepository.findByEmail(email)
+                .orElse(null);
+
+        if (byEmail == null) {
+            return UserStatus.NOT_FOUND;
+        } else if (!byEmail.isActive()) {
+            return UserStatus.INACTIVE;
+        } else {
+            return UserStatus.ACTIVE;
+        }
     }
 
     @Override
@@ -189,6 +198,12 @@ public class UserServiceImpl implements UserService {
                                 () -> new ObjectNotFoundException("User with email: " + email + " not found")
                         )
         );
+    }
+
+    @Override
+    public boolean isActive(String email) {
+        Optional<UserEntity> byEmail = userRepository.findByEmail(email);
+        return byEmail.get().isActive();
     }
 
     private boolean isAdmin(UserEntity userEntity) {

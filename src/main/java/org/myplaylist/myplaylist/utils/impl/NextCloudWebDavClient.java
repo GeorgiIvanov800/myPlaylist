@@ -4,10 +4,7 @@ import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import jakarta.xml.bind.JAXBException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -37,7 +34,6 @@ public class NextCloudWebDavClient {
     private static final String BASIC_AUTH = "Basic ";
     private static final String AUTHORIZATION = HttpHeaders.AUTHORIZATION;
     private static final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
-    private static final int SUCCESS_STATUS_CODE_UPLOAD = 201;
     private static final int SUCCESS_STATUS_CODE_DELETE = 204;
     private static final int SUCCESS_STATUS_CODE_SHARE_LINK = 200;
 
@@ -67,19 +63,31 @@ public class NextCloudWebDavClient {
         List<String> pathAndShareLink = new ArrayList<>();
         String fileName = remotePath.substring(remotePath.lastIndexOf('/') + 1);
         String userDirectoryPath = "/UsersUploads/" + URLEncoder.encode(email, StandardCharsets.UTF_8).replace("+", "%20") + "/";
+
         createSubfolderIfNotExists(userDirectoryPath);
+
         String filePath = userDirectoryPath + fileName;
         String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
         String fullPath = nextCloudProperties.getWebdavUrl() + userDirectoryPath + encodedFileName;
+
         HttpClient client = getHttpClient();
         HttpPut put = new HttpPut(fullPath);
+
         put.setHeader(AUTHORIZATION, getBasicAuth());
         put.setEntity(new FileEntity(file));
+
         HttpResponse response = client.execute(put);
-        validateResponse(response, SUCCESS_STATUS_CODE_UPLOAD, "Failed to upload file. HTTP error code: ");
-        String shareLink = createShareLink(filePath);
-        pathAndShareLink.add(shareLink);
-        pathAndShareLink.add(fullPath);
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        if (statusCode == HttpStatus.SC_NO_CONTENT || statusCode == HttpStatus.SC_CREATED) {
+            // File uploaded or already exists
+            String shareLink = createShareLink(filePath);
+            pathAndShareLink.add(shareLink);
+            pathAndShareLink.add(fullPath);
+        } else {
+            throw new Exception("Failed to upload file. HTTP error code: " + statusCode);
+        }
+
         return pathAndShareLink;
     }
 

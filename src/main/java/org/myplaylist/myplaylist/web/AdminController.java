@@ -36,7 +36,7 @@ public class AdminController {
     @GetMapping("/panel")
     public String adminPanel(Model model,
                              @PageableDefault(
-                                     size = 10
+                                     size = 20
                              ) Pageable pageable) {
 
         Page<UserEntity> users = userService.getAllUsers(pageable);

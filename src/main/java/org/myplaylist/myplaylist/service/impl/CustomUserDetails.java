@@ -8,13 +8,15 @@ import java.util.Collection;
 public class CustomUserDetails extends User {
     private String displayUsername; // hold the username
     private Long userId; // will be needed for database calls
+    private boolean active; // for the check if the user has been activated
     public CustomUserDetails(String username, String password,
                              Collection<? extends GrantedAuthority> authorities,
                              String displayUsername,
-                             Long userId) {
+                             Long userId, boolean active) {
         super(username, password, authorities);
         this.displayUsername = displayUsername;
         this.userId = userId;
+        this.active = active;
     }
 
     public String getDisplayUsername() {
@@ -31,5 +33,9 @@ public class CustomUserDetails extends User {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+    @Override
+    public boolean isEnabled() {
+        return this.active;
     }
 }

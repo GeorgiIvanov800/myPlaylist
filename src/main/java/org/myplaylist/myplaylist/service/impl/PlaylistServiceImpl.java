@@ -40,7 +40,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final UserRepository userRepository;
     private final PlaylistMapper playlistMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(PlaylistServiceImpl.class);
-    private static final String UPLOAD_DIR = "/home/givanov/IdeaProjects/myplaylist/src/main/resources/static/playlist-images/";
 
     public PlaylistServiceImpl(PlaylistRepository playlistRepository, SongRepository songRepository, UserRepository userRepository, PlaylistMapper playlistMapper) {
         this.playlistRepository = playlistRepository;
@@ -73,7 +72,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public Page<PlaylistViewModel> getUserPlaylist(Pageable pageable, Long userId) {
-
+        LocalDateTime now = LocalDateTime.now();
         Page<PlaylistEntity> byUser = playlistRepository.findByUserId(userId, pageable);
         return byUser.map(playlistMapper::playlistEntityToViewModel);
     }
@@ -81,30 +80,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public Long getTotalSongCountForUser(Long userId) {
         return playlistRepository.countTotalSongsByUserId(userId);
-    }
-
-    @Override
-    public void updatePlaylistImage(Long playlistId, String pictureUrl, MultipartFile pictureFile, String filename) throws IOException {
-
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        try (InputStream inputStream = pictureFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(filename);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new FileUploadException("Error saving file: " + filename, e);
-        }
-
-
-        PlaylistEntity playlist = playlistRepository.findById(playlistId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid playlist ID: " + playlistId));
-        playlist.setPictureUrl(pictureUrl);
-        playlistRepository.save(playlist);
-
     }
 
     @Override //Get the songs for the playlist
@@ -216,12 +191,26 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @Cacheable("topRatedPlaylists")
-    public Page<PlaylistViewModel> topRatedPlaylists(Pageable pageable) {
+    public List<PlaylistViewModel> topRatedPlaylists() {
+        Pageable topFive = PageRequest.of(0, 4);
+        System.out.println("Cache has been updated");
+        List<PlaylistEntity> topRated = playlistRepository.findTopRatedPlaylists(topFive);
+        return topRated.stream()
+                .map(playlistMapper::playlistEntityToViewModel)
+                .toList();
+    }
 
-        pageable = PageRequest.of(0, 10);
+    @Override
+    public Page<PlaylistViewModel> getAll(Pageable pageable) {
+        Page<PlaylistEntity> allPlaylists = playlistRepository.findAll(pageable);
+        return allPlaylists.map(playlistMapper::playlistEntityToViewModel);
+    }
 
-        Page<PlaylistEntity> topRated = playlistRepository.findTopRatedPlaylists(pageable);
-        return topRated.map(playlistMapper::playlistEntityToViewModel);
+    @Override
+    public Page<PlaylistViewModel> searchPlaylists(String query, Pageable pageable) {
+        Page<PlaylistEntity> bySearchQuery = playlistRepository.findBySearchQuery(query, pageable);
+
+        return bySearchQuery.map(playlistMapper::playlistEntityToViewModel);
     }
 
     @Override

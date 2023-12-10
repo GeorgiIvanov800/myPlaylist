@@ -1,4 +1,4 @@
-/* CSS Variables */
+
 :root {
     --primary: #ddd;
     --dark: #333;
@@ -24,7 +24,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: calc(100vh - 4rem);
-    color: #0D6EFD;
+    color: #75b798;
 }
 
 
@@ -86,9 +86,27 @@ body {
 }
 
 .validation-error {
-    color: red;
-    font-size: 15px;
+    font-size: 14px;
+    color: #dc3545;
+    padding: 1px;
+    border: 1px solid #dc3545;
+    background-color: cornsilk;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
 }
+
+.passwordError {
+    display: none;
+    font-size: 14px;
+    color: #dc3545;
+    padding: 1px;
+    border: 1px solid #dc3545;
+    background-color: cornsilk;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .error-email-username {
     color: red;
     font-size: 15px;
@@ -120,8 +138,8 @@ body {
 }
 
 .loader {
-    border: 5px solid #f3f3f3; /* Light grey */
-    border-top: 5px solid #3498db; /* Blue */
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -138,7 +156,6 @@ footer {
 }
 
 .visible-error {
-    display: block; /* Ensure the element is visible */
-    color: red; /* Example: Make the text color red for visibility */
-    /* Add any other styles you need */
+    display: block;
+    color: red;
 }

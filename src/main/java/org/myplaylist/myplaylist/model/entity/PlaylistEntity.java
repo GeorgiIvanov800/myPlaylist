@@ -23,14 +23,14 @@ public class PlaylistEntity extends BaseEntity {
     @Column(name = "created_on")
     private LocalDateTime createdOn;
     private boolean isPrivate;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "playlist_songs", joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<SongEntity> songs;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "playlist")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "playlist", fetch = FetchType.EAGER)
     private Set<PlaylistRatingEntity> ratings = new HashSet<>();
 
     public PlaylistEntity() {

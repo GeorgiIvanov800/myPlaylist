@@ -5,6 +5,11 @@
     overflow: hidden;
 }
 
+.song-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
 .image-wrapper img {
     position: absolute;
     top: 0;
@@ -40,7 +45,7 @@
 }
 
 .dropdown {
-    position: absolute;
+    position: inherit;
     vertical-align: top;
     margin-left: 275px
 }

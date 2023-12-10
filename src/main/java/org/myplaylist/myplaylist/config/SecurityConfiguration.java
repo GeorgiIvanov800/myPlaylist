@@ -16,10 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     private final String rememberMeKey;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     public SecurityConfiguration(@Value("${myPlaylist.remember.me.key}")
-                                 String rememberMeKey) {
+                                 String rememberMeKey,
+                                 CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
         this.rememberMeKey = rememberMeKey;
+        this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
     }
 
     @Bean
@@ -32,7 +35,7 @@ public class SecurityConfiguration {
                         //all resources which are static in js, images, css are available for anyone
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         //allow anyone to see the home page, the registration page and the login form
-                        .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
+                        .requestMatchers("/", "/users/login", "/users/register", "/users/login-error", "/about").permitAll()
                         .requestMatchers("/user/activate", "/activation-failed").permitAll()
                         .requestMatchers("/error").permitAll()
                         //only admins have access to admin page
@@ -49,7 +52,7 @@ public class SecurityConfiguration {
                             .usernameParameter("email")
                             .passwordParameter("password")
                             .defaultSuccessUrl("/users/dashboard")
-                            .failureForwardUrl("/users/login-error");
+                            .failureHandler(customAuthenticationFailureHandler);
                 }
         ).logout(
                 logout -> {

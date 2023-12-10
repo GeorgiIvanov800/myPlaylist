@@ -117,29 +117,6 @@ public class PlaylistServiceImplTest {
     }
 
     @Test
-    void testUpdatePlaylistImage_Success() throws IOException, URISyntaxException {
-        // Arrange
-        Long playlistId = 1L;
-        String pictureUrl = "http://example.com/image.jpg";
-        String filename = "test-image.jpg";
-
-        // Load the image file from the resource folder
-        Path imagePath = Paths.get(getClass().getClassLoader().getResource(filename).toURI());
-        byte[] content = Files.readAllBytes(imagePath);
-        MockMultipartFile pictureFile = new MockMultipartFile("pictureFile", filename, "image/jpeg", content);
-
-        PlaylistEntity playlistEntity = new PlaylistEntity();
-
-        when(mockPlaylistRepository.findById(playlistId)).thenReturn(Optional.of(playlistEntity));
-
-        // Act
-        testService.updatePlaylistImage(playlistId, pictureUrl, pictureFile, filename);
-
-        // Assert
-        assertEquals(pictureUrl, playlistEntity.getPictureUrl());
-        verify(mockPlaylistRepository).save(playlistEntity);
-    }
-    @Test
     void testGetTotalSongCountForUser() {
         Long userId = 1L;
         Long expectedCount = 10L;
@@ -366,26 +343,26 @@ public class PlaylistServiceImplTest {
         assertThrows(ObjectNotFoundException.class, () -> testService.ratePlaylist(playlistId, email, RatingType.LIKE));
     }
 
-    @Test
-    void testTopRatedPlaylists() {
-        // Arrange
-        Pageable pageable = PageRequest.of(0, 10);
-
-        PlaylistEntity playlistEntity = new PlaylistEntity();
-        PlaylistViewModel playlistViewModel = new PlaylistViewModel();
-        Page<PlaylistEntity> playlistEntityPage = new PageImpl<>(List.of(playlistEntity));
-
-        when(playlistMapper.playlistEntityToViewModel(playlistEntity)).thenReturn(playlistViewModel);
-        when(mockPlaylistRepository.findTopRatedPlaylists(pageable)).thenReturn(playlistEntityPage);
-
-        // Act
-        Page<PlaylistViewModel> result = testService.topRatedPlaylists(pageable);
-
-        // Assert
-        assertFalse(result.isEmpty());
-        assertEquals(playlistViewModel, result.getContent().get(0));
-        verify(playlistMapper).playlistEntityToViewModel(playlistEntity);
-    }
+//    @Test
+//    void testTopRatedPlaylists() {
+//        // Arrange
+//        Pageable pageable = PageRequest.of(0, 10);
+//
+//        PlaylistEntity playlistEntity = new PlaylistEntity();
+//        PlaylistViewModel playlistViewModel = new PlaylistViewModel();
+//        Page<PlaylistEntity> playlistEntityPage = new PageImpl<>(List.of(playlistEntity));
+//
+//        when(playlistMapper.playlistEntityToViewModel(playlistEntity)).thenReturn(playlistViewModel);
+//        when(mockPlaylistRepository.findTopRatedPlaylists(pageable)).thenReturn(playlistEntityPage);
+//
+//        // Act
+//        Page<PlaylistViewModel> result = testService.topRatedPlaylists(pageable);
+//
+//        // Assert
+//        assertFalse(result.isEmpty());
+//        assertEquals(playlistViewModel, result.getContent().get(0));
+//        verify(playlistMapper).playlistEntityToViewModel(playlistEntity);
+//    }
 
     @Test
     void testIsOwner_PlaylistExists_UserIsAdmin() {

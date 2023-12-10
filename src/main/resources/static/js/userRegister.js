@@ -14,17 +14,21 @@ document.addEventListener("DOMContentLoaded", function () { // Ensure the DOM is
 
         if (!isValidPassword(passwordField.value)) {
             passwordError.textContent = "Password should contain both characters and numbers!";
+            passwordError.style.display = 'block'; // Show the error message
             passwordField.setCustomValidity("Invalid password!");
             return;
         } else {
+            passwordError.style.display = 'none'; // Hide the error message
             passwordField.setCustomValidity("");
         }
 
         if (passwordField.value !== confirmPasswordField.value) {
             passwordError.textContent = "Passwords do not match!";
+            passwordError.style.display = 'block'; // Show the error message
             confirmPasswordField.setCustomValidity("Passwords do not match!"); //prevent form submission
         } else {
             passwordError.textContent = "";
+            passwordError.style.display = 'none'; // Hide the error message
             confirmPasswordField.setCustomValidity(""); //allow form submission
         }
     }
@@ -49,4 +53,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+
 

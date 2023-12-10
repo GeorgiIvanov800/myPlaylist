@@ -24,6 +24,7 @@ public class MyPlaylistUserDetailService implements UserDetailsService {
         return userRepository.findByEmail(email)
                 .map(this::map)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+
     }
 
     private UserDetails map(UserEntity userEntity) {
@@ -38,7 +39,8 @@ public class MyPlaylistUserDetailService implements UserDetailsService {
                 userEntity.getPassword(),
                 authorities,
                 userEntity.getUsername(),
-                userEntity.getId()
+                userEntity.getId(),
+                userEntity.isActive()
         );
 
     }

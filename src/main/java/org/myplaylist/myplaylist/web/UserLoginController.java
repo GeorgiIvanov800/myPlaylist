@@ -1,6 +1,9 @@
 package org.myplaylist.myplaylist.web;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.myplaylist.myplaylist.model.entity.UserEntity;
+import org.myplaylist.myplaylist.model.enums.UserStatus;
 import org.myplaylist.myplaylist.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,33 +19,17 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserLoginController {
 
-    private UserService userService;
-
-    public UserLoginController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest request,
+                        Model model) {
 
-        return "user-login";
-    }
-
-    @PostMapping("/login-error")
-    public String onFailure(
-            @ModelAttribute("email") String email,
-            Model model) {
-
-        boolean isActive = userService.isUserActive(email);
-        if (!isActive) {
-            model.addAttribute("notActive", "Sorry but you account is not activated");
-            return "user-login";
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("loginError") != null) {
+            model.addAttribute("loginError", session.getAttribute("loginError"));
+            model.addAttribute("email", session.getAttribute("email"));
+            session.removeAttribute("loginError");
         }
-
-        model.addAttribute("email", email);
-        model.addAttribute("bad_credentials", "true");
-
-
         return "user-login";
     }
 

@@ -16,7 +16,7 @@
                 It looks like the page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
             </p>
             <p th:text="${errorMessage}"></p>
-            <a href="/" class="btn btn-primary">Go to Homepage</a>
+            <a th:href="@{/users/dashboard}" class="btn btn-primary">Go to Homepage</a>
         </div>
     </div>
 </div>

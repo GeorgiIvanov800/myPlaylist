@@ -41,7 +41,7 @@
                     <label for="email" class="text-white font-weight-bold">Email</label>
                     <input th:field="*{email}" th:errorclass="is-invalid" id="email" name="email" type="email"
                            class="form-control rounded" placeholder="Email" required>
-                    <p class="validation-error" th:text="${emailError}">Error Text</p>
+<!--                    <p class="validation-error" th:text="${emailError}">Error Text</p>-->
                     <span class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error</span>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <label for="username" class="text-white font-weight-bold">Username</label>
                 <input th:field="*{username}" th:errorclass="is-invalid" id="username" name="username" type="text"
                        class="form-control" placeholder="Username" required title="Enter your Username">
-                <p class="validation-error" th:text="${usernameError}">Error Text</p>
+<!--                <p class="validation-error" th:text="${usernameError}">Error Text</p>-->
                 <span class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Error</span>
             </div>
             <!-- Password & Confirm Password -->
@@ -74,7 +74,7 @@
                            name="confirmPassword" type="password" class="form-control rounded"
                            placeholder="Confirm password" required>
                     <span class="validation-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Error</span>
-                    <span id="passwordError" style="color: red;"></span>
+                    <span class="passwordError" id="passwordError"></span>
                     </div>
                 </div>
             </div>

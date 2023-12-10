@@ -1,50 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>MyPlaylist</title>
-    <link rel="stylesheet" th:href="@{/css/reset-css.css}"/>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/user-dashboard.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/music-player.css}">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script src="https://kit.fontawesome.com/08b39fed13.js" crossorigin="anonymous"></script>
+<head th:replace="~{fragments/head}">
 </head>
-
 <body>
+
 <div class="wrapper">
     <nav th:replace="~{fragments/nav-bar}"></nav>
     <div class="container mt-5">
-        <!-- Personalized Welcome Message -->
-        <h2 th:text="'Hello, ' + ${#authentication.principal.displayUsername} + '!'">Hello, User!</h2>
-        <!-- User Profile Overview & Quick Actions -->
-        <div class="row mt-4">
-            <div class="col-md-3">
-                <img th:src="@{/images/music.png}" alt="User Profile Picture"
-                     class="img-fluid rounded-circle" style="width: 50%;"/>
 
-                <p class="mt-2"><strong>Playlists:</strong> <span th:text="${playlist.totalElements}">0</span></p>
-                <p><strong>Songs Added:</strong> <span th:text="${songsCount}">50</span></p>
-                <a href="/playlist/create" class="btn btn-primary mt-3">Create a New Playlist</a>
-                <div th:if="${successMessage}" class="success-message-container">
-                    <div class="alert alert-success" role="alert">
-                        <span th:text="${successMessage}"></span>
-                    </div>
-                </div>
+        <form th:action="@{/discover/search}" method="get" class="d-flex justify-content-end mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control"  th:value="${query}" name="query" placeholder="Search playlists..." aria-label="Search playlists">
+                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
             </div>
-
-            <div class="col-md-9">
-                <!-- User's Playlists Title -->
-                <h4>Your Playlists</h4>
+        </form>
+        <div class="col-md-12">
+                <h2>Find out what if best for you</h2>
                 <!-- Playlists Container -->
                 <div class="row">
                     <th:block th:each="playlist : ${playlist}">
-                        <div class="col-md-4 mb-4">
+                        <div class="col-md-3 mb-4">
                             <div class="card h-100 shadow-sm">
                                 <!-- Playlist Image -->
                                 <div class="image-wrapper">
@@ -72,30 +49,6 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- Dropdown Actions -->
-                                <div class="dropdown">
-                                    <button class="dropbtn">
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                    </button>
-                                    <div class="dropdown-content">
-                                        <a th:href="@{/playlist/create/{id}(id=${playlist.id})}">Edit</a>
-                                        <form th:class="'image-upload-form'"
-                                              th:action="@{/users/dashboard/upload-image/{id}(id=${playlist.id})}"
-                                              method="post"
-                                              enctype="multipart/form-data"
-                                              th:data-playlist-id="${playlist.id}">
-                                            <input type="file" th:id="'picture' + ${playlist.id}" name="picture" style="display: none;">
-                                            <label th:for="'picture' + ${playlist.id}" class="link-style-button">Upload Image</label>
-                                            <button type="submit" style="display: none;">Submit</button>
-                                        </form>
-                                        <form th:action="@{/users/dashboard/deletePlaylist/{id}(id=${playlist.id})}"
-                                              method="post"
-                                              class="delete-form">
-                                            <input type="hidden" name="_method" value="delete"/>
-                                            <button type="submit" class="link-style-button">Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
                                 <!-- Card Footer -->
                                 <div class="card-footer">
                                     <div class="footer-content d-flex justify-content-between">
@@ -110,6 +63,8 @@
                                         <span th:id="'dislikeCount_' + ${playlist.id}"
                                               th:text="${playlist.dislikeCount}">0</span></span>
                                             </div>
+                                            <p class="creator-name">Created by: <span th:text="${playlist.user.username}">Username</span>
+                                            </p>
                                         </div>
                                         <div class="right-content">
                                             <p class="song-count" th:text="${playlist.songs.size() + ' Songs'}">Songs</p>
@@ -125,18 +80,18 @@
                     </th:block>
                 </div>
                 <!-- Pagination Controls -->
-                <nav aria-label="Playlist pagination" >
+                <nav aria-label="Playlist pagination">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${playlist.first ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/users/dashboard(page=${playlist.number - 1})}" aria-label="Previous">
+                            <a class="page-link" th:href="@{/discover/more(page=${playlist.number - 1})}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         <li th:each="pageNum : ${#numbers.sequence(0, playlist.totalPages - 1)}" class="page-item" th:classappend="${pageNum == playlist.number ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/users/dashboard(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
+                            <a class="page-link" th:href="@{/discover/more(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
                         </li>
                         <li class="page-item" th:classappend="${playlist.last ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/users/dashboard(page=${playlist.number + 1})}" aria-label="Next">
+                            <a class="page-link" th:href="@{/discover/more(page=${playlist.number + 1})}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -146,17 +101,6 @@
         </div>
     </div>
 </div>
-<!-- Loading Overlay -->
-<div id="loadingOverlay">
-    <div>
-        <i class="fas fa-music spinner-icon"></i>
-        <p>Uploading, please wait...</p>
-    </div>
-</div>
-<!-- Footer -->
-<footer th:replace="~{fragments/footer}"></footer>
-<script th:src="@{/js/playlistDashboard.js}"></script>
-<script th:src="@{/js/lib/howler.core.min.js}"></script>
-<script th:src="@{/js/newPlayer.js}"></script>
+
 </body>
 </html>

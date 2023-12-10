@@ -69,7 +69,7 @@
                 <td th:text="${user.username}">Username</td>
                 <td th:text="${user.email}">Email</td>
                 <td>
-                    <span th:each="role : ${user.roles}" th:text="${role.role} + ','"></span>
+                    <span th:each="role, iterStat : ${user.roles}" th:text="${role.role} + ${iterStat.last ? '' : ', '}"></span>
                 </td>
                 <td>
                     <form th:action="@{/admin/action}" method="post">

@@ -11,19 +11,12 @@
     <header>
         <h1 class="header-title">Welcome to MyPlaylist.org</h1>
         <p class="header-description">Your favorite music corner</p>
-        <th:block sec:authorize="isAuthenticated()">
-            <th:block th:text="${#authentication.principal.displayUsername}"></th:block>
-        </th:block>
-        <th:block sec:authorize="!isAuthenticated()">
-            Anonymous!
-        </th:block>
+
     </header>
 
     <section class="container mt-4">
         <h2 class="text-center">Christmas is coming, Let's ROCK</h2>
-        <div id="adminsPickCarousel" class="carousel slide" data-ride="carousel">
-            <!-- Carousel items -->
-        </div>
+
     </section>
 
     <!--     Top Rated Playlists-->
@@ -31,7 +24,7 @@
         <div class="cooler-box-top">
             <h2 class="text-center">Top Rated Playlists</h2>
             <div class="row row-cols-1 row-cols-md-2 g-4">
-                <th:block th:each="topRated : ${topRated.content}">
+                <th:block th:each="topRated : ${topRated}">
                     <div class="col-md-3 mb-3">
                         <div class="card h-100 playlist-card">
                             <div class="image-wrapper">
@@ -41,6 +34,7 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="text-center card-title" th:text="${topRated.getName()}">Playlist Name</h5>
+                                <p class="playlist-genre">Genre: <span th:text="${topRated.genre}">Playlist Genre</span></p>
                                 <p class="vertical-separator"></p>
                                 <p class="playlist-description" th:text="${topRated.description}">Playlist
                                     Description</p>
@@ -63,7 +57,7 @@
                                         <div class="likes-dislikes">
                                      <span class="likes">
                                      <i class="fa fa-thumbs-up"></i>
-                                       <span th:id="'likeCount_' + ${topRated.id}"
+                                       <span th:id="'likeCount_' + ${topRated.getId()}"
                                              th:text="${topRated.likeCount}">0</span></span>
                                             <span class="dislikes">
                                         <i class="fa fa-thumbs-down"></i>
@@ -104,6 +98,7 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="text-center card-title" th:text="${playlist.getName()}">Playlist Name</h5>
+                                <p class="playlist-genre">Genre: <span th:text="${playlist.genre}">Playlist Genre</span></p>
                                 <p class="vertical-separator"></p>
                                 <p class="playlist-description" th:text="${playlist.description}">Playlist
                                     Description</p>

@@ -52,7 +52,6 @@ public class UploadFilesServiceImpl implements UploadFilesService {
     )
     @Override
     public boolean uploadSongs(String email, MultipartFile[] files) {
-//        TODO: IMPLEMENT AOP to check how fast is the upload doing
         //Upload the songs
         List<SongEntity> songs = new ArrayList<>();
 

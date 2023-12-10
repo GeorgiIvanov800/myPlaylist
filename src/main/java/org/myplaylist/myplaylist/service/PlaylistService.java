@@ -21,8 +21,6 @@ public interface PlaylistService {
 
     Long getTotalSongCountForUser(Long userId);
 
-    void updatePlaylistImage(Long playlistId, String pictureUrl, MultipartFile pictureFile, String filename) throws IOException;
-
     List<SongViewModel> getSongsForPlaylist(Long playlistId, String email);
 
     void updatePlaylist(Long playlistId, PlaylistBindingModel playlistBindingModel, String email);
@@ -37,5 +35,9 @@ public interface PlaylistService {
 
     Page<PlaylistViewModel> findByLatestCreated(Pageable pageable);
 
-    Page<PlaylistViewModel> topRatedPlaylists(Pageable pageable);
+    List<PlaylistViewModel> topRatedPlaylists();
+
+    Page<PlaylistViewModel> getAll(Pageable pageable);
+
+    Page<PlaylistViewModel> searchPlaylists(String query, Pageable pageable);
 }
