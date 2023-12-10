@@ -51,7 +51,7 @@ public class AdminController {
     }
 
     @PreAuthorize("@commentServiceImpl.isAdmin(#principal.username)")
-    @DeleteMapping("/reports/deleteComment/{commentId}") //TODO: make it with request param
+    @DeleteMapping("/reports/deleteComment/{commentId}")
     public String deleteComment(@PathVariable("commentId") Long commentId,
                                 @AuthenticationPrincipal UserDetails principal) {
 
@@ -60,15 +60,14 @@ public class AdminController {
         return "redirect:/admin/panel";
     }
 
-//    @PreAuthorize("@commentServiceImpl.isAdmin(#principal.username)") TODO: Remove after the unit tests are successful
     @PreAuthorize("@userRoleChecker.isAdmin(#principal.name)")
-    @DeleteMapping("/reports/clearReport/{reportId}")  //TODO: Try make it with Request Param
+    @DeleteMapping("/reports/clearReport/{reportId}")
     public String clearReport(@PathVariable("reportId") Long reportId,
                               @AuthenticationPrincipal UserDetails principal) {
         reportService.deleteReport(reportId);
         return "redirect:/admin/panel";
     }
-//    @PreAuthorize("@userServiceImpl.isAdmin(#principal.name)")
+
     @PreAuthorize("@userRoleChecker.isAdmin(#principal.name)")
     @PostMapping("/action")
     public String handleUserAction(@RequestParam Long userId,
