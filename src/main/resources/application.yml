@@ -58,7 +58,7 @@ mail:
   host: localhost
   port: 1025
   username: ${MAIL_USER:myPlaylist}
-  password: ${MAIL_PASSWORD:gogata9212058445}
+  password: ${MAIL_PASSWORD:topsecret}
 
 
 logging:
