@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -34,3 +35,4 @@ build/
 /src/main/resources/static/songs/
 /src/main/resources/static/uploads/
 /src/main/resources/static/images/
+/src/main/resources/data.sql
