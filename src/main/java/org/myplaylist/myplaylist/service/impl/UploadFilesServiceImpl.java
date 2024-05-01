@@ -40,7 +40,10 @@ public class UploadFilesServiceImpl implements UploadFilesService {
     private static final String DEFAULT_GENRE = "Unknown Genre";
 
 
-    public UploadFilesServiceImpl(SongRepository songRepository, UserRepository userRepository, NextCloudWebDavClient nextCloudWebDavClient, PlaylistRepository playlistRepository) {
+    public UploadFilesServiceImpl(SongRepository songRepository,
+                                  UserRepository userRepository,
+                                  NextCloudWebDavClient nextCloudWebDavClient,
+                                  PlaylistRepository playlistRepository) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
         this.nextCloudWebDavClient = nextCloudWebDavClient;
